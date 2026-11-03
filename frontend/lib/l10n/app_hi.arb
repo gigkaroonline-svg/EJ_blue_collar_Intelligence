@@ -1,0 +1,139 @@
+{
+  "@@locale": "hi",
+  "appName": "EarlyJobs",
+  "home": "होम",
+  "candidates": "कारीगर",
+  "profile": "प्रोफ़ाइल",
+  "signOut": "साइन आउट",
+  "signIn": "साइन इन",
+  "signUp": "साइन अप",
+  "logIn": "लॉग इन",
+  "moreCandidates": "और कारीगर",
+  "recentCandidates": "आपके पास के कारीगर।",
+  "candidatesCount": "आपकी लिस्ट में {count} लोग हैं।",
+  "@candidatesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "candidate": "कारीगर",
+  "candidateNotFound": "कारीगर नहीं मिला।",
+  "addCandidate": "कारीगर जोड़ें",
+  "editCandidate": "कारीगर बदलें",
+  "saveCandidate": "कारीगर सेव करें",
+  "readyToWork": "काम के लिए तैयार",
+  "ready": "तैयार",
+  "busy": "अभी काम पर",
+  "personal": "अपनी बात",
+  "work": "काम",
+  "address": "पता",
+  "documents": "दस्तावेज़",
+  "addDocument": "दस्तावेज़ जोड़ें",
+  "noDocuments": "अभी कोई दस्तावेज़ नहीं।",
+  "aadhaar": "आधार",
+  "pan": "पैन कार्ड",
+  "bankPassbook": "बैंक पासबुक",
+  "drivingLicence": "ड्राइविंग लाइसेंस",
+  "photo": "फ़ोटो",
+  "fullName": "पूरा नाम",
+  "phone": "फ़ोन",
+  "mobileNumber": "मोबाइल नंबर",
+  "gender": "लिंग",
+  "dateOfBirth": "जन्म तारीख",
+  "idLabel": "आईडी",
+  "primaryTrade": "मुख्य काम",
+  "subSkills": "और काम",
+  "subSkillsHint": "कॉमा से अलग लिखें",
+  "experience": "अनुभव",
+  "yearsOfExperience": "कितने साल का काम",
+  "dailyWageExpected": "रोज़ की मजदूरी",
+  "addressLine": "पता",
+  "villageOrTown": "गाँव / शहर",
+  "district": "ज़िला",
+  "state": "राज्य",
+  "pincode": "पिनकोड",
+  "permanentAddress": "स्थायी पता",
+  "currentAddress": "अभी का पता",
+  "sameAsPermanent": "स्थायी पते जैसा ही",
+  "workHistory": "काम का इतिहास",
+  "company": "कंपनी",
+  "addWork": "काम जोड़ें",
+  "fromDate": "से",
+  "toDate": "तक",
+  "stillWorking": "अभी भी यहीं काम करता है",
+  "endThisWork": "यह काम बंद करें",
+  "noWorkHistory": "अभी कोई काम नहीं जोड़ा।",
+  "now": "अभी",
+  "availabilityHint": "तैयार / अभी काम पर पर टैप करके बदलें।",
+  "leaveJobTitle": "काम छोड़ना है?",
+  "leaveJobBody": "पहले {company} पर काम था। अब तैयार करें?",
+  "@leaveJobBody": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  },
+  "markAvailable": "तैयार करें",
+  "markOnJobTitle": "अभी काम पर करें?",
+  "markOnJobBody": "अभी कहाँ काम कर रहे हैं?",
+  "markOnJob": "अभी काम पर करें",
+  "cancel": "रद्द करें",
+  "years": "साल",
+  "welcomeBack": "वापस स्वागत है",
+  "signInWithMobile": "अपना मोबाइल नंबर डालकर साइन इन करें।",
+  "password": "पासवर्ड",
+  "forgotPassword": "पासवर्ड भूल गए?",
+  "newHere": "नए हैं?",
+  "otp": "ओटीपी",
+  "sendOtp": "ओटीपी भेजें",
+  "verifyOtp": "ओटीपी जाँचें",
+  "resendOtp": "ओटीपी फिर भेजें",
+  "createAccount": "नया खाता बनाएँ",
+  "pendingApproval": "मंज़ूरी का इंतज़ार",
+  "pendingApprovalBody": "आपका खाता इंतज़ार में है। आगे बढ़ने से पहले किसी को मंज़ूरी देनी होगी।",
+  "myProfile": "मेरी प्रोफ़ाइल",
+  "requiredField": "यह भरना ज़रूरी है",
+  "systemDefault": "फ़ोन की भाषा",
+  "language": "भाषा",
+  "chooseLanguage": "भाषा चुनें",
+  "submitForApproval": "मंज़ूरी के लिए भेजें",
+  "signupBody": "आगे के कदम यहाँ आएँगे। भेजने के बाद तब तक इंतज़ार करें जब तक कोई मंज़ूरी न दे।",
+  "enterOtpForPhone": "+91 {phone} का 6 अंकों का कोड डालें।",
+  "@enterOtpForPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "newOtpReady": "नया ओटीपी तैयार है।",
+  "resetPassword": "पासवर्ड बदलें",
+  "forgotPasswordTitle": "पासवर्ड भूल गए?",
+  "forgotPasswordBody": "अपना मोबाइल नंबर पक्का करें, फिर नया पासवर्ड डालें।",
+  "forgotPasswordOtpBody": "+91 {phone} का कोड डालें, फिर नया पासवर्ड चुनें।",
+  "@forgotPasswordOtpBody": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "newPassword": "नया पासवर्ड",
+  "confirmPassword": "पासवर्ड पक्का करें",
+  "updatePassword": "पासवर्ड बदलें",
+  "passwordUpdated": "पासवर्ड बदल गया। नए पासवर्ड से साइन इन करें।",
+  "showPassword": "पासवर्ड दिखाएँ",
+  "hidePassword": "पासवर्ड छिपाएँ",
+  "enterMobileNumber": "अपना मोबाइल नंबर डालें",
+  "enterValidMobile": "सही 10 अंकों का मोबाइल नंबर डालें",
+  "enterPassword": "अपना पासवर्ड डालें",
+  "enterOtp": "ओटीपी डालें",
+  "enterSixDigitOtp": "6 अंकों का ओटीपी डालें",
+  "enterNewPassword": "नया पासवर्ड डालें",
+  "useAtLeast8Characters": "कम से कम 8 अक्षर डालें",
+  "confirmNewPassword": "नया पासवर्ड पक्का करें",
+  "passwordsDoNotMatch": "पासवर्ड एक जैसे नहीं हैं"
+}

@@ -1,0 +1,139 @@
+{
+  "@@locale": "en",
+  "appName": "EarlyJobs",
+  "home": "Home",
+  "candidates": "Tradespeople",
+  "profile": "Profile",
+  "signOut": "Sign out",
+  "signIn": "Sign in",
+  "signUp": "Sign up",
+  "logIn": "Log in",
+  "moreCandidates": "More tradespeople",
+  "recentCandidates": "Tradespeople near you.",
+  "candidatesCount": "{count} people in your list.",
+  "@candidatesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "candidate": "Tradesperson",
+  "candidateNotFound": "Tradesperson not found.",
+  "addCandidate": "Add tradesperson",
+  "editCandidate": "Edit tradesperson",
+  "saveCandidate": "Save tradesperson",
+  "readyToWork": "Available for work",
+  "ready": "Available",
+  "busy": "On a job",
+  "personal": "Personal",
+  "work": "Work",
+  "address": "Address",
+  "documents": "Documents",
+  "addDocument": "Add document",
+  "noDocuments": "No documents yet.",
+  "aadhaar": "Aadhaar",
+  "pan": "PAN card",
+  "bankPassbook": "Bank passbook",
+  "drivingLicence": "Driving licence",
+  "photo": "Photo",
+  "fullName": "Full name",
+  "phone": "Phone",
+  "mobileNumber": "Mobile number",
+  "gender": "Gender",
+  "dateOfBirth": "Date of birth",
+  "idLabel": "ID",
+  "primaryTrade": "Main work",
+  "subSkills": "Other skills",
+  "subSkillsHint": "Separate with commas",
+  "experience": "Experience",
+  "yearsOfExperience": "Years of work",
+  "dailyWageExpected": "Daily wage wanted",
+  "addressLine": "Address",
+  "villageOrTown": "Village / town",
+  "district": "District",
+  "state": "State",
+  "pincode": "Pincode",
+  "permanentAddress": "Permanent address",
+  "currentAddress": "Current address",
+  "sameAsPermanent": "Same as permanent address",
+  "workHistory": "Work history",
+  "company": "Company",
+  "addWork": "Add work",
+  "fromDate": "From",
+  "toDate": "To",
+  "stillWorking": "Still working here",
+  "endThisWork": "End this work",
+  "noWorkHistory": "No work added yet.",
+  "now": "Now",
+  "availabilityHint": "Tap Available / On a job to change it.",
+  "leaveJobTitle": "Ready to leave?",
+  "leaveJobBody": "Was working at {company}. Mark as Available?",
+  "@leaveJobBody": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  },
+  "markAvailable": "Mark Available",
+  "markOnJobTitle": "Mark as on a job?",
+  "markOnJobBody": "Where are they working now?",
+  "markOnJob": "Mark On a job",
+  "cancel": "Cancel",
+  "years": "years",
+  "welcomeBack": "Welcome back",
+  "signInWithMobile": "Sign in with your mobile number.",
+  "password": "Password",
+  "forgotPassword": "Forgot password?",
+  "newHere": "New here?",
+  "otp": "OTP",
+  "sendOtp": "Send OTP",
+  "verifyOtp": "Check OTP",
+  "resendOtp": "Send OTP again",
+  "createAccount": "Create an account",
+  "pendingApproval": "Waiting for okay",
+  "pendingApprovalBody": "Your account is waiting. Someone must give okay before you can continue.",
+  "myProfile": "My profile",
+  "requiredField": "Please fill this",
+  "systemDefault": "Phone language",
+  "language": "Language",
+  "chooseLanguage": "Choose language",
+  "submitForApproval": "Send for okay",
+  "signupBody": "Next steps come here. After you send, wait until someone gives okay.",
+  "enterOtpForPhone": "Enter the 6-digit code for +91 {phone}.",
+  "@enterOtpForPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "newOtpReady": "A new OTP is ready.",
+  "resetPassword": "Reset password",
+  "forgotPasswordTitle": "Forgot your password?",
+  "forgotPasswordBody": "Check your mobile number, then set a new password.",
+  "forgotPasswordOtpBody": "Enter the code for +91 {phone}, then choose a new password.",
+  "@forgotPasswordOtpBody": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "updatePassword": "Update password",
+  "passwordUpdated": "Password updated. Sign in with your new password.",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "enterMobileNumber": "Enter your mobile number",
+  "enterValidMobile": "Enter a valid 10-digit mobile number",
+  "enterPassword": "Enter your password",
+  "enterOtp": "Enter the OTP",
+  "enterSixDigitOtp": "Enter the 6-digit OTP",
+  "enterNewPassword": "Enter a new password",
+  "useAtLeast8Characters": "Use at least 8 characters",
+  "confirmNewPassword": "Confirm your new password",
+  "passwordsDoNotMatch": "Passwords do not match"
+}
