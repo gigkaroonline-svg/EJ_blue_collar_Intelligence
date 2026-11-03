@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home => 'Home';
 
   @override
-  String get candidates => 'Tradespeople';
+  String get tradespeople => 'Tradespeople';
 
   @override
   String get profile => 'Profile';
@@ -34,30 +34,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logIn => 'Log in';
 
   @override
-  String get moreCandidates => 'More tradespeople';
+  String get moreTradespeople => 'More tradespeople';
 
   @override
-  String get recentCandidates => 'Tradespeople near you.';
+  String get recentTradespeople => 'Tradespeople near you.';
 
   @override
-  String candidatesCount(int count) {
+  String tradespeopleCount(int count) {
     return '$count people in your list.';
   }
 
   @override
-  String get candidate => 'Tradesperson';
+  String get tradesperson => 'Tradesperson';
 
   @override
-  String get candidateNotFound => 'Tradesperson not found.';
+  String get tradespersonNotFound => 'Tradesperson not found.';
 
   @override
-  String get addCandidate => 'Add tradesperson';
+  String get addTradesperson => 'Add tradesperson';
 
   @override
-  String get editCandidate => 'Edit tradesperson';
+  String get editTradesperson => 'Edit tradesperson';
 
   @override
-  String get saveCandidate => 'Save tradesperson';
+  String get saveTradesperson => 'Save tradesperson';
 
   @override
   String get readyToWork => 'Available for work';
@@ -189,7 +189,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get now => 'Now';
 
   @override
-  String get availabilityHint => 'Tap Available / On a job to change it.';
+  String get availabilityHint => 'Toggle Available / On a job to change it.';
 
   @override
   String get leaveJobTitle => 'Ready to leave?';

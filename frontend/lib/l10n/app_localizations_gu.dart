@@ -16,7 +16,7 @@ class AppLocalizationsGu extends AppLocalizations {
   String get home => 'હોમ';
 
   @override
-  String get candidates => 'કારીગરો';
+  String get tradespeople => 'કારીગરો';
 
   @override
   String get profile => 'પ્રોફાઇલ';
@@ -34,30 +34,30 @@ class AppLocalizationsGu extends AppLocalizations {
   String get logIn => 'લૉગ ઇન';
 
   @override
-  String get moreCandidates => 'વધુ કારીગરો';
+  String get moreTradespeople => 'વધુ કારીગરો';
 
   @override
-  String get recentCandidates => 'તમારી નજીકના કારીગરો.';
+  String get recentTradespeople => 'તમારી નજીકના કારીગરો.';
 
   @override
-  String candidatesCount(int count) {
+  String tradespeopleCount(int count) {
     return 'તમારી યાદીમાં $count લોકો છે.';
   }
 
   @override
-  String get candidate => 'કારીગર';
+  String get tradesperson => 'કારીગર';
 
   @override
-  String get candidateNotFound => 'કારીગર મળ્યો નથી.';
+  String get tradespersonNotFound => 'કારીગર મળ્યો નથી.';
 
   @override
-  String get addCandidate => 'કારીગર ઉમેરો';
+  String get addTradesperson => 'કારીગર ઉમેરો';
 
   @override
-  String get editCandidate => 'કારીગર બદલો';
+  String get editTradesperson => 'કારીગર બદલો';
 
   @override
-  String get saveCandidate => 'કારીગર સાચવો';
+  String get saveTradesperson => 'કારીગર સાચવો';
 
   @override
   String get readyToWork => 'કામ માટે તૈયાર';

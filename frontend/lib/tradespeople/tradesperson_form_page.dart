@@ -4,28 +4,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/l10n/app_localizations.dart';
+import '../core/errors/api_error.dart';
+import '../features/catalog/models/catalog_skill.dart';
+import '../features/catalog/presentation/skill_search_field.dart';
 import '../theme/app_styles.dart';
 import 'add_work_sheet.dart';
 import 'address_fields.dart';
 import 'availability_chip.dart';
-import 'candidate.dart';
-import 'candidates_provider.dart';
+import 'tradesperson.dart';
+import 'tradespeople_provider.dart';
 import 'document_ui.dart';
 import 'work_history_tile.dart';
 
-class CandidateFormPage extends ConsumerStatefulWidget {
-  const CandidateFormPage({super.key, this.candidateId});
+class TradespersonFormPage extends ConsumerStatefulWidget {
+  const TradespersonFormPage({super.key, this.tradespersonId});
 
-  final String? candidateId;
+  final String? tradespersonId;
 
-  bool get isEditing => candidateId != null;
+  bool get isEditing => tradespersonId != null;
 
   @override
-  ConsumerState<CandidateFormPage> createState() => _CandidateFormPageState();
+  ConsumerState<TradespersonFormPage> createState() => _TradespersonFormPageState();
 }
 
-class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
+class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     with SingleTickerProviderStateMixin {
+  static const _idTypes = ['aadhaar', 'voter_id', 'pan'];
+
   final _formKey = GlobalKey<FormState>();
   late final TabController _tabController;
 
@@ -33,16 +38,19 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
   late final TextEditingController _phone;
   late final TextEditingController _gender;
   late final TextEditingController _dateOfBirth;
-  late final TextEditingController _primaryTrade;
+  late final TextEditingController _idNumber;
   late final TextEditingController _subSkills;
   late final TextEditingController _years;
   late final TextEditingController _wage;
   late final AddressControllers _permanentAddress;
   late final AddressControllers _currentAddress;
 
+  String _idType = _idTypes.first;
+  CatalogSkill? _primaryTrade;
   bool _sameAsPermanent = false;
-  bool _missingCandidate = false;
-  late List<CandidateDocument> _documents;
+  bool _missingTradesperson = false;
+  bool _saving = false;
+  late List<TradespersonDocument> _documents;
   late List<WorkEntry> _workHistory;
 
   @override
@@ -55,12 +63,12 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
       }
     });
 
-    final existing = widget.candidateId == null
+    final existing = widget.tradespersonId == null
         ? null
-        : ref.read(candidatesProvider.notifier).findById(widget.candidateId!);
+        : ref.read(tradespeopleProvider.notifier).findById(widget.tradespersonId!);
 
     if (widget.isEditing && existing == null) {
-      _missingCandidate = true;
+      _missingTradesperson = true;
     }
 
     final personal = existing?.personal;
@@ -70,7 +78,7 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
     _phone = TextEditingController(text: personal?.phoneNumber ?? '');
     _gender = TextEditingController(text: personal?.gender ?? '');
     _dateOfBirth = TextEditingController(text: personal?.dateOfBirth ?? '');
-    _primaryTrade = TextEditingController(text: experience?.primaryTrade ?? '');
+    _idNumber = TextEditingController();
     _subSkills = TextEditingController(
       text: experience?.subSkills.join(', ') ?? '',
     );
@@ -84,8 +92,20 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
     _currentAddress = AddressControllers(initial: personal?.currentAddress);
     _sameAsPermanent = personal != null &&
         personal.permanentAddress.isSameAs(personal.currentAddress);
-    _documents = List<CandidateDocument>.from(existing?.documents ?? const []);
+    _documents = List<TradespersonDocument>.from(existing?.documents ?? const []);
     _workHistory = List<WorkEntry>.from(existing?.workHistory ?? const []);
+
+    if (existing?.primaryTradeId != null &&
+        existing!.experience.primaryTrade.isNotEmpty &&
+        existing.experience.primaryTrade != '—') {
+      _primaryTrade = CatalogSkill(
+        id: existing.primaryTradeId!,
+        name: existing.experience.primaryTrade,
+      );
+    }
+    if (existing?.idType != null && _idTypes.contains(existing!.idType)) {
+      _idType = existing.idType!;
+    }
   }
 
   @override
@@ -95,7 +115,7 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
     _phone.dispose();
     _gender.dispose();
     _dateOfBirth.dispose();
-    _primaryTrade.dispose();
+    _idNumber.dispose();
     _subSkills.dispose();
     _years.dispose();
     _wage.dispose();
@@ -142,25 +162,20 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
       },
     );
 
-    if (selected == null || !mounted) {
-      return;
-    }
+    if (selected == null || !mounted) return;
 
-    // TODO: Open camera/gallery picker, then upload the selected image.
-    // For now, store a local placeholder path so the UI can show a thumbnail.
+    // Document upload API is not wired yet; keep a local placeholder.
     setState(() {
       _documents = [
         ..._documents,
-        CandidateDocument(type: selected, imagePath: 'placeholder'),
+        TradespersonDocument(type: selected, imagePath: 'placeholder'),
       ];
     });
   }
 
   Future<void> _addWork() async {
     final entry = await showAddWorkSheet(context);
-    if (entry == null || !mounted) {
-      return;
-    }
+    if (entry == null || !mounted) return;
     setState(() {
       _workHistory = [..._workHistory, entry];
     });
@@ -180,9 +195,7 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
 
   bool get _isCurrentlyWorking {
     for (final entry in _workHistory) {
-      if (entry.isCurrent) {
-        return true;
-      }
+      if (entry.isCurrent) return true;
     }
     return false;
   }
@@ -198,8 +211,36 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
     return entries;
   }
 
-  void _save() {
-    if (!_formKey.currentState!.validate()) {
+  String? _dobToIso(String raw) {
+    final text = raw.trim();
+    final parts = text.split(RegExp(r'[/\-.]'));
+    if (parts.length == 3) {
+      final d = int.tryParse(parts[0]);
+      final m = int.tryParse(parts[1]);
+      final y = int.tryParse(parts[2]);
+      if (d != null && m != null && y != null) {
+        return DateTime(y, m, d).toIso8601String();
+      }
+    }
+    return DateTime.tryParse(text)?.toIso8601String();
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (widget.isEditing) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Editing is not available yet')),
+        );
+      return;
+    }
+
+    if (_primaryTrade == null) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('Select a primary trade')));
       return;
     }
 
@@ -207,72 +248,64 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
       _currentAddress.copyFrom(_permanentAddress);
     }
 
-    final skills = _subSkills.text
-        .split(',')
-        .map((skill) => skill.trim())
-        .where((skill) => skill.isNotEmpty)
-        .toList();
+    final years = int.tryParse(_years.text.trim()) ?? 0;
+    final wage = int.tryParse(_wage.text.trim()) ?? 0;
+    final permanent = _permanentAddress.toAddress();
+    final present = _currentAddress.toAddress();
 
-    final personal = CandidatePersonal(
-      fullName: _fullName.text.trim(),
-      phoneNumber: _phone.text.trim(),
-      gender: _gender.text.trim(),
-      dateOfBirth: _dateOfBirth.text.trim(),
-      permanentAddress: _permanentAddress.toAddress(),
-      currentAddress: _currentAddress.toAddress(),
-    );
-    final experience = CandidateExperience(
-      primaryTrade: _primaryTrade.text.trim(),
-      subSkills: skills,
-      yearsOfExperience: int.parse(_years.text.trim()),
-      dailyWageExpected: int.parse(_wage.text.trim()),
-    );
+    final body = <String, dynamic>{
+      'idType': _idType,
+      'idNumber': _idNumber.text.trim(),
+      'fullName': _fullName.text.trim(),
+      'gender': _gender.text.trim(),
+      'phoneNumber': _phone.text.trim(),
+      'dateOfBirth': _dobToIso(_dateOfBirth.text),
+      'permanentAddress': permanent.toApiJson(),
+      'presentSameAsPermanent': _sameAsPermanent,
+      if (!_sameAsPermanent) 'presentAddress': present.toApiJson(),
+      'dailyWageExpected': wage,
+      'primaryTrade': _primaryTrade!.id,
+      'skillIds': [_primaryTrade!.id],
+      'workExperiences': [
+        for (final entry in _workHistory)
+          if (entry.companyId != null && entry.companyId!.isNotEmpty)
+            {
+              'companyId': entry.companyId,
+              'yearsOfExperience': entry.yearsOfExperience ?? years,
+            },
+      ],
+    };
 
-    final notifier = ref.read(candidatesProvider.notifier);
-    if (widget.isEditing) {
-      final existing = notifier.findById(widget.candidateId!);
-      if (existing == null) {
-        return;
-      }
-      notifier.update(
-        existing.copyWith(
-          personal: personal,
-          experience: experience,
-          documents: List<CandidateDocument>.from(_documents),
-          workHistory: List<WorkEntry>.from(_workHistory),
-        ),
-      );
-      context.pop();
-      return;
+    setState(() => _saving = true);
+    try {
+      final created = await ref.read(tradespeopleProvider.notifier).create(body);
+      if (!mounted) return;
+      context.go('/tradesperson/${created.id}');
+    } catch (e) {
+      if (!mounted) return;
+      final message = e is ApiError ? e.error : e.toString();
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(message)));
+    } finally {
+      if (mounted) setState(() => _saving = false);
     }
-
-    final id = DateTime.now().millisecondsSinceEpoch.toString();
-    notifier.add(
-      Candidate(
-        id: id,
-        personal: personal,
-        experience: experience,
-        documents: List<CandidateDocument>.from(_documents),
-        workHistory: List<WorkEntry>.from(_workHistory),
-      ),
-    );
-    context.go('/candidate/$id');
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    if (_missingCandidate) {
+    if (_missingTradesperson) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.editCandidate)),
-        body: Center(child: Text(l10n.candidateNotFound)),
+        appBar: AppBar(title: Text(l10n.editTradesperson)),
+        body: Center(child: Text(l10n.tradespersonNotFound)),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.isEditing ? l10n.editCandidate : l10n.addCandidate,
+          widget.isEditing ? l10n.editTradesperson : l10n.addTradesperson,
         ),
         bottom: TabBar(
           controller: _tabController,
@@ -301,8 +334,14 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                 child: FilledButton(
-                  onPressed: _save,
-                  child: Text(l10n.saveCandidate),
+                  onPressed: _saving ? null : _save,
+                  child: _saving
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(l10n.saveTradesperson),
                 ),
               ),
             ),
@@ -344,9 +383,32 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
         const SizedBox(height: 12),
         TextFormField(
           controller: _dateOfBirth,
-          decoration: InputDecoration(labelText: l10n.dateOfBirth),
+          decoration: InputDecoration(
+            labelText: l10n.dateOfBirth,
+            hintText: 'DD/MM/YYYY',
+          ),
           validator: (value) => _required(value, l10n),
         ),
+        if (!widget.isEditing) ...[
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            initialValue: _idType,
+            decoration: const InputDecoration(labelText: 'ID type'),
+            items: [
+              for (final type in _idTypes)
+                DropdownMenuItem(value: type, child: Text(type)),
+            ],
+            onChanged: (value) {
+              if (value != null) setState(() => _idType = value);
+            },
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _idNumber,
+            decoration: const InputDecoration(labelText: 'ID number'),
+            validator: (value) => _required(value, l10n),
+          ),
+        ],
         const SizedBox(height: 16),
         Text(l10n.permanentAddress, style: textTheme.titleMedium),
         const SizedBox(height: 12),
@@ -432,10 +494,9 @@ class _CandidateFormPageState extends ConsumerState<CandidateFormPage>
           style: textTheme.bodySmall?.copyWith(color: muted),
         ),
         const SizedBox(height: 16),
-        TextFormField(
-          controller: _primaryTrade,
-          decoration: InputDecoration(labelText: l10n.primaryTrade),
-          validator: (value) => _required(value, l10n),
+        SkillSearchField(
+          initial: _primaryTrade,
+          onSelected: (skill) => setState(() => _primaryTrade = skill),
         ),
         const SizedBox(height: 12),
         TextFormField(

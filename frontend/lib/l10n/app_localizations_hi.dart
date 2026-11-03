@@ -16,7 +16,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get home => 'होम';
 
   @override
-  String get candidates => 'कारीगर';
+  String get tradespeople => 'कारीगर';
 
   @override
   String get profile => 'प्रोफ़ाइल';
@@ -34,30 +34,30 @@ class AppLocalizationsHi extends AppLocalizations {
   String get logIn => 'लॉग इन';
 
   @override
-  String get moreCandidates => 'और कारीगर';
+  String get moreTradespeople => 'और कारीगर';
 
   @override
-  String get recentCandidates => 'आपके पास के कारीगर।';
+  String get recentTradespeople => 'आपके पास के कारीगर।';
 
   @override
-  String candidatesCount(int count) {
+  String tradespeopleCount(int count) {
     return 'आपकी लिस्ट में $count लोग हैं।';
   }
 
   @override
-  String get candidate => 'कारीगर';
+  String get tradesperson => 'कारीगर';
 
   @override
-  String get candidateNotFound => 'कारीगर नहीं मिला।';
+  String get tradespersonNotFound => 'कारीगर नहीं मिला।';
 
   @override
-  String get addCandidate => 'कारीगर जोड़ें';
+  String get addTradesperson => 'कारीगर जोड़ें';
 
   @override
-  String get editCandidate => 'कारीगर बदलें';
+  String get editTradesperson => 'कारीगर बदलें';
 
   @override
-  String get saveCandidate => 'कारीगर सेव करें';
+  String get saveTradesperson => 'कारीगर सेव करें';
 
   @override
   String get readyToWork => 'काम के लिए तैयार';

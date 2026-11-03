@@ -3,95 +3,112 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/errors/api_error.dart';
 import '../theme/app_styles.dart';
 import 'availability_actions.dart';
 import 'availability_chip.dart';
-import 'candidate.dart';
-import 'candidates_provider.dart';
+import 'tradesperson.dart';
+import 'tradespeople_provider.dart';
 import 'document_ui.dart';
 import 'work_history_tile.dart';
 
-class CandidateDetailPage extends ConsumerWidget {
-  const CandidateDetailPage({super.key, required this.candidateId});
+class TradespersonDetailPage extends ConsumerWidget {
+  const TradespersonDetailPage({super.key, required this.tradespersonId});
 
-  final String candidateId;
+  final String tradespersonId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final candidates = ref.watch(candidatesProvider);
-    Candidate? candidate;
-    for (final item in candidates) {
-      if (item.id == candidateId) {
-        candidate = item;
-        break;
-      }
-    }
+    final asyncList = ref.watch(tradespeopleProvider);
     final textTheme = Theme.of(context).textTheme;
 
-    if (candidate == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text(l10n.candidate)),
-        body: Center(child: Text(l10n.candidateNotFound)),
-      );
-    }
+    return asyncList.when(
+      loading: () => Scaffold(
+        appBar: AppBar(title: Text(l10n.tradesperson)),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, _) {
+        final message = error is ApiError ? error.error : 'Something went wrong';
+        return Scaffold(
+          appBar: AppBar(title: Text(l10n.tradesperson)),
+          body: Center(child: Text(message)),
+        );
+      },
+      data: (tradespeople) {
+        Tradesperson? tradesperson;
+        for (final item in tradespeople) {
+          if (item.id == tradespersonId) {
+            tradesperson = item;
+            break;
+          }
+        }
 
-    final person = candidate;
-    final personal = person.personal;
+        if (tradesperson == null) {
+          return Scaffold(
+            appBar: AppBar(title: Text(l10n.tradesperson)),
+            body: Center(child: Text(l10n.tradespersonNotFound)),
+          );
+        }
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(personal.fullName),
-          actions: [
-            TextButton(
-              onPressed: () => context.push('/candidate/$candidateId/edit'),
-              child: Text(l10n.editCandidate),
+        final person = tradesperson;
+        final personal = person.personal;
+
+        return DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(personal.fullName),
+              actions: [
+                TextButton(
+                  onPressed: () => context.push('/tradesperson/$tradespersonId/edit'),
+                  child: Text(l10n.editTradesperson),
+                ),
+              ],
             ),
-          ],
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-              child: Card(
-                child: Padding(
-                  padding: AppStyles.cardPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(personal.fullName, style: textTheme.headlineSmall),
-                      const SizedBox(height: 8),
-                      AvailabilityChip(
-                        isAvailable: !person.isCurrentlyWorking,
-                        onTap: () => changeAvailability(context, ref, person),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                  child: Card(
+                    child: Padding(
+                      padding: AppStyles.cardPadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(personal.fullName, style: textTheme.headlineSmall),
+                          const SizedBox(height: 8),
+                          AvailabilityChip(
+                            isAvailable: person.isReadyToWork,
+                            onTap: () => changeAvailability(context, ref, person),
+                          ),
+                        ],
                       ),
+                    ),
+                  ),
+                ),
+                TabBar(
+                  tabs: [
+                    Tab(text: l10n.personal),
+                    Tab(text: l10n.documents),
+                    Tab(text: l10n.experience),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      _PersonalTab(personal: personal),
+                      _DocumentsTab(documents: person.documents),
+                      _ExperienceTab(tradesperson: person),
                     ],
                   ),
                 ),
-              ),
-            ),
-            TabBar(
-              tabs: [
-                Tab(text: l10n.personal),
-                Tab(text: l10n.documents),
-                Tab(text: l10n.experience),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _PersonalTab(personal: personal),
-                  _DocumentsTab(documents: person.documents),
-                  _ExperienceTab(candidate: person),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -99,7 +116,7 @@ class CandidateDetailPage extends ConsumerWidget {
 class _PersonalTab extends StatelessWidget {
   const _PersonalTab({required this.personal});
 
-  final CandidatePersonal personal;
+  final TradespersonPersonal personal;
 
   @override
   Widget build(BuildContext context) {
@@ -141,15 +158,15 @@ class _PersonalTab extends StatelessWidget {
 }
 
 class _ExperienceTab extends StatelessWidget {
-  const _ExperienceTab({required this.candidate});
+  const _ExperienceTab({required this.tradesperson});
 
-  final Candidate candidate;
+  final Tradesperson tradesperson;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final experience = candidate.experience;
-    final history = candidate.sortedWorkHistory;
+    final experience = tradesperson.experience;
+    final history = tradesperson.sortedWorkHistory;
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
@@ -160,7 +177,9 @@ class _ExperienceTab extends StatelessWidget {
             _InfoRow(label: l10n.primaryTrade, value: experience.primaryTrade),
             _InfoRow(
               label: l10n.subSkills,
-              value: experience.subSkills.join(', '),
+              value: experience.subSkills.isEmpty
+                  ? '—'
+                  : experience.subSkills.join(', '),
             ),
             _InfoRow(
               label: l10n.experience,
@@ -190,7 +209,7 @@ class _ExperienceTab extends StatelessWidget {
 class _DocumentsTab extends StatelessWidget {
   const _DocumentsTab({required this.documents});
 
-  final List<CandidateDocument> documents;
+  final List<TradespersonDocument> documents;
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +234,7 @@ class _DocumentsTab extends StatelessWidget {
 class _DocumentTile extends StatelessWidget {
   const _DocumentTile({required this.document});
 
-  final CandidateDocument document;
+  final TradespersonDocument document;
 
   @override
   Widget build(BuildContext context) {

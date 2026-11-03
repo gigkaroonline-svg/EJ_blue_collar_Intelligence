@@ -4,12 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/errors/api_error.dart';
+import '../features/auth/presentation/auth_notifier.dart';
 import '../l10n/language_picker.dart';
 import 'auth_fields.dart';
-import 'auth_session.dart';
 import 'auth_validators.dart';
-
-enum SignInMethod { password, otp }
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -21,56 +20,85 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _otpController = TextEditingController();
 
-  SignInMethod _method = SignInMethod.password;
-  bool _obscurePassword = true;
   bool _otpSent = false;
 
   @override
   void dispose() {
     _phoneController.dispose();
-    _passwordController.dispose();
     _otpController.dispose();
     super.dispose();
   }
 
-  void _signIn() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    final session = ref
-        .read(authSessionProvider.notifier)
-        .signIn(_phoneController.text.trim());
-    context.go(session.isPending ? '/pending' : '/home');
+  void _showError(Object error) {
+    final message = error is ApiError ? error.error : error.toString();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _sendOtp() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    setState(() => _otpSent = true);
-  }
+  Future<void> _sendOtp() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  void _openForgotPassword() {
     final phone = _phoneController.text.trim();
-    context.push(
-      phone.isEmpty ? '/forgot-password' : '/forgot-password?phone=$phone',
-    );
+    try {
+      await ref.read(authNotifierProvider.notifier).sendOtp(phone, 'login');
+      if (!mounted) return;
+      setState(() => _otpSent = true);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.newOtpReady)));
+    } catch (e) {
+      _showError(e);
+    }
+  }
+
+  Future<void> _verifyOtp() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final phone = _phoneController.text.trim();
+    final otp = _otpController.text.trim();
+    try {
+      await ref.read(authNotifierProvider.notifier).submitOtp(
+            phoneNumber: phone,
+            otp: otp,
+            purpose: 'login',
+          );
+      if (!mounted) return;
+      _navigateForAuthState(ref.read(authNotifierProvider));
+    } catch (e) {
+      _showError(e);
+    }
+  }
+
+  void _navigateForAuthState(AuthState state) {
+    switch (state) {
+      case AwaitingApproval():
+        context.go('/pending');
+      case Rejected():
+        context.go('/rejected');
+      case Authenticated():
+        context.go('/home');
+      default:
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState is Loading;
 
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             tooltip: l10n.language,
-            onPressed: () => showLanguagePicker(context, ref),
+            onPressed: isLoading ? null : () => showLanguagePicker(context, ref),
             icon: const Icon(Icons.language),
           ),
         ],
@@ -96,7 +124,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton(
-                    onPressed: () => context.go('/signup'),
+                    onPressed: isLoading ? null : () => context.go('/signup'),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
                       maximumSize: const Size.fromHeight(52),
@@ -134,96 +162,61 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               const SizedBox(height: 24),
               PhoneField(controller: _phoneController),
               const SizedBox(height: 16),
-              SegmentedButton<SignInMethod>(
-                segments: [
-                  ButtonSegment(
-                    value: SignInMethod.password,
-                    label: Text(l10n.password),
-                    icon: const Icon(Icons.lock_outline),
+              if (!_otpSent)
+                FilledButton(
+                  onPressed: isLoading ? null : _sendOtp,
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(l10n.sendOtp),
+                )
+              else ...[
+                Text(
+                  l10n.enterOtpForPhone(_phoneController.text.trim()),
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  ButtonSegment(
-                    value: SignInMethod.otp,
-                    label: Text(l10n.otp),
-                    icon: const Icon(Icons.sms_outlined),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  key: const Key('otp-field'),
+                  controller: _otpController,
+                  enabled: !isLoading,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(6),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: l10n.otp,
+                    prefixIcon: const Icon(Icons.pin_outlined),
                   ),
-                ],
-                selected: {_method},
-                onSelectionChanged: (selection) {
-                  setState(() {
-                    _method = selection.first;
-                    if (_method == SignInMethod.password) {
-                      _otpSent = false;
-                      _otpController.clear();
-                    }
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              if (_method == SignInMethod.password) ...[
-                PasswordField(
-                  controller: _passwordController,
-                  label: l10n.password,
-                  fieldKey: const Key('password-field'),
-                  obscureText: _obscurePassword,
-                  autofillHints: const [AutofillHints.password],
-                  onToggleVisibility: () {
-                    setState(() => _obscurePassword = !_obscurePassword);
+                  validator: (value) => validateOtp(value, l10n),
+                  onFieldSubmitted: (_) {
+                    if (!isLoading) _verifyOtp();
                   },
-                  validator: (value) => validatePassword(value, l10n),
                 ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: _openForgotPassword,
-                    child: Text(l10n.forgotPassword),
+                    onPressed: isLoading ? null : _sendOtp,
+                    child: Text(l10n.resendOtp),
                   ),
                 ),
-                FilledButton(onPressed: _signIn, child: Text(l10n.signIn)),
-              ] else ...[
-                if (_otpSent) ...[
-                  Text(
-                    l10n.enterOtpForPhone(_phoneController.text.trim()),
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    key: const Key('otp-field'),
-                    controller: _otpController,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(6),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: l10n.otp,
-                      prefixIcon: const Icon(Icons.pin_outlined),
-                    ),
-                    validator: (value) => validateOtp(value, l10n),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        _otpController.clear();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.newOtpReady)),
-                        );
-                      },
-                      child: Text(l10n.resendOtp),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: _signIn,
-                    child: Text(l10n.verifyOtp),
-                  ),
-                ] else
-                  FilledButton(
-                    onPressed: _sendOtp,
-                    child: Text(l10n.sendOtp),
-                  ),
+                FilledButton(
+                  onPressed: isLoading ? null : _verifyOtp,
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(l10n.verifyOtp),
+                ),
               ],
             ],
           ),

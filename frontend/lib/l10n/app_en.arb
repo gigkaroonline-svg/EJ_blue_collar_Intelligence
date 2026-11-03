@@ -2,27 +2,27 @@
   "@@locale": "en",
   "appName": "EarlyJobs",
   "home": "Home",
-  "candidates": "Tradespeople",
+  "tradespeople": "Tradespeople",
   "profile": "Profile",
   "signOut": "Sign out",
   "signIn": "Sign in",
   "signUp": "Sign up",
   "logIn": "Log in",
-  "moreCandidates": "More tradespeople",
-  "recentCandidates": "Tradespeople near you.",
-  "candidatesCount": "{count} people in your list.",
-  "@candidatesCount": {
+  "moreTradespeople": "More tradespeople",
+  "recentTradespeople": "Tradespeople near you.",
+  "tradespeopleCount": "{count} people in your list.",
+  "@tradespeopleCount": {
     "placeholders": {
       "count": {
         "type": "int"
       }
     }
   },
-  "candidate": "Tradesperson",
-  "candidateNotFound": "Tradesperson not found.",
-  "addCandidate": "Add tradesperson",
-  "editCandidate": "Edit tradesperson",
-  "saveCandidate": "Save tradesperson",
+  "tradesperson": "Tradesperson",
+  "tradespersonNotFound": "Tradesperson not found.",
+  "addTradesperson": "Add tradesperson",
+  "editTradesperson": "Edit tradesperson",
+  "saveTradesperson": "Save tradesperson",
   "readyToWork": "Available for work",
   "ready": "Available",
   "busy": "On a job",
@@ -66,7 +66,7 @@
   "endThisWork": "End this work",
   "noWorkHistory": "No work added yet.",
   "now": "Now",
-  "availabilityHint": "Tap Available / On a job to change it.",
+  "availabilityHint": "Toggle Available / On a job to change it.",
   "leaveJobTitle": "Ready to leave?",
   "leaveJobBody": "Was working at {company}. Mark as Available?",
   "@leaveJobBody": {

@@ -31,7 +31,7 @@ class MainShell extends StatelessWidget {
           NavigationDestination(
             icon: const Icon(Icons.groups_outlined),
             selectedIcon: const Icon(Icons.groups),
-            label: l10n.candidates,
+            label: l10n.tradespeople,
           ),
           NavigationDestination(
             icon: const Icon(Icons.person_outline),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
-import 'candidate.dart';
+import 'tradesperson.dart';
 
 class AddressControllers {
   AddressControllers({Address? initial})

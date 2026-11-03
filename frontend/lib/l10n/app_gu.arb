@@ -2,27 +2,27 @@
   "@@locale": "gu",
   "appName": "EarlyJobs",
   "home": "હોમ",
-  "candidates": "કારીગરો",
+  "tradespeople": "કારીગરો",
   "profile": "પ્રોફાઇલ",
   "signOut": "સાઇન આઉટ",
   "signIn": "સાઇન ઇન",
   "signUp": "સાઇન અપ",
   "logIn": "લૉગ ઇન",
-  "moreCandidates": "વધુ કારીગરો",
-  "recentCandidates": "તમારી નજીકના કારીગરો.",
-  "candidatesCount": "તમારી યાદીમાં {count} લોકો છે.",
-  "@candidatesCount": {
+  "moreTradespeople": "વધુ કારીગરો",
+  "recentTradespeople": "તમારી નજીકના કારીગરો.",
+  "tradespeopleCount": "તમારી યાદીમાં {count} લોકો છે.",
+  "@tradespeopleCount": {
     "placeholders": {
       "count": {
         "type": "int"
       }
     }
   },
-  "candidate": "કારીગર",
-  "candidateNotFound": "કારીગર મળ્યો નથી.",
-  "addCandidate": "કારીગર ઉમેરો",
-  "editCandidate": "કારીગર બદલો",
-  "saveCandidate": "કારીગર સાચવો",
+  "tradesperson": "કારીગર",
+  "tradespersonNotFound": "કારીગર મળ્યો નથી.",
+  "addTradesperson": "કારીગર ઉમેરો",
+  "editTradesperson": "કારીગર બદલો",
+  "saveTradesperson": "કારીગર સાચવો",
   "readyToWork": "કામ માટે તૈયાર",
   "ready": "તૈયાર",
   "busy": "અત્યારે કામ પર",

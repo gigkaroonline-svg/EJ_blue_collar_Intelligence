@@ -71,7 +71,7 @@ CREATE TABLE gov_ngo_profiles (
   jurisdiction_level  varchar(50)
 );
 
-CREATE TABLE laborers (
+CREATE TABLE tradespeople (
   id               uuid PRIMARY KEY,
   id_type          varchar(30) NOT NULL,
   identity_hash    char(64) NOT NULL,
@@ -101,12 +101,12 @@ CREATE TABLE laborers (
   created_at       timestamptz NOT NULL,
   updated_at       timestamptz NOT NULL
 );
-CREATE UNIQUE INDEX idx_laborers_identity ON laborers (id_type, identity_hash);
-CREATE INDEX idx_laborers_region ON laborers (perm_state, perm_district);
+CREATE UNIQUE INDEX idx_tradespeople_identity ON tradespeople (id_type, identity_hash);
+CREATE INDEX idx_tradespeople_region ON tradespeople (perm_state, perm_district);
 
-CREATE TABLE labor_documents (
+CREATE TABLE tradesperson_documents (
   id                 uuid PRIMARY KEY,
-  laborer_id         uuid NOT NULL REFERENCES laborers(id),
+  tradesperson_id    uuid NOT NULL REFERENCES tradespeople(id),
   primary_id_front_url text,
   primary_id_back_url  text,
   pan_card_url       text,
@@ -114,9 +114,9 @@ CREATE TABLE labor_documents (
   created_at         timestamptz NOT NULL
 );
 
-CREATE TABLE labor_work_experiences (
+CREATE TABLE tradesperson_work_experiences (
   id                    uuid PRIMARY KEY,
-  laborer_id            uuid NOT NULL REFERENCES laborers(id),
+  tradesperson_id       uuid NOT NULL REFERENCES tradespeople(id),
   primary_trade         varchar(100) NOT NULL,
   sub_skills            text,
   years_of_experience   int,
@@ -124,13 +124,13 @@ CREATE TABLE labor_work_experiences (
   created_at            timestamptz NOT NULL
 );
 
-CREATE TABLE labor_availability_logs (
+CREATE TABLE tradesperson_availability_logs (
   id                    uuid PRIMARY KEY,
-  laborer_id            uuid NOT NULL REFERENCES laborers(id),
+  tradesperson_id       uuid NOT NULL REFERENCES tradespeople(id),
   previous_status       boolean,
   new_status            boolean NOT NULL,
   updated_by_partner_id uuid REFERENCES sourcing_partners(id),
   updated_by_role       varchar(20),
   created_at            timestamptz NOT NULL
 );
-CREATE INDEX idx_avail_laborer_time ON labor_availability_logs (laborer_id, created_at);
+CREATE INDEX idx_avail_tradesperson_time ON tradesperson_availability_logs (tradesperson_id, created_at);

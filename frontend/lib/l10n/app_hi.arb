@@ -2,27 +2,27 @@
   "@@locale": "hi",
   "appName": "EarlyJobs",
   "home": "होम",
-  "candidates": "कारीगर",
+  "tradespeople": "कारीगर",
   "profile": "प्रोफ़ाइल",
   "signOut": "साइन आउट",
   "signIn": "साइन इन",
   "signUp": "साइन अप",
   "logIn": "लॉग इन",
-  "moreCandidates": "और कारीगर",
-  "recentCandidates": "आपके पास के कारीगर।",
-  "candidatesCount": "आपकी लिस्ट में {count} लोग हैं।",
-  "@candidatesCount": {
+  "moreTradespeople": "और कारीगर",
+  "recentTradespeople": "आपके पास के कारीगर।",
+  "tradespeopleCount": "आपकी लिस्ट में {count} लोग हैं।",
+  "@tradespeopleCount": {
     "placeholders": {
       "count": {
         "type": "int"
       }
     }
   },
-  "candidate": "कारीगर",
-  "candidateNotFound": "कारीगर नहीं मिला।",
-  "addCandidate": "कारीगर जोड़ें",
-  "editCandidate": "कारीगर बदलें",
-  "saveCandidate": "कारीगर सेव करें",
+  "tradesperson": "कारीगर",
+  "tradespersonNotFound": "कारीगर नहीं मिला।",
+  "addTradesperson": "कारीगर जोड़ें",
+  "editTradesperson": "कारीगर बदलें",
+  "saveTradesperson": "कारीगर सेव करें",
   "readyToWork": "काम के लिए तैयार",
   "ready": "तैयार",
   "busy": "अभी काम पर",

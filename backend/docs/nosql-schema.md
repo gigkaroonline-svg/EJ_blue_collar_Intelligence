@@ -1,4 +1,4 @@
-# NoSQL (MongoDB) schema: 11 SQL tables → 4 collections
+# NoSQL (MongoDB) schema
 
 ## Rules (kept simple)
 
@@ -10,7 +10,7 @@
 ## Collections
 
 ```
-laborers                       ← laborers + labor_documents + labor_work_experiences
+tradespeople                   ← Tradesperson + embedded documents + workExperiences
   idType, identityHash, maskedIdentity, panNumber
   fullName, dateOfBirth, gender, phoneNumber
   permanentAddress {line, villageOrTown, district, state, pincode}
@@ -19,17 +19,18 @@ laborers                       ← laborers + labor_documents + labor_work_exper
   registeredBy {partnerId → sourcingpartners, role}
   registrationLocation  GeoJSON Point [lng, lat]
   documents {primaryIdFrontUrl, primaryIdBackUrl, panCardUrl, photoUrl}
-  workExperiences[] {primaryTrade, subSkills[], yearsOfExperience, dailyWageExpected}
+  dailyWageExpected, primaryTrade → skills, skillIds[] → skills
+  workExperiences[] {companyId → companies, skillId?, yearsOfExperience, addedBy}
   createdAt, updatedAt
 
-laboravailabilitylogs          ← labor_availability_logs (append-only)
-  laborerId → laborers, previousStatus, newStatus
+tradesperson_availability_logs ← TradespersonAvailabilityLog (append-only)
+  tradespersonId → tradespeople, previousStatus, newStatus
   updatedBy {partnerId, role}, createdAt
 
 sourcingpartners               ← sourcing_partners + csc/cmc/anganwadi/gov_ngo profiles
   role: csc | cmc | anganwadi | gov_ngo
   fullName, phoneNumber (unique), email (unique), passwordHash (hidden by default)
-  status: pending | approved        (same as frontend AccountStatus)
+  status: pending | accepted | rejected
   state, district, subDistrict, pincode
   profile: role-specific fields
     csc       {vleId, kioskName, kioskAddress, certificateDocUrl, location}
@@ -40,22 +41,26 @@ sourcingpartners               ← sourcing_partners + csc/cmc/anganwadi/gov_ngo
 partnerotps                    ← sourcing_partner_otps
   phoneNumber, purpose, otpHmac, attempts, maxAttempts, isUsed
   expiresAt   (TTL index: Mongo deletes expired docs)
+
+admins, companies, skills      ← catalog + review workflow
 ```
 
 ## Indexes
 
 | Collection | Index |
 |---|---|
-| laborers | `{idType, identityHash}` unique · `{permanentAddress.state, .district}` · `{isReadyToWork, workExperiences.primaryTrade}` · `{registeredBy.partnerId}` |
-| laboravailabilitylogs | `{laborerId, createdAt: -1}` |
+| tradespeople | `{idType, identityHash}` unique · `{permanentAddress.state, .district}` · `{isReadyToWork, skillIds}` · `{skillIds}` · `{workExperiences.companyId}` · `{registeredBy.partnerId}` |
+| tradesperson_availability_logs | `{tradespersonId, createdAt: -1}` |
 | sourcingpartners | `phoneNumber`, `email` unique · `{role, state, district}` |
 | partnerotps | `{phoneNumber, purpose, isUsed}` · TTL on `expiresAt` |
+| skills | `{searchTerms}` unique (multikey) |
+| companies | `{nameNormalized}` unique |
 
 Add a `2dsphere` index on `registrationLocation` when the first "near me" query is built.
 
 ## Trade-offs
 
-- No foreign-key enforcement: partner/laborer references are checked in services.
+- No foreign-key enforcement: partner/tradesperson references are checked in services.
 - `partner.profile` is not schema-validated; validate per role in the signup service.
 - `registeredBy.role` is a copy; roles don't change, so it's safe.
 - Enum values for `idType`, `gender`, `purpose` are free strings until confirmed.

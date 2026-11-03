@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
-import 'candidate.dart';
+import 'tradesperson.dart';
 
 IconData documentTypeIcon(DocumentType type) {
   switch (type) {

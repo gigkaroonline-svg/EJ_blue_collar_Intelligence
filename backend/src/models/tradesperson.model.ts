@@ -6,13 +6,16 @@ const address = new Schema(
 );
 
 const workExperience = new Schema({
-  primaryTrade: { type: String, required: true },
-  subSkills: [String],
+  companyId: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
+  skillId: { type: Schema.Types.ObjectId, ref: 'Skill' },
   yearsOfExperience: Number,
-  dailyWageExpected: Number,
+  addedBy: {
+    partnerId: { type: Schema.Types.ObjectId, ref: 'SourcingPartner' },
+    role: String,
+  },
 });
 
-const laborerSchema = new Schema(
+const tradespersonSchema = new Schema(
   {
     idType: { type: String, required: true },
     identityHash: { type: String, required: true },
@@ -30,6 +33,10 @@ const laborerSchema = new Schema(
 
     isReadyToWork: { type: Boolean, default: false },
     statusUpdatedAt: Date,
+
+    dailyWageExpected: Number,
+    primaryTrade: { type: Schema.Types.ObjectId, ref: 'Skill' },
+    skillIds: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
 
     registeredBy: {
       partnerId: { type: Schema.Types.ObjectId, ref: 'SourcingPartner', required: true },
@@ -49,9 +56,11 @@ const laborerSchema = new Schema(
   { timestamps: true },
 );
 
-laborerSchema.index({ idType: 1, identityHash: 1 }, { unique: true });
-laborerSchema.index({ 'permanentAddress.state': 1, 'permanentAddress.district': 1 });
-laborerSchema.index({ isReadyToWork: 1, 'workExperiences.primaryTrade': 1 });
-laborerSchema.index({ 'registeredBy.partnerId': 1 });
+tradespersonSchema.index({ idType: 1, identityHash: 1 }, { unique: true });
+tradespersonSchema.index({ 'permanentAddress.state': 1, 'permanentAddress.district': 1 });
+tradespersonSchema.index({ isReadyToWork: 1, skillIds: 1 });
+tradespersonSchema.index({ skillIds: 1 });
+tradespersonSchema.index({ 'workExperiences.companyId': 1 });
+tradespersonSchema.index({ 'registeredBy.partnerId': 1 });
 
-export const Laborer = model('Laborer', laborerSchema);
+export const Tradesperson = model('Tradesperson', tradespersonSchema, 'tradespeople');

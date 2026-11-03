@@ -4,24 +4,24 @@ import 'package:go_router/go_router.dart';
 
 import 'availability_actions.dart';
 import 'availability_chip.dart';
-import 'candidate.dart';
+import 'tradesperson.dart';
 
-class CandidateTile extends ConsumerWidget {
-  const CandidateTile({super.key, required this.candidate});
+class TradespersonTile extends ConsumerWidget {
+  const TradespersonTile({super.key, required this.tradesperson});
 
-  final Candidate candidate;
+  final Tradesperson tradesperson;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final personal = candidate.personal;
-    final experience = candidate.experience;
+    final personal = tradesperson.personal;
+    final experience = tradesperson.experience;
     final current = personal.currentAddress;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        onTap: () => context.push('/candidate/${candidate.id}'),
+        onTap: () => context.push('/tradesperson/${tradesperson.id}'),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: Text(personal.fullName, style: textTheme.titleMedium),
         subtitle: Text(
@@ -30,8 +30,8 @@ class CandidateTile extends ConsumerWidget {
         ),
         isThreeLine: true,
         trailing: AvailabilityChip(
-          isAvailable: !candidate.isCurrentlyWorking,
-          onTap: () => changeAvailability(context, ref, candidate),
+          isAvailable: tradesperson.isReadyToWork,
+          onTap: () => changeAvailability(context, ref, tradesperson),
         ),
       ),
     );

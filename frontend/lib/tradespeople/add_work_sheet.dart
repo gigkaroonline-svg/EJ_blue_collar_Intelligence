@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
-import 'candidate.dart';
+import '../features/catalog/models/catalog_company.dart';
+import '../features/catalog/presentation/company_search_field.dart';
+import 'tradesperson.dart';
 import 'work_date_format.dart';
 
 Future<WorkEntry?> showAddWorkSheet(BuildContext context) {
@@ -12,26 +15,24 @@ Future<WorkEntry?> showAddWorkSheet(BuildContext context) {
   );
 }
 
-class _AddWorkSheet extends StatefulWidget {
+class _AddWorkSheet extends ConsumerStatefulWidget {
   const _AddWorkSheet();
 
   @override
-  State<_AddWorkSheet> createState() => _AddWorkSheetState();
+  ConsumerState<_AddWorkSheet> createState() => _AddWorkSheetState();
 }
 
-class _AddWorkSheetState extends State<_AddWorkSheet> {
+class _AddWorkSheetState extends ConsumerState<_AddWorkSheet> {
   final _formKey = GlobalKey<FormState>();
-  final _customCompany = TextEditingController();
   final _trade = TextEditingController();
 
-  String? _selectedCompanyId;
+  CatalogCompany? _selectedCompany;
   bool _stillWorking = true;
   DateTime _startDate = DateTime.now();
   DateTime? _endDate;
 
   @override
   void dispose() {
-    _customCompany.dispose();
     _trade.dispose();
     super.dispose();
   }
@@ -44,9 +45,7 @@ class _AddWorkSheetState extends State<_AddWorkSheet> {
       firstDate: DateTime(1980),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (picked == null) {
-      return;
-    }
+    if (picked == null) return;
     setState(() {
       if (isStart) {
         _startDate = picked;
@@ -57,26 +56,18 @@ class _AddWorkSheetState extends State<_AddWorkSheet> {
   }
 
   void _submit() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    final customName = _customCompany.text.trim();
-    final useCustom = customName.isNotEmpty;
-    if (!useCustom && _selectedCompanyId == null) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
+    if (_selectedCompany == null) return;
 
     final entry = WorkEntry(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      companyId: useCustom ? null : _selectedCompanyId,
-      companyName: useCustom ? customName : null,
+      companyId: _selectedCompany!.id,
+      companyName: _selectedCompany!.name,
       trade: _trade.text.trim().isEmpty ? null : _trade.text.trim(),
       startDate: _startDate,
       endDate: _stillWorking ? null : (_endDate ?? DateTime.now()),
     );
 
-    // TODO: Persist this work entry through the API when the backend is ready.
     Navigator.pop(context, entry);
   }
 
@@ -84,7 +75,6 @@ class _AddWorkSheetState extends State<_AddWorkSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    final customName = _customCompany.text.trim();
 
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomInset),
@@ -97,41 +87,22 @@ class _AddWorkSheetState extends State<_AddWorkSheet> {
             children: [
               Text(l10n.addWork, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
-              Text(l10n.company, style: Theme.of(context).textTheme.titleSmall),
-              for (final company in seedCompanies)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(company.name),
-                  leading: Icon(
-                    _selectedCompanyId == company.id && customName.isEmpty
-                        ? Icons.check_circle
-                        : Icons.circle_outlined,
-                  ),
-                  enabled: customName.isEmpty,
-                  onTap: customName.isNotEmpty
-                      ? null
-                      : () {
-                          setState(() => _selectedCompanyId = company.id);
-                        },
-                ),
-              TextFormField(
-                controller: _customCompany,
-                decoration: InputDecoration(labelText: l10n.company),
-                onChanged: (value) {
-                  setState(() {
-                    if (value.trim().isNotEmpty) {
-                      _selectedCompanyId = null;
-                    }
-                  });
-                },
-                validator: (value) {
-                  if ((value == null || value.trim().isEmpty) &&
-                      _selectedCompanyId == null) {
-                    return l10n.requiredField;
-                  }
-                  return null;
+              CompanySearchField(
+                onSelected: (company) {
+                  setState(() => _selectedCompany = company);
                 },
               ),
+              if (_selectedCompany == null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    l10n.requiredField,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _trade,

@@ -14,7 +14,10 @@ const partnerSchema = new Schema(
     phoneNumber: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     passwordHash: { type: String, select: false },
-    status: { type: String, enum: ['pending', 'approved'], default: 'pending' }, // matches frontend AccountStatus
+    status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+    reviewedBy: { type: Schema.Types.ObjectId, ref: 'Admin' },
+    reviewedAt: Date,
+    rejectionReason: String,
     state: String,
     district: String,
     subDistrict: String,

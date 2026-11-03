@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import '../auth/forgot_password_page.dart';
 import '../auth/login_page.dart';
 import '../auth/pending_approval_page.dart';
+import '../auth/rejected_page.dart';
 import '../auth/signup_page.dart';
-import '../candidates/candidate_detail_page.dart';
-import '../candidates/candidate_form_page.dart';
-import '../candidates/company_detail_page.dart';
-import '../home/candidates_page.dart';
+import '../tradespeople/tradesperson_detail_page.dart';
+import '../tradespeople/tradesperson_form_page.dart';
+import '../tradespeople/company_detail_page.dart';
+import '../home/tradespeople_page.dart';
 import '../home/home_tab.dart';
 import '../home/main_shell.dart';
 import '../home/profile_tab.dart';
@@ -28,6 +29,10 @@ GoRouter createAppRouter() {
       GoRoute(
         path: '/pending',
         builder: (context, state) => const PendingApprovalPage(),
+      ),
+      GoRoute(
+        path: '/rejected',
+        builder: (context, state) => const RejectedPage(),
       ),
       GoRoute(
         path: '/forgot-password',
@@ -52,8 +57,8 @@ GoRouter createAppRouter() {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/candidates',
-                builder: (context, state) => const CandidatesPage(),
+                path: '/tradespeople',
+                builder: (context, state) => const TradespeoplePage(),
               ),
             ],
           ),
@@ -68,25 +73,25 @@ GoRouter createAppRouter() {
         ],
       ),
       GoRoute(
-        path: '/candidates-list',
-        builder: (context, state) => const CandidatesPage(showAppBar: true),
+        path: '/tradespeople-list',
+        builder: (context, state) => const TradespeoplePage(showAppBar: true),
       ),
       GoRoute(
-        path: '/candidate/new',
-        builder: (context, state) => const CandidateFormPage(),
+        path: '/tradesperson/new',
+        builder: (context, state) => const TradespersonFormPage(),
       ),
       GoRoute(
-        path: '/candidate/:id/edit',
+        path: '/tradesperson/:id/edit',
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
-          return CandidateFormPage(candidateId: id);
+          return TradespersonFormPage(tradespersonId: id);
         },
       ),
       GoRoute(
-        path: '/candidate/:id',
+        path: '/tradesperson/:id',
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
-          return CandidateDetailPage(candidateId: id);
+          return TradespersonDetailPage(tradespersonId: id);
         },
       ),
       GoRoute(

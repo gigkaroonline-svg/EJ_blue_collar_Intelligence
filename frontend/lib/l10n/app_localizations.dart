@@ -112,11 +112,11 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
-  /// No description provided for @candidates.
+  /// No description provided for @tradespeople.
   ///
   /// In en, this message translates to:
   /// **'Tradespeople'**
-  String get candidates;
+  String get tradespeople;
 
   /// No description provided for @profile.
   ///
@@ -148,53 +148,53 @@ abstract class AppLocalizations {
   /// **'Log in'**
   String get logIn;
 
-  /// No description provided for @moreCandidates.
+  /// No description provided for @moreTradespeople.
   ///
   /// In en, this message translates to:
   /// **'More tradespeople'**
-  String get moreCandidates;
+  String get moreTradespeople;
 
-  /// No description provided for @recentCandidates.
+  /// No description provided for @recentTradespeople.
   ///
   /// In en, this message translates to:
   /// **'Tradespeople near you.'**
-  String get recentCandidates;
+  String get recentTradespeople;
 
-  /// No description provided for @candidatesCount.
+  /// No description provided for @tradespeopleCount.
   ///
   /// In en, this message translates to:
   /// **'{count} people in your list.'**
-  String candidatesCount(int count);
+  String tradespeopleCount(int count);
 
-  /// No description provided for @candidate.
+  /// No description provided for @tradesperson.
   ///
   /// In en, this message translates to:
   /// **'Tradesperson'**
-  String get candidate;
+  String get tradesperson;
 
-  /// No description provided for @candidateNotFound.
+  /// No description provided for @tradespersonNotFound.
   ///
   /// In en, this message translates to:
   /// **'Tradesperson not found.'**
-  String get candidateNotFound;
+  String get tradespersonNotFound;
 
-  /// No description provided for @addCandidate.
+  /// No description provided for @addTradesperson.
   ///
   /// In en, this message translates to:
   /// **'Add tradesperson'**
-  String get addCandidate;
+  String get addTradesperson;
 
-  /// No description provided for @editCandidate.
+  /// No description provided for @editTradesperson.
   ///
   /// In en, this message translates to:
   /// **'Edit tradesperson'**
-  String get editCandidate;
+  String get editTradesperson;
 
-  /// No description provided for @saveCandidate.
+  /// No description provided for @saveTradesperson.
   ///
   /// In en, this message translates to:
   /// **'Save tradesperson'**
-  String get saveCandidate;
+  String get saveTradesperson;
 
   /// No description provided for @readyToWork.
   ///
@@ -457,7 +457,7 @@ abstract class AppLocalizations {
   /// No description provided for @availabilityHint.
   ///
   /// In en, this message translates to:
-  /// **'Tap Available / On a job to change it.'**
+  /// **'Toggle Available / On a job to change it.'**
   String get availabilityHint;
 
   /// No description provided for @leaveJobTitle.
