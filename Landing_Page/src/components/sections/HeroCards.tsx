@@ -13,16 +13,6 @@ export function HeroCards() {
             {profile.title}
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-rm-muted">{profile.body}</p>
-          <ul className="mt-4 flex flex-wrap gap-1.5">
-            {profile.tags.map((tag) => (
-              <li
-                key={tag}
-                className="rounded-full bg-white/90 px-2.5 py-1 font-mono text-[0.6rem] uppercase tracking-wider text-rm-blue"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
         </article>
 
         <article className="hero-float relative overflow-hidden rounded-3xl border border-white/60 bg-gradient-to-br from-rm-blue to-rm-blue-deep p-4 text-white shadow-md">
