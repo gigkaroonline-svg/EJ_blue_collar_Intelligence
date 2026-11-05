@@ -3,8 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/errors/api_error.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../features/uploads/data/uploads_repository.dart';
+import '../../../workers/worker_filters.dart';
+import '../../../workers/workers_provider.dart';
 import '../data/auth_repository.dart';
 import '../models/partner.dart';
+import 'partner_profile_provider.dart';
 
 sealed class AuthState {
   const AuthState();
@@ -56,10 +60,19 @@ class AuthNotifier extends Notifier<AuthState> {
   AuthRepository get _repo => ref.read(authRepositoryProvider);
   TokenStorage get _tokens => ref.read(tokenStorageProvider);
 
+  /// Drop cached partner/workers/avatars so the next account never flashes the last one.
+  void _clearUserScopedCaches() {
+    ref.invalidate(partnerProfileProvider);
+    ref.invalidate(workersProvider);
+    ref.invalidate(workerFiltersProvider);
+    ref.invalidate(signedReadUrlProvider);
+  }
+
   Future<void> checkAuthStatus() async {
     state = const Loading();
     final token = await _tokens.getToken();
     if (token == null || token.isEmpty) {
+      _clearUserScopedCaches();
       state = const Unauthenticated();
       return;
     }
@@ -70,6 +83,7 @@ class AuthNotifier extends Notifier<AuthState> {
     } on ApiError catch (e) {
       if (e.code == 'unauthorized' || e.statusCode == 401) {
         await _tokens.clearToken();
+        _clearUserScopedCaches();
         state = const Unauthenticated();
         return;
       }
@@ -138,12 +152,14 @@ class AuthNotifier extends Notifier<AuthState> {
 
   Future<void> _completeLogin(String token) async {
     await _tokens.saveToken(token);
+    _clearUserScopedCaches();
     final partner = await _repo.fetchMe();
     state = authStateForPartner(partner);
   }
 
   Future<void> logout() async {
     await _tokens.clearToken();
+    _clearUserScopedCaches();
     state = const Unauthenticated();
   }
 }

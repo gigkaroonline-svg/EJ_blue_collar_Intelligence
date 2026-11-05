@@ -106,6 +106,22 @@ class CatalogRepository {
       _throwApiError(e);
     }
   }
+
+  Future<CatalogJob> addJob(String name) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/jobs',
+        data: {'name': name.trim()},
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const ApiError(code: 'server_error', error: 'Something went wrong');
+      }
+      return CatalogJob.fromJson(data);
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
 }
 
 final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {

@@ -76,6 +76,25 @@ class AuthRepository {
     }
   }
 
+  Future<void> resetPassword({
+    required String phoneNumber,
+    required String otp,
+    required String newPassword,
+  }) async {
+    try {
+      await _dio.post<Map<String, dynamic>>(
+        '/auth/reset-password',
+        data: {
+          'phoneNumber': phoneNumber,
+          'otp': otp,
+          'newPassword': newPassword,
+        },
+      );
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
+
   String _tokenFrom(Map<String, dynamic>? data) {
     final token = data?['token'];
     if (token is! String || token.isEmpty) {
@@ -87,6 +106,47 @@ class AuthRepository {
   Future<Partner> fetchMe() async {
     try {
       final response = await _dio.get<Map<String, dynamic>>('/auth/me');
+      final data = response.data;
+      if (data == null) {
+        throw const ApiError(code: 'server_error', error: 'Something went wrong');
+      }
+      return Partner.fromJson(data);
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
+
+  /// Update partner profile fields. Pass [clearAvatar] to remove the photo.
+  Future<Partner> updateMe({
+    String? fullName,
+    String? email,
+    String? avatarUrl,
+    bool clearAvatar = false,
+    Map<String, dynamic>? permanentAddress,
+    Map<String, dynamic>? presentAddress,
+    bool? presentSameAsPermanent,
+    Map<String, dynamic>? profile,
+  }) async {
+    try {
+      final body = <String, dynamic>{};
+      if (fullName != null) body['fullName'] = fullName;
+      if (email != null) body['email'] = email;
+      if (clearAvatar) {
+        body['avatarUrl'] = null;
+      } else if (avatarUrl != null) {
+        body['avatarUrl'] = avatarUrl;
+      }
+      if (permanentAddress != null) body['permanentAddress'] = permanentAddress;
+      if (presentAddress != null) body['presentAddress'] = presentAddress;
+      if (presentSameAsPermanent != null) {
+        body['presentSameAsPermanent'] = presentSameAsPermanent;
+      }
+      if (profile != null) body['profile'] = profile;
+
+      final response = await _dio.patch<Map<String, dynamic>>(
+        '/auth/me',
+        data: body,
+      );
       final data = response.data;
       if (data == null) {
         throw const ApiError(code: 'server_error', error: 'Something went wrong');

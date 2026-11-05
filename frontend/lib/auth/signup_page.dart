@@ -7,8 +7,10 @@ import 'package:go_router/go_router.dart';
 import '../core/errors/api_error.dart';
 import '../core/ui/app_logo.dart';
 import '../features/auth/presentation/auth_notifier.dart';
+import '../home/profile_helpers.dart';
 import '../pages/auth/registration_state.dart';
 import '../pages/auth/signup_channel.dart';
+import '../workers/address_fields.dart';
 import 'auth_fields.dart';
 import 'auth_validators.dart';
 
@@ -17,27 +19,27 @@ class _PartnerRole {
 
   final String id;
   final String label;
-  final List<({String key, String label})> profileFields;
+  final List<PartnerProfileField> profileFields;
 }
 
-const _roles = <_PartnerRole>[
-  _PartnerRole('csc', 'CSC Centres', [
-    (key: 'vleId', label: 'VLE ID'),
-    (key: 'kioskName', label: 'Kiosk name'),
-  ]),
-  _PartnerRole('cmc', 'Community Mobilizers', [
-    (key: 'mobilizerId', label: 'Mobilizer ID'),
-    (key: 'agencyOrPartnerName', label: 'Agency / partner name'),
-  ]),
-  _PartnerRole('anganwadi', 'Anganwadi Centres', [
-    (key: 'awcCode', label: 'AWC code'),
-    (key: 'centerName', label: 'Center name'),
-  ]),
-  _PartnerRole('gov_ngo', 'Govt / NGO Partners', [
-    (key: 'organizationName', label: 'Organization name'),
-    (key: 'designation', label: 'Designation'),
-  ]),
-];
+List<_PartnerRole> get _roles => [
+      _PartnerRole('csc', 'CSC Centres', partnerProfileFieldsForRole('csc')),
+      _PartnerRole(
+        'cmc',
+        'Community Mobilizers',
+        partnerProfileFieldsForRole('cmc'),
+      ),
+      _PartnerRole(
+        'anganwadi',
+        'Anganwadi Centres',
+        partnerProfileFieldsForRole('anganwadi'),
+      ),
+      _PartnerRole(
+        'gov_ngo',
+        'Govt / NGO Partners',
+        partnerProfileFieldsForRole('gov_ngo'),
+      ),
+    ];
 
 _PartnerRole _roleForChannel(SignupChannel channel) {
   final id = channel.apiRole;
@@ -58,15 +60,14 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   final _fullName = TextEditingController();
   final _phone = TextEditingController();
   final _email = TextEditingController();
-  final _state = TextEditingController();
-  final _district = TextEditingController();
-  final _subDistrict = TextEditingController();
-  final _pincode = TextEditingController();
   final _otp = TextEditingController();
+  final _permanentAddress = AddressControllers();
+  final _presentAddress = AddressControllers();
 
   final Map<String, TextEditingController> _profileControllers = {};
 
   late _PartnerRole _role;
+  bool _sameAsPermanent = true;
   bool _awaitingOtp = false;
   bool _submitting = false;
   bool _missingChannel = false;
@@ -82,6 +83,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
       _role = _roleForChannel(channel);
     }
     _rebuildProfileControllers(_role);
+    _permanentAddress.addListener(_syncPresentFromPermanent);
     if (_missingChannel) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -94,16 +96,20 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     }
   }
 
+  void _syncPresentFromPermanent() {
+    if (!_sameAsPermanent) return;
+    _presentAddress.copyFrom(_permanentAddress);
+  }
+
   @override
   void dispose() {
+    _permanentAddress.removeListener(_syncPresentFromPermanent);
     _fullName.dispose();
     _phone.dispose();
     _email.dispose();
-    _state.dispose();
-    _district.dispose();
-    _subDistrict.dispose();
-    _pincode.dispose();
     _otp.dispose();
+    _permanentAddress.dispose();
+    _presentAddress.dispose();
     for (final c in _profileControllers.values) {
       c.dispose();
     }
@@ -127,20 +133,14 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     return null;
   }
 
-  String? _emailValidator(String? value, AppLocalizations l10n) {
-    final email = value?.trim() ?? '';
-    if (email.isEmpty) return l10n.requiredField;
-    if (!email.contains('@') || !email.contains('.')) {
-      return 'Enter a valid email';
+  String? _profileValidator(PartnerProfileField field, String? value, AppLocalizations l10n) {
+    if (field.isPhone) {
+      return validateOtherMobile(value, _phone.text, l10n);
     }
-    return null;
-  }
-
-  String? _pincodeValidator(String? value, AppLocalizations l10n) {
-    final pin = value?.trim() ?? '';
-    if (pin.isEmpty) return l10n.requiredField;
-    if (!RegExp(r'^\d{6}$').hasMatch(pin)) return 'Enter a 6-digit pincode';
-    return null;
+    if (!field.required) {
+      return null;
+    }
+    return _required(value, l10n);
   }
 
   void _showError(Object error) {
@@ -154,16 +154,20 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   Future<void> _submitSignup() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (_sameAsPermanent) {
+      _presentAddress.copyFrom(_permanentAddress);
+    }
+
+    final email = _email.text.trim();
     final body = <String, dynamic>{
       'role': _role.id,
       'fullName': _fullName.text.trim(),
       'phoneNumber': _phone.text.trim(),
-      'email': _email.text.trim(),
-      'state': _state.text.trim(),
-      'district': _district.text.trim(),
-      if (_subDistrict.text.trim().isNotEmpty)
-        'subDistrict': _subDistrict.text.trim(),
-      'pincode': _pincode.text.trim(),
+      if (email.isNotEmpty) 'email': email,
+      'permanentAddress': _permanentAddress.toAddress().toApiJson(),
+      'presentSameAsPermanent': _sameAsPermanent,
+      if (!_sameAsPermanent)
+        'presentAddress': _presentAddress.toAddress().toApiJson(),
       'profile': {
         for (final field in _role.profileFields)
           field.key: _profileControllers[field.key]!.text.trim(),
@@ -320,57 +324,39 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             textInputAction: TextInputAction.next,
             autofillHints: const [AutofillHints.email],
             decoration: const InputDecoration(
-              labelText: 'Email',
+              labelText: 'Email (optional)',
               prefixIcon: Icon(Icons.email_outlined),
             ),
-            validator: (v) => _emailValidator(v, l10n),
+            validator: validateOptionalEmail,
           ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _state,
-            textCapitalization: TextCapitalization.words,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              labelText: l10n.state,
-              prefixIcon: const Icon(Icons.map_outlined),
-            ),
+          const SizedBox(height: 16),
+          Text(l10n.permanentAddress, style: textTheme.titleSmall),
+          const SizedBox(height: 8),
+          AddressFields(
+            controllers: _permanentAddress,
+            enabled: true,
             validator: (v) => _required(v, l10n),
           ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _district,
-            textCapitalization: TextCapitalization.words,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              labelText: l10n.district,
-              prefixIcon: const Icon(Icons.location_city_outlined),
-            ),
+          const SizedBox(height: 16),
+          Text(l10n.currentAddress, style: textTheme.titleSmall),
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text(l10n.sameAsPermanent),
+            value: _sameAsPermanent,
+            onChanged: (value) {
+              setState(() {
+                _sameAsPermanent = value ?? false;
+                if (_sameAsPermanent) {
+                  _presentAddress.copyFrom(_permanentAddress);
+                }
+              });
+            },
+          ),
+          AddressFields(
+            controllers: _presentAddress,
+            enabled: !_sameAsPermanent,
             validator: (v) => _required(v, l10n),
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _subDistrict,
-            textCapitalization: TextCapitalization.words,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              labelText: 'Sub-district (optional)',
-              prefixIcon: Icon(Icons.holiday_village_outlined),
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _pincode,
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(6),
-            ],
-            decoration: InputDecoration(
-              labelText: l10n.pincode,
-              prefixIcon: const Icon(Icons.pin_drop_outlined),
-            ),
-            validator: (v) => _pincodeValidator(v, l10n),
           ),
           const SizedBox(height: 16),
           Text('Role details', style: textTheme.titleSmall),
@@ -378,9 +364,20 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           for (final field in _role.profileFields) ...[
             TextFormField(
               controller: _profileControllers[field.key],
+              keyboardType:
+                  field.isPhone ? TextInputType.phone : TextInputType.text,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: field.label),
-              validator: (v) => _required(v, l10n),
+              inputFormatters: field.isPhone
+                  ? [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ]
+                  : null,
+              decoration: InputDecoration(
+                labelText: field.label,
+                prefixText: field.isPhone ? '+91 ' : null,
+              ),
+              validator: (v) => _profileValidator(field, v, l10n),
             ),
             const SizedBox(height: 12),
           ],

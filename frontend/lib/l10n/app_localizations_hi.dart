@@ -16,7 +16,58 @@ class AppLocalizationsHi extends AppLocalizations {
   String get home => 'होम';
 
   @override
-  String get tradespeople => 'कारीगर';
+  String get workers => 'वर्कर';
+
+  @override
+  String get filter => 'फ़िल्टर';
+
+  @override
+  String get filters => 'फ़िल्टर';
+
+  @override
+  String get clearFilters => 'फ़िल्टर हटाएँ';
+
+  @override
+  String get applyFilters => 'लागू करें';
+
+  @override
+  String get filterAvailability => 'उपलब्धता';
+
+  @override
+  String get filterAll => 'सभी';
+
+  @override
+  String get filterAvailable => 'उपलब्ध';
+
+  @override
+  String get filterOnJob => 'काम पर';
+
+  @override
+  String get filterDisability => 'दिव्यांगता';
+
+  @override
+  String get filterWithDisability => 'दिव्यांग';
+
+  @override
+  String get filterWithoutDisability => 'बिना दिव्यांगता';
+
+  @override
+  String get filterTrade => 'मुख्य काम';
+
+  @override
+  String get filterTradeHint => 'जैसे राजमिस्त्री';
+
+  @override
+  String get filterDistrict => 'ज़िला';
+
+  @override
+  String get filterDistrictHint => 'जैसे सूरत';
+
+  @override
+  String get searchWorkers => 'नाम से खोजें';
+
+  @override
+  String get noWorkersMatchFilters => 'इन फ़िल्टर से कोई वर्कर नहीं मिला।';
 
   @override
   String get profile => 'खाता';
@@ -34,30 +85,30 @@ class AppLocalizationsHi extends AppLocalizations {
   String get logIn => 'लॉग इन';
 
   @override
-  String get moreTradespeople => 'और कारीगर';
+  String get moreWorkers => 'और वर्कर';
 
   @override
-  String get recentTradespeople => 'आपके पास के कारीगर।';
+  String get recentWorkers => 'आपके पास के वर्कर।';
 
   @override
-  String tradespeopleCount(int count) {
+  String workersCount(int count) {
     return 'आपकी लिस्ट में $count लोग हैं।';
   }
 
   @override
-  String get tradesperson => 'कारीगर';
+  String get worker => 'वर्कर';
 
   @override
-  String get tradespersonNotFound => 'कारीगर नहीं मिला।';
+  String get workerNotFound => 'वर्कर नहीं मिला।';
 
   @override
-  String get addTradesperson => 'कारीगर जोड़ें';
+  String get addWorker => 'वर्कर जोड़ें';
 
   @override
-  String get editTradesperson => 'कारीगर बदलें';
+  String get editWorker => 'वर्कर बदलें';
 
   @override
-  String get saveTradesperson => 'कारीगर सेव करें';
+  String get saveWorker => 'वर्कर सेव करें';
 
   @override
   String get readyToWork => 'काम के लिए तैयार';
@@ -126,16 +177,37 @@ class AppLocalizationsHi extends AppLocalizations {
   String get selectGender => 'लिंग चुनें';
 
   @override
-  String get selectIdType => 'आईडी प्रकार चुनें';
+  String get selectIdType => 'दस्तावेज़ आईडी प्रकार चुनें';
 
   @override
   String get dateOfBirth => 'जन्म तारीख';
 
   @override
-  String get idType => 'आईडी प्रकार';
+  String get hasDisability => 'दिव्यांग व्यक्ति';
 
   @override
-  String get idNumber => 'आईडी नंबर';
+  String get disabilityDetails => 'दिव्यांगता का विवरण';
+
+  @override
+  String get disabilityDetailsHint => 'दिव्यांगता का प्रकार (वैकल्पिक)';
+
+  @override
+  String get yes => 'हाँ';
+
+  @override
+  String get no => 'नहीं';
+
+  @override
+  String get idType => 'दस्तावेज़ आईडी प्रकार';
+
+  @override
+  String get idNumber => 'दस्तावेज़ आईडी नंबर';
+
+  @override
+  String get invalidAadhaar => '12 अंकों का सही आधार नंबर लिखें';
+
+  @override
+  String get invalidPan => 'सही पैन लिखें (जैसे ABCDE1234F)';
 
   @override
   String get documentFront => 'सामने';
@@ -160,6 +232,15 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get chooseGallery => 'गैलरी से चुनें';
+
+  @override
+  String get removePhoto => 'फोटो हटाएँ';
+
+  @override
+  String get addPhotoOptional => 'फोटो जोड़ें (वैकल्पिक)';
+
+  @override
+  String get changePhoto => 'फोटो बदलें';
 
   @override
   String get idImagesRequired => 'आईडी की आगे और पीछे दोनों तस्वीरें जोड़ें।';
@@ -293,7 +374,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sendOtp => 'ओटीपी भेजें';
 
   @override
-  String get verifyOtp => 'ओटीपी जाँचें';
+  String get verifyOtp => 'ओटीपी सत्यापित करें';
 
   @override
   String get resendOtp => 'ओटीपी फिर भेजें';
@@ -316,6 +397,15 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get personalDetails => 'व्यक्तिगत विवरण';
+
+  @override
+  String get saveChanges => 'सेव करें';
+
+  @override
+  String get changesSaved => 'बदलाव सेव हो गए।';
+
+  @override
+  String get phoneCannotChange => 'फ़ोन नंबर नहीं बदला जा सकता।';
 
   @override
   String get preferences => 'प्राथमिकताएँ';
@@ -341,6 +431,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get termsAndConditions => 'नियम और शर्तें';
+
+  @override
+  String appVersion(String version) {
+    return 'संस्करण $version';
+  }
 
   @override
   String get requiredField => 'यह भरना ज़रूरी है';

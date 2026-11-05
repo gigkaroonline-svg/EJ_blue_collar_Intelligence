@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
-import 'tradesperson.dart';
+import 'worker.dart';
 
 class AddressControllers {
   AddressControllers({Address? initial})
@@ -35,6 +35,22 @@ class AddressControllers {
     district.text = other.district.text;
     state.text = other.state.text;
     pincode.text = other.pincode.text;
+  }
+
+  void addListener(VoidCallback listener) {
+    addressLine.addListener(listener);
+    villageOrTown.addListener(listener);
+    district.addListener(listener);
+    state.addListener(listener);
+    pincode.addListener(listener);
+  }
+
+  void removeListener(VoidCallback listener) {
+    addressLine.removeListener(listener);
+    villageOrTown.removeListener(listener);
+    district.removeListener(listener);
+    state.removeListener(listener);
+    pincode.removeListener(listener);
   }
 
   void dispose() {

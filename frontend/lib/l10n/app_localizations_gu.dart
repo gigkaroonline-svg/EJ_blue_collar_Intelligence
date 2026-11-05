@@ -16,7 +16,58 @@ class AppLocalizationsGu extends AppLocalizations {
   String get home => 'હોમ';
 
   @override
-  String get tradespeople => 'કારીગરો';
+  String get workers => 'વર્કર';
+
+  @override
+  String get filter => 'ફિલ્ટર';
+
+  @override
+  String get filters => 'ફિલ્ટર';
+
+  @override
+  String get clearFilters => 'ફિલ્ટર દૂર કરો';
+
+  @override
+  String get applyFilters => 'લાગુ કરો';
+
+  @override
+  String get filterAvailability => 'ઉપલબ્ધતા';
+
+  @override
+  String get filterAll => 'બધા';
+
+  @override
+  String get filterAvailable => 'ઉપલબ્ધ';
+
+  @override
+  String get filterOnJob => 'કામ પર';
+
+  @override
+  String get filterDisability => 'દિવ્યાંગતા';
+
+  @override
+  String get filterWithDisability => 'દિવ્યાંગ';
+
+  @override
+  String get filterWithoutDisability => 'દિવ્યાંગતા વગર';
+
+  @override
+  String get filterTrade => 'મુખ્ય કામ';
+
+  @override
+  String get filterTradeHint => 'જેમ કે મેસન';
+
+  @override
+  String get filterDistrict => 'જિલ્લો';
+
+  @override
+  String get filterDistrictHint => 'જેમ કે સુરત';
+
+  @override
+  String get searchWorkers => 'નામથી શોધો';
+
+  @override
+  String get noWorkersMatchFilters => 'આ ફિલ્ટર સાથે કોઈ વર્કર મળ્યો નથી.';
 
   @override
   String get profile => 'એકાઉન્ટ';
@@ -34,30 +85,30 @@ class AppLocalizationsGu extends AppLocalizations {
   String get logIn => 'લૉગ ઇન';
 
   @override
-  String get moreTradespeople => 'વધુ કારીગરો';
+  String get moreWorkers => 'વધુ વર્કર';
 
   @override
-  String get recentTradespeople => 'તમારી નજીકના કારીગરો.';
+  String get recentWorkers => 'તમારી નજીકના વર્કર.';
 
   @override
-  String tradespeopleCount(int count) {
+  String workersCount(int count) {
     return 'તમારી યાદીમાં $count લોકો છે.';
   }
 
   @override
-  String get tradesperson => 'કારીગર';
+  String get worker => 'વર્કર';
 
   @override
-  String get tradespersonNotFound => 'કારીગર મળ્યો નથી.';
+  String get workerNotFound => 'વર્કર મળ્યો નથી.';
 
   @override
-  String get addTradesperson => 'કારીગર ઉમેરો';
+  String get addWorker => 'વર્કર ઉમેરો';
 
   @override
-  String get editTradesperson => 'કારીગર બદલો';
+  String get editWorker => 'વર્કર બદલો';
 
   @override
-  String get saveTradesperson => 'કારીગર સાચવો';
+  String get saveWorker => 'વર્કર સાચવો';
 
   @override
   String get readyToWork => 'કામ માટે તૈયાર';
@@ -126,16 +177,37 @@ class AppLocalizationsGu extends AppLocalizations {
   String get selectGender => 'લિંગ પસંદ કરો';
 
   @override
-  String get selectIdType => 'આઈડી પ્રકાર પસંદ કરો';
+  String get selectIdType => 'દસ્તાવેજ આઈડી પ્રકાર પસંદ કરો';
 
   @override
   String get dateOfBirth => 'જન્મ તારીખ';
 
   @override
-  String get idType => 'આઈડી પ્રકાર';
+  String get hasDisability => 'દિવ્યાંગ વ્યક્તિ';
 
   @override
-  String get idNumber => 'આઈડી નંબર';
+  String get disabilityDetails => 'દિવ્યાંગતાની વિગત';
+
+  @override
+  String get disabilityDetailsHint => 'દિવ્યાંગતાનો પ્રકાર (વૈકલ્પિક)';
+
+  @override
+  String get yes => 'હા';
+
+  @override
+  String get no => 'ના';
+
+  @override
+  String get idType => 'દસ્તાવેજ આઈડી પ્રકાર';
+
+  @override
+  String get idNumber => 'દસ્તાવેજ આઈડી નંબર';
+
+  @override
+  String get invalidAadhaar => '12 અંકનો માન્ય આધાર નંબર લખો';
+
+  @override
+  String get invalidPan => 'માન્ય પાન લખો (જેમ કે ABCDE1234F)';
 
   @override
   String get documentFront => 'આગળ';
@@ -160,6 +232,15 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get chooseGallery => 'ગેલરીમાંથી પસંદ કરો';
+
+  @override
+  String get removePhoto => 'ફોટો કાઢો';
+
+  @override
+  String get addPhotoOptional => 'ફોટો ઉમેરો (વૈકલ્પિક)';
+
+  @override
+  String get changePhoto => 'ફોટો બદલો';
 
   @override
   String get idImagesRequired => 'આઈડીની આગળ અને પાછળ બંને તસવીરો ઉમેરો.';
@@ -293,7 +374,7 @@ class AppLocalizationsGu extends AppLocalizations {
   String get sendOtp => 'ઓટીપી મોકલો';
 
   @override
-  String get verifyOtp => 'ઓટીપી તપાસો';
+  String get verifyOtp => 'ઓટીપી ચકાસો';
 
   @override
   String get resendOtp => 'ઓટીપી ફરી મોકલો';
@@ -316,6 +397,15 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get personalDetails => 'વ્યક્તિગત વિગતો';
+
+  @override
+  String get saveChanges => 'સાચવો';
+
+  @override
+  String get changesSaved => 'ફેરફારો સાચવાયા.';
+
+  @override
+  String get phoneCannotChange => 'ફોન નંબર બદલી શકાતો નથી.';
 
   @override
   String get preferences => 'પસંદગીઓ';
@@ -341,6 +431,11 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get termsAndConditions => 'નિયમો અને શરતો';
+
+  @override
+  String appVersion(String version) {
+    return 'વર્ઝન $version';
+  }
 
   @override
   String get requiredField => 'આ ભરવું જરૂરી છે';

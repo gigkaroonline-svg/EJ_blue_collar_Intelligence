@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
-import 'tradesperson.dart';
+import 'worker.dart';
 import 'work_date_format.dart';
 
 class WorkHistoryTile extends StatelessWidget {

@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/api_error.dart';
 import '../../../core/network/api_client.dart';
-import '../../../tradespeople/tradesperson.dart';
+import '../../../workers/worker.dart';
 
-class TradespeopleRepository {
-  TradespeopleRepository(this._dio);
+class WorkersRepository {
+  WorkersRepository(this._dio);
 
   final Dio _dio;
 
@@ -16,72 +16,88 @@ class TradespeopleRepository {
     throw ApiError.fromDioException(e);
   }
 
-  Future<List<Tradesperson>> list({int limit = 50}) async {
+  Future<List<Worker>> list({int limit = 50}) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
-        '/tradespeople',
+        '/workers',
         queryParameters: {'limit': limit, 'page': 1},
       );
       final items = response.data?['items'];
       if (items is! List) return const [];
       return [
         for (final item in items)
-          if (item is Map) Tradesperson.fromJson(Map<String, dynamic>.from(item)),
+          if (item is Map) Worker.fromJson(Map<String, dynamic>.from(item)),
       ];
     } on DioException catch (e) {
       _throwApiError(e);
     }
   }
 
-  Future<Tradesperson> getById(String id) async {
+  Future<Worker> getById(String id) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/tradespeople/$id');
+      final response = await _dio.get<Map<String, dynamic>>('/workers/$id');
       final data = response.data;
       if (data == null) {
-        throw const ApiError(code: 'not_found', error: 'Tradesperson not found');
+        throw const ApiError(code: 'not_found', error: 'Worker not found');
       }
-      return Tradesperson.fromJson(data);
+      return Worker.fromJson(data);
     } on DioException catch (e) {
       _throwApiError(e);
     }
   }
 
-  Future<Tradesperson> setAvailability({
+  Future<Worker> setAvailability({
     required String id,
     required bool isReadyToWork,
   }) async {
     try {
       final response = await _dio.patch<Map<String, dynamic>>(
-        '/tradespeople/$id/availability',
+        '/workers/$id/availability',
         data: {'isReadyToWork': isReadyToWork},
       );
       final data = response.data;
       if (data == null) {
         throw const ApiError(code: 'server_error', error: 'Something went wrong');
       }
-      return Tradesperson.fromJson(data);
+      return Worker.fromJson(data);
     } on DioException catch (e) {
       _throwApiError(e);
     }
   }
 
-  Future<Tradesperson> create(Map<String, dynamic> body) async {
+  Future<Worker> create(Map<String, dynamic> body) async {
     try {
       final response = await _dio.post<Map<String, dynamic>>(
-        '/tradespeople',
+        '/workers',
         data: body,
       );
       final data = response.data;
       if (data == null) {
         throw const ApiError(code: 'server_error', error: 'Something went wrong');
       }
-      return Tradesperson.fromJson(data);
+      return Worker.fromJson(data);
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
+
+  Future<Worker> update(String id, Map<String, dynamic> body) async {
+    try {
+      final response = await _dio.patch<Map<String, dynamic>>(
+        '/workers/$id',
+        data: body,
+      );
+      final data = response.data;
+      if (data == null) {
+        throw const ApiError(code: 'server_error', error: 'Something went wrong');
+      }
+      return Worker.fromJson(data);
     } on DioException catch (e) {
       _throwApiError(e);
     }
   }
 }
 
-final tradespeopleRepositoryProvider = Provider<TradespeopleRepository>((ref) {
-  return TradespeopleRepository(ref.watch(dioProvider));
+final workersRepositoryProvider = Provider<WorkersRepository>((ref) {
+  return WorkersRepository(ref.watch(dioProvider));
 });

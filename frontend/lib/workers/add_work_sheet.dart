@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
+import '../core/ui/date_slash_formatter.dart';
 import '../features/catalog/models/catalog_company.dart';
 import '../features/catalog/presentation/company_search_field.dart';
-import 'tradesperson.dart';
-import 'work_date_format.dart';
+import 'worker.dart';
 
 Future<WorkEntry?> showAddWorkSheet(BuildContext context) {
   return showModalBottomSheet<WorkEntry>(
@@ -25,33 +25,53 @@ class _AddWorkSheet extends ConsumerStatefulWidget {
 class _AddWorkSheetState extends ConsumerState<_AddWorkSheet> {
   final _formKey = GlobalKey<FormState>();
   final _trade = TextEditingController();
+  late final TextEditingController _fromDate;
+  late final TextEditingController _toDate;
 
   CatalogCompany? _selectedCompany;
   bool _stillWorking = true;
-  DateTime _startDate = DateTime.now();
-  DateTime? _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    // Empty on open — pre-filling today made it feel like nothing to enter.
+    _fromDate = TextEditingController();
+    _toDate = TextEditingController();
+  }
 
   @override
   void dispose() {
     _trade.dispose();
+    _fromDate.dispose();
+    _toDate.dispose();
     super.dispose();
   }
 
-  Future<void> _pickDate({required bool isStart}) async {
-    final initial = isStart ? _startDate : (_endDate ?? DateTime.now());
+  String? _validateWorkDate(String? value, AppLocalizations l10n) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return l10n.requiredField;
+    if (tryParseDobDdMmYyyy(text, requireMinAge: null) == null) {
+      return 'Enter a valid date (DD/MM/YYYY)';
+    }
+    return null;
+  }
+
+  Future<void> _pickDate(TextEditingController controller) async {
+    final l10n = AppLocalizations.of(context)!;
+    final today = DateTime.now();
+    final parsed = tryParseDobDdMmYyyy(controller.text, requireMinAge: null);
+    final initial = parsed ?? today;
+
     final picked = await showDatePicker(
       context: context,
-      initialDate: initial,
+      initialDate: initial.isAfter(today) ? today : initial,
       firstDate: DateTime(1980),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: today,
+      helpText: l10n.fromDate,
     );
-    if (picked == null) return;
+    if (picked == null || !mounted) return;
     setState(() {
-      if (isStart) {
-        _startDate = picked;
-      } else {
-        _endDate = picked;
-      }
+      controller.text = formatDobDdMmYyyy(picked);
     });
   }
 
@@ -59,13 +79,30 @@ class _AddWorkSheetState extends ConsumerState<_AddWorkSheet> {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCompany == null) return;
 
+    final start = tryParseDobDdMmYyyy(_fromDate.text, requireMinAge: null);
+    if (start == null) return;
+
+    DateTime? end;
+    if (!_stillWorking) {
+      end = tryParseDobDdMmYyyy(_toDate.text, requireMinAge: null);
+      if (end == null) return;
+      if (end.isBefore(start)) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(content: Text('To date must be on or after From')),
+          );
+        return;
+      }
+    }
+
     final entry = WorkEntry(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       companyId: _selectedCompany!.id,
       companyName: _selectedCompany!.name,
       trade: _trade.text.trim().isEmpty ? null : _trade.text.trim(),
-      startDate: _startDate,
-      endDate: _stillWorking ? null : (_endDate ?? DateTime.now()),
+      startDate: start,
+      endDate: _stillWorking ? null : end,
     );
 
     Navigator.pop(context, entry);
@@ -109,12 +146,20 @@ class _AddWorkSheetState extends ConsumerState<_AddWorkSheet> {
                 decoration: InputDecoration(labelText: l10n.primaryTrade),
               ),
               const SizedBox(height: 8),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.fromDate),
-                subtitle: Text(formatWorkDate(context, _startDate)),
-                trailing: const Icon(Icons.calendar_today_outlined),
-                onTap: () => _pickDate(isStart: true),
+              TextFormField(
+                controller: _fromDate,
+                keyboardType: TextInputType.number,
+                inputFormatters: const [DateSlashInputFormatter()],
+                decoration: InputDecoration(
+                  labelText: l10n.fromDate,
+                  hintText: 'DD/MM/YYYY',
+                  suffixIcon: IconButton(
+                    tooltip: l10n.fromDate,
+                    onPressed: () => _pickDate(_fromDate),
+                    icon: const Icon(Icons.calendar_today_outlined),
+                  ),
+                ),
+                validator: (value) => _validateWorkDate(value, l10n),
               ),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
@@ -123,23 +168,25 @@ class _AddWorkSheetState extends ConsumerState<_AddWorkSheet> {
                 onChanged: (value) {
                   setState(() {
                     _stillWorking = value;
-                    if (value) {
-                      _endDate = null;
-                    } else {
-                      _endDate ??= DateTime.now();
-                    }
+                    if (value) _toDate.clear();
                   });
                 },
               ),
               if (!_stillWorking)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.toDate),
-                  subtitle: Text(
-                    formatWorkDate(context, _endDate ?? DateTime.now()),
+                TextFormField(
+                  controller: _toDate,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: const [DateSlashInputFormatter()],
+                  decoration: InputDecoration(
+                    labelText: l10n.toDate,
+                    hintText: 'DD/MM/YYYY',
+                    suffixIcon: IconButton(
+                      tooltip: l10n.toDate,
+                      onPressed: () => _pickDate(_toDate),
+                      icon: const Icon(Icons.calendar_today_outlined),
+                    ),
                   ),
-                  trailing: const Icon(Icons.calendar_today_outlined),
-                  onTap: () => _pickDate(isStart: false),
+                  validator: (value) => _validateWorkDate(value, l10n),
                 ),
               const SizedBox(height: 16),
               FilledButton(

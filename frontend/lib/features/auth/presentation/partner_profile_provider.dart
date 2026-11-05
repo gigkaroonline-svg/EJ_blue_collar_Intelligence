@@ -5,7 +5,8 @@ import '../../../core/errors/api_error.dart';
 import '../../../core/network/api_client.dart';
 import '../models/partner.dart';
 
-final partnerProfileProvider = FutureProvider.autoDispose<Partner>((ref) async {
+/// Kept alive across Account sub-routes so returning doesn't flash a skeleton.
+final partnerProfileProvider = FutureProvider<Partner>((ref) async {
   final dio = ref.watch(dioProvider);
   try {
     final response = await dio.get<Map<String, dynamic>>('/auth/me');

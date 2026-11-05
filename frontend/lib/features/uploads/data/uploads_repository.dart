@@ -32,7 +32,7 @@ class UploadsRepository {
   }
 
   /// Uploads a local image to GCS via a backend-issued signed URL.
-  /// Returns the durable object key to store on the tradesperson document.
+  /// Returns the durable object key to store on the worker document.
   Future<String> uploadImage({
     required String localPath,
     required String kind,
@@ -115,4 +115,10 @@ class UploadsRepository {
 
 final uploadsRepositoryProvider = Provider<UploadsRepository>((ref) {
   return UploadsRepository(ref.watch(dioProvider));
+});
+
+/// Cached signed read URLs so avatars / thumbs don't blank on every rebuild.
+final signedReadUrlProvider =
+    FutureProvider.family<String, String>((ref, objectKey) {
+  return ref.watch(uploadsRepositoryProvider).signedReadUrl(objectKey);
 });

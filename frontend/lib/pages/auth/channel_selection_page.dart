@@ -83,7 +83,7 @@ class _ChannelSelectionPageState extends ConsumerState<ChannelSelectionPage> {
     ref
         .read(registrationProvider.notifier)
         .setChannel(channel.asSignupChannel);
-    // Partner onboarding form for this channel (not tradesperson).
+    // Partner onboarding form for this channel (not worker).
     context.push('/signup/details');
   }
 

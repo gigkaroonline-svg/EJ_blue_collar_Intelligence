@@ -6,11 +6,11 @@ import '../auth/pending_approval_page.dart';
 import '../auth/rejected_page.dart';
 import '../auth/signup_page.dart';
 import '../pages/auth/channel_selection_page.dart';
-import '../tradespeople/tradesperson_detail_page.dart';
-import '../tradespeople/tradesperson_form_page.dart';
-import '../tradespeople/company_detail_page.dart';
+import '../workers/worker_detail_page.dart';
+import '../workers/worker_form_page.dart';
+import '../workers/company_detail_page.dart';
 import '../home/authentication_details_page.dart';
-import '../home/tradespeople_page.dart';
+import '../home/workers_page.dart';
 import '../home/home_tab.dart';
 import '../home/legal_document_page.dart';
 import '../home/main_shell.dart';
@@ -70,8 +70,8 @@ GoRouter createAppRouter() {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/tradespeople',
-                builder: (context, state) => const TradespeoplePage(),
+                path: '/workers',
+                builder: (context, state) => const WorkersPage(),
               ),
             ],
           ),
@@ -86,29 +86,29 @@ GoRouter createAppRouter() {
         ],
       ),
       GoRoute(
-        path: '/tradespeople-list',
-        builder: (context, state) => const TradespeoplePage(showAppBar: true),
+        path: '/workers-list',
+        builder: (context, state) => const WorkersPage(showAppBar: true),
       ),
       GoRoute(
-        path: '/tradesperson/new',
-        builder: (context, state) => const TradespersonFormPage(),
+        path: '/worker/new',
+        builder: (context, state) => const WorkerFormPage(),
       ),
       GoRoute(
-        path: '/tradesperson/:id/edit',
+        path: '/worker/:id/edit',
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
           final tab = int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0;
-          return TradespersonFormPage(
-            tradespersonId: id,
+          return WorkerFormPage(
+            workerId: id,
             initialTabIndex: tab,
           );
         },
       ),
       GoRoute(
-        path: '/tradesperson/:id',
+        path: '/worker/:id',
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
-          return TradespersonDetailPage(tradespersonId: id);
+          return WorkerDetailPage(workerId: id);
         },
       ),
       GoRoute(

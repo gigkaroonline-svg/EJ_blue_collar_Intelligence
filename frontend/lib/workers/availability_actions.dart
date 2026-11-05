@@ -5,20 +5,20 @@ import 'package:frontend/l10n/app_localizations.dart';
 import '../core/errors/api_error.dart';
 import '../features/catalog/models/catalog_company.dart';
 import '../features/catalog/presentation/company_search_field.dart';
-import 'tradesperson.dart';
-import 'tradespeople_provider.dart';
+import 'worker.dart';
+import 'workers_provider.dart';
 
 Future<void> changeAvailability(
   BuildContext context,
   WidgetRef ref,
-  Tradesperson tradesperson,
+  Worker worker,
 ) async {
   final l10n = AppLocalizations.of(context)!;
 
-  if (!tradesperson.isReadyToWork) {
-    await _confirmLeaveJob(context, ref, tradesperson, l10n);
+  if (!worker.isReadyToWork) {
+    await _confirmLeaveJob(context, ref, worker, l10n);
   } else {
-    await _confirmStartJob(context, ref, tradesperson, l10n);
+    await _confirmStartJob(context, ref, worker, l10n);
   }
 }
 
@@ -32,11 +32,11 @@ void _showError(BuildContext context, Object error) {
 Future<void> _confirmLeaveJob(
   BuildContext context,
   WidgetRef ref,
-  Tradesperson tradesperson,
+  Worker worker,
   AppLocalizations l10n,
 ) async {
   WorkEntry? current;
-  for (final entry in tradesperson.workHistory) {
+  for (final entry in worker.workHistory) {
     if (entry.companyName != null || entry.companyId != null) {
       current = entry;
       break;
@@ -68,8 +68,8 @@ Future<void> _confirmLeaveJob(
   if (confirmed != true || !context.mounted) return;
 
   try {
-    await ref.read(tradespeopleProvider.notifier).setAvailability(
-          tradesperson.id,
+    await ref.read(workersProvider.notifier).setAvailability(
+          worker.id,
           isReadyToWork: true,
         );
   } catch (e) {
@@ -80,7 +80,7 @@ Future<void> _confirmLeaveJob(
 Future<void> _confirmStartJob(
   BuildContext context,
   WidgetRef ref,
-  Tradesperson tradesperson,
+  Worker worker,
   AppLocalizations l10n,
 ) async {
   CatalogCompany? selectedCompany;
@@ -129,8 +129,8 @@ Future<void> _confirmStartJob(
 
   try {
     // Availability API only stores isReadyToWork; company is selected for partner context.
-    await ref.read(tradespeopleProvider.notifier).setAvailability(
-          tradesperson.id,
+    await ref.read(workersProvider.notifier).setAvailability(
+          worker.id,
           isReadyToWork: false,
         );
   } catch (e) {

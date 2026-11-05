@@ -18,7 +18,7 @@ class MainShell extends StatelessWidget {
 
     final destinations = [
       (Icons.home_outlined, Icons.home_rounded, l10n.home),
-      (Icons.groups_outlined, Icons.groups_rounded, l10n.tradespeople),
+      (Icons.groups_outlined, Icons.groups_rounded, l10n.workers),
       (Icons.person_outline_rounded, Icons.person_rounded, l10n.profile),
     ];
 

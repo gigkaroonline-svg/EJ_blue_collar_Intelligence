@@ -18,27 +18,27 @@ import '../theme/app_styles.dart';
 import 'add_work_sheet.dart';
 import 'address_fields.dart';
 import 'availability_chip.dart';
-import 'tradesperson.dart';
-import 'tradespeople_provider.dart';
+import 'worker.dart';
+import 'workers_provider.dart';
 import 'work_history_tile.dart';
 
-class TradespersonFormPage extends ConsumerStatefulWidget {
-  const TradespersonFormPage({
+class WorkerFormPage extends ConsumerStatefulWidget {
+  const WorkerFormPage({
     super.key,
-    this.tradespersonId,
+    this.workerId,
     this.initialTabIndex = 0,
   });
 
-  final String? tradespersonId;
+  final String? workerId;
   final int initialTabIndex;
 
-  bool get isEditing => tradespersonId != null;
+  bool get isEditing => workerId != null;
 
   @override
-  ConsumerState<TradespersonFormPage> createState() => _TradespersonFormPageState();
+  ConsumerState<WorkerFormPage> createState() => _WorkerFormPageState();
 }
 
-class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
+class _WorkerFormPageState extends ConsumerState<WorkerFormPage>
     with SingleTickerProviderStateMixin {
   static const _idTypes = ['aadhaar', 'pan'];
   static const _genders = ['male', 'female', 'other'];
@@ -52,19 +52,23 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
   late final TextEditingController _phone;
   late final TextEditingController _dateOfBirth;
   late final TextEditingController _idNumber;
-  late final TextEditingController _subSkills;
   late final TextEditingController _years;
   late final TextEditingController _wage;
+  late final TextEditingController _disabilityDetails;
   late final AddressControllers _permanentAddress;
   late final AddressControllers _currentAddress;
 
   String? _gender;
   String? _idType;
+  String? _maskedIdentity;
   CatalogJob? _primaryTrade;
   String? _idFrontPath;
   String? _idBackPath;
+  String? _idFrontKey;
+  String? _idBackKey;
+  bool _hasDisability = false;
   bool _sameAsPermanent = false;
-  bool _missingTradesperson = false;
+  bool _missingWorker = false;
   bool _saving = false;
   late List<WorkEntry> _workHistory;
 
@@ -83,12 +87,12 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
       }
     });
 
-    final existing = widget.tradespersonId == null
+    final existing = widget.workerId == null
         ? null
-        : ref.read(tradespeopleProvider.notifier).findById(widget.tradespersonId!);
+        : ref.read(workersProvider.notifier).findById(widget.workerId!);
 
     if (widget.isEditing && existing == null) {
-      _missingTradesperson = true;
+      _missingWorker = true;
     }
 
     final personal = existing?.personal;
@@ -98,19 +102,21 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     _phone = TextEditingController(text: personal?.phoneNumber ?? '');
     _dateOfBirth = TextEditingController(text: personal?.dateOfBirth ?? '');
     _idNumber = TextEditingController();
-    _subSkills = TextEditingController(
-      text: experience?.subSkills.join(', ') ?? '',
-    );
     _years = TextEditingController(
       text: experience?.yearsOfExperience.toString() ?? '',
     );
     _wage = TextEditingController(
       text: experience?.dailyWageExpected.toString() ?? '',
     );
+    _hasDisability = personal?.hasDisability ?? false;
+    _disabilityDetails = TextEditingController(
+      text: personal?.disabilityDetails ?? '',
+    );
     _permanentAddress = AddressControllers(initial: personal?.permanentAddress);
     _currentAddress = AddressControllers(initial: personal?.currentAddress);
     _sameAsPermanent = personal != null &&
         personal.permanentAddress.isSameAs(personal.currentAddress);
+    _permanentAddress.addListener(_syncCurrentFromPermanent);
     _workHistory = List<WorkEntry>.from(existing?.workHistory ?? const []);
 
     final existingGender = personal?.gender.toLowerCase();
@@ -129,6 +135,28 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     if (existing?.idType != null && _idTypes.contains(existing!.idType)) {
       _idType = existing.idType!;
     }
+    _maskedIdentity = existing?.maskedIdentity;
+
+    if (existing != null) {
+      for (final doc in existing.documents) {
+        final key = doc.imagePath;
+        if (key == null || key.isEmpty) continue;
+        if (doc.side == DocumentSide.front) {
+          _idFrontKey = key;
+        } else if (doc.side == DocumentSide.back) {
+          _idBackKey = key;
+        }
+      }
+      // Fallback if side wasn't tagged.
+      if (_idFrontKey == null) {
+        for (final doc in existing.documents) {
+          if (doc.imagePath != null && doc.imagePath!.isNotEmpty) {
+            _idFrontKey ??= doc.imagePath;
+            break;
+          }
+        }
+      }
+    }
   }
 
   @override
@@ -138,9 +166,10 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     _phone.dispose();
     _dateOfBirth.dispose();
     _idNumber.dispose();
-    _subSkills.dispose();
     _years.dispose();
     _wage.dispose();
+    _disabilityDetails.dispose();
+    _permanentAddress.removeListener(_syncCurrentFromPermanent);
     _permanentAddress.dispose();
     _currentAddress.dispose();
     super.dispose();
@@ -198,6 +227,11 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     );
   }
 
+  void _syncCurrentFromPermanent() {
+    if (!_sameAsPermanent) return;
+    _currentAddress.copyFrom(_permanentAddress);
+  }
+
   void _onSameAsPermanentChanged(bool? value) {
     final checked = value ?? false;
     setState(() {
@@ -212,10 +246,35 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     if (value == _idType) return;
     setState(() {
       _idType = value;
+      _idNumber.clear();
       _idFrontPath = null;
       _idBackPath = null;
+      _idFrontKey = null;
+      _idBackKey = null;
     });
   }
+
+  String? _validateIdNumber(String? value, AppLocalizations l10n) {
+    final requiredError = _required(value, l10n);
+    if (requiredError != null) return requiredError;
+    final raw = value!.trim().replaceAll(RegExp(r'[\s-]'), '');
+    if (_idType == 'aadhaar') {
+      if (!RegExp(r'^\d{12}$').hasMatch(raw)) return l10n.invalidAadhaar;
+    } else if (_idType == 'pan') {
+      if (!RegExp(r'^[A-Za-z]{5}[0-9]{4}[A-Za-z]$').hasMatch(raw)) {
+        return l10n.invalidPan;
+      }
+    }
+    return null;
+  }
+
+  bool get _hasFrontImage =>
+      (_idFrontPath != null && _idFrontPath!.isNotEmpty) ||
+      (_idFrontKey != null && _idFrontKey!.isNotEmpty);
+
+  bool get _hasBackImage =>
+      (_idBackPath != null && _idBackPath!.isNotEmpty) ||
+      (_idBackKey != null && _idBackKey!.isNotEmpty);
 
   Future<void> _pickIdImage({required bool isFront}) async {
     final l10n = AppLocalizations.of(context)!;
@@ -344,15 +403,6 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
-    if (widget.isEditing) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('Editing is not available yet')),
-        );
-      return;
-    }
-
     if (_primaryTrade == null) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -360,7 +410,7 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
       return;
     }
 
-    if (_idFrontPath == null || _idBackPath == null) {
+    if (!_hasFrontImage || !_hasBackImage) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(l10n.idImagesRequired)));
@@ -380,14 +430,19 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
     setState(() => _saving = true);
     try {
       final uploads = ref.read(uploadsRepositoryProvider);
-      final frontKey = await uploads.uploadImage(
-        localPath: _idFrontPath!,
-        kind: 'id-front',
-      );
-      final backKey = await uploads.uploadImage(
-        localPath: _idBackPath!,
-        kind: 'id-back',
-      );
+
+      final frontKey = _idFrontPath != null
+          ? await uploads.uploadImage(
+              localPath: _idFrontPath!,
+              kind: 'id-front',
+            )
+          : _idFrontKey!;
+      final backKey = _idBackPath != null
+          ? await uploads.uploadImage(
+              localPath: _idBackPath!,
+              kind: 'id-back',
+            )
+          : _idBackKey!;
 
       final documents = <String, dynamic>{
         'primaryIdFrontUrl': frontKey,
@@ -396,12 +451,13 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
       };
 
       final body = <String, dynamic>{
-        'idType': _idType,
-        'idNumber': _idNumber.text.trim(),
         'fullName': _fullName.text.trim(),
         'gender': _gender,
         'phoneNumber': _phone.text.trim(),
         'dateOfBirth': _dobToIso(_dateOfBirth.text),
+        'hasDisability': _hasDisability,
+        'disabilityDetails':
+            _hasDisability ? _disabilityDetails.text.trim() : '',
         'permanentAddress': permanent.toApiJson(),
         'presentSameAsPermanent': _sameAsPermanent,
         if (!_sameAsPermanent) 'presentAddress': present.toApiJson(),
@@ -418,9 +474,16 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
         ],
       };
 
-      final created = await ref.read(tradespeopleProvider.notifier).create(body);
+      final notifier = ref.read(workersProvider.notifier);
+      final saved = widget.isEditing
+          ? await notifier.updateWorker(widget.workerId!, body)
+          : await notifier.create({
+              ...body,
+              'idType': _idType,
+              'idNumber': _idNumber.text.trim(),
+            });
       if (!mounted) return;
-      context.go('/tradesperson/${created.id}');
+      context.go('/worker/${saved.id}');
     } catch (e) {
       if (!mounted) return;
       final message = e is ApiError ? e.error : e.toString();
@@ -435,17 +498,17 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    if (_missingTradesperson) {
+    if (_missingWorker) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.editTradesperson)),
-        body: Center(child: Text(l10n.tradespersonNotFound)),
+        appBar: AppBar(title: Text(l10n.editWorker)),
+        body: Center(child: Text(l10n.workerNotFound)),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.isEditing ? l10n.editTradesperson : l10n.addTradesperson,
+          widget.isEditing ? l10n.editWorker : l10n.addWorker,
         ),
         bottom: TabBar(
           controller: _tabController,
@@ -481,7 +544,7 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
                           height: 20.r,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : Text(l10n.saveTradesperson),
+                      : Text(l10n.saveWorker),
                 ),
               ),
             ),
@@ -543,6 +606,30 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
           ),
           validator: (value) => _validateDob(value, l10n),
         ),
+        SizedBox(height: 8.h),
+        CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(l10n.hasDisability),
+          value: _hasDisability,
+          onChanged: (value) {
+            setState(() {
+              _hasDisability = value ?? false;
+              if (!_hasDisability) _disabilityDetails.clear();
+            });
+          },
+        ),
+        if (_hasDisability) ...[
+          SizedBox(height: 4.h),
+          TextFormField(
+            controller: _disabilityDetails,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              labelText: l10n.disabilityDetails,
+              hintText: l10n.disabilityDetailsHint,
+            ),
+          ),
+        ],
         if (!widget.isEditing) ...[
           SizedBox(height: 12.h),
           _formDropdown(
@@ -556,10 +643,53 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
           ),
           SizedBox(height: 12.h),
           TextFormField(
+            key: ValueKey('id-number-$_idType'),
             controller: _idNumber,
-            decoration: InputDecoration(labelText: l10n.idNumber),
-            validator: (value) => _required(value, l10n),
+            keyboardType: _idType == 'aadhaar'
+                ? TextInputType.number
+                : TextInputType.text,
+            textCapitalization: _idType == 'pan'
+                ? TextCapitalization.characters
+                : TextCapitalization.none,
+            inputFormatters: [
+              if (_idType == 'aadhaar') ...[
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(12),
+              ] else if (_idType == 'pan') ...[
+                FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
+                LengthLimitingTextInputFormatter(10),
+                TextInputFormatter.withFunction((oldValue, newValue) {
+                  return newValue.copyWith(
+                    text: newValue.text.toUpperCase(),
+                    selection: newValue.selection,
+                  );
+                }),
+              ],
+            ],
+            decoration: InputDecoration(
+              labelText: l10n.idNumber,
+              hintText: _idType == 'aadhaar'
+                  ? '123456789012'
+                  : (_idType == 'pan' ? 'ABCDE1234F' : null),
+            ),
+            validator: (value) => _validateIdNumber(value, l10n),
           ),
+        ] else ...[
+          SizedBox(height: 12.h),
+          InputDecorator(
+            decoration: InputDecoration(labelText: l10n.idType),
+            child: Text(
+              _idType == null ? '—' : _idTypeLabel(l10n, _idType!),
+              style: textTheme.bodyLarge,
+            ),
+          ),
+          if (_maskedIdentity != null && _maskedIdentity!.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            InputDecorator(
+              decoration: InputDecoration(labelText: l10n.idNumber),
+              child: Text(_maskedIdentity!, style: textTheme.bodyLarge),
+            ),
+          ],
         ],
         SizedBox(height: 16.h),
         Text(l10n.permanentAddress, style: textTheme.titleMedium),
@@ -622,6 +752,7 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
           title: '${l10n.documentFront} · $docLabel',
           emptyLabel: l10n.addFrontImage,
           path: _idFrontPath,
+          objectKey: _idFrontKey,
           onPick: () => _pickIdImage(isFront: true),
           onClear: _idFrontPath == null
               ? null
@@ -632,6 +763,7 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
           title: '${l10n.documentBack} · $docLabel',
           emptyLabel: l10n.addBackImage,
           path: _idBackPath,
+          objectKey: _idBackKey,
           onPick: () => _pickIdImage(isFront: false),
           onClear: _idBackPath == null
               ? null
@@ -659,14 +791,6 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
         JobSearchField(
           initial: _primaryTrade,
           onSelected: (job) => setState(() => _primaryTrade = job),
-        ),
-        SizedBox(height: 12.h),
-        TextFormField(
-          controller: _subSkills,
-          decoration: InputDecoration(
-            labelText: l10n.subSkills,
-            hintText: l10n.subSkillsHint,
-          ),
         ),
         SizedBox(height: 12.h),
         TextFormField(
@@ -717,24 +841,70 @@ class _TradespersonFormPageState extends ConsumerState<TradespersonFormPage>
   }
 }
 
-class _IdImageSlot extends StatelessWidget {
+class _IdImageSlot extends ConsumerWidget {
   const _IdImageSlot({
     required this.title,
     required this.emptyLabel,
     required this.path,
     required this.onPick,
+    this.objectKey,
     this.onClear,
   });
 
   final String title;
   final String emptyLabel;
   final String? path;
+  final String? objectKey;
   final VoidCallback onPick;
   final VoidCallback? onClear;
 
+  bool get _hasImage =>
+      (path != null && path!.isNotEmpty) ||
+      (objectKey != null && objectKey!.isNotEmpty);
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+
+    Widget preview;
+    if (path != null && path!.isNotEmpty) {
+      preview = Image.file(
+        File(path!),
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => ColoredBox(
+          color: muted.withValues(alpha: 0.08),
+          child: Icon(Icons.broken_image_outlined, color: muted),
+        ),
+      );
+    } else if (objectKey != null && objectKey!.isNotEmpty) {
+      preview = FutureBuilder<String>(
+        future: ref.read(uploadsRepositoryProvider).signedReadUrl(objectKey!),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return ColoredBox(
+              color: muted.withValues(alpha: 0.08),
+              child: const Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            );
+          }
+          return Image.network(
+            snapshot.data!,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => ColoredBox(
+              color: muted.withValues(alpha: 0.08),
+              child: Icon(Icons.broken_image_outlined, color: muted),
+            ),
+          );
+        },
+      );
+    } else {
+      preview = const SizedBox.shrink();
+    }
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -751,18 +921,8 @@ class _IdImageSlot extends StatelessWidget {
                     tooltip: 'Remove',
                   ),
           ),
-          if (path != null)
-            AspectRatio(
-              aspectRatio: 16 / 10,
-              child: Image.file(
-                File(path!),
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => ColoredBox(
-                  color: muted.withValues(alpha: 0.08),
-                  child: Icon(Icons.broken_image_outlined, color: muted),
-                ),
-              ),
-            )
+          if (_hasImage)
+            AspectRatio(aspectRatio: 16 / 10, child: preview)
           else
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
@@ -772,7 +932,7 @@ class _IdImageSlot extends StatelessWidget {
                 label: Text(emptyLabel),
               ),
             ),
-          if (path != null)
+          if (_hasImage)
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
               child: OutlinedButton.icon(

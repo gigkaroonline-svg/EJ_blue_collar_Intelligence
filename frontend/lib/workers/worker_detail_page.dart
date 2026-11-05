@@ -10,51 +10,51 @@ import '../features/uploads/data/uploads_repository.dart';
 import '../theme/app_styles.dart';
 import 'availability_actions.dart';
 import 'availability_chip.dart';
-import 'tradesperson.dart';
-import 'tradespeople_provider.dart';
+import 'worker.dart';
+import 'workers_provider.dart';
 import 'document_ui.dart';
 import 'work_history_tile.dart';
 
-class TradespersonDetailPage extends ConsumerWidget {
-  const TradespersonDetailPage({super.key, required this.tradespersonId});
+class WorkerDetailPage extends ConsumerWidget {
+  const WorkerDetailPage({super.key, required this.workerId});
 
-  final String tradespersonId;
+  final String workerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final asyncList = ref.watch(tradespeopleProvider);
+    final asyncList = ref.watch(workersProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return asyncList.when(
       loading: () => Scaffold(
-        appBar: AppBar(title: Text(l10n.tradesperson)),
-        body: const TradespersonDetailSkeleton(),
+        appBar: AppBar(title: Text(l10n.worker)),
+        body: const WorkerDetailSkeleton(),
       ),
       error: (error, _) {
         final message = error is ApiError ? error.error : 'Something went wrong';
         return Scaffold(
-          appBar: AppBar(title: Text(l10n.tradesperson)),
+          appBar: AppBar(title: Text(l10n.worker)),
           body: Center(child: Text(message)),
         );
       },
-      data: (tradespeople) {
-        Tradesperson? tradesperson;
-        for (final item in tradespeople) {
-          if (item.id == tradespersonId) {
-            tradesperson = item;
+      data: (workers) {
+        Worker? worker;
+        for (final item in workers) {
+          if (item.id == workerId) {
+            worker = item;
             break;
           }
         }
 
-        if (tradesperson == null) {
+        if (worker == null) {
           return Scaffold(
-            appBar: AppBar(title: Text(l10n.tradesperson)),
-            body: Center(child: Text(l10n.tradespersonNotFound)),
+            appBar: AppBar(title: Text(l10n.worker)),
+            body: Center(child: Text(l10n.workerNotFound)),
           );
         }
 
-        final person = tradesperson;
+        final person = worker;
         final personal = person.personal;
 
         return DefaultTabController(
@@ -70,10 +70,10 @@ class TradespersonDetailPage extends ConsumerWidget {
                         final tab =
                             DefaultTabController.of(buttonContext).index;
                         buttonContext.push(
-                          '/tradesperson/$tradespersonId/edit?tab=$tab',
+                          '/worker/$workerId/edit?tab=$tab',
                         );
                       },
-                      child: Text(l10n.editTradesperson),
+                      child: Text(l10n.editWorker),
                     );
                   },
                 ),
@@ -113,7 +113,7 @@ class TradespersonDetailPage extends ConsumerWidget {
                     children: [
                       _PersonalTab(personal: personal),
                       _DocumentsTab(documents: person.documents),
-                      _ExperienceTab(tradesperson: person),
+                      _ExperienceTab(worker: person),
                     ],
                   ),
                 ),
@@ -129,7 +129,7 @@ class TradespersonDetailPage extends ConsumerWidget {
 class _PersonalTab extends StatelessWidget {
   const _PersonalTab({required this.personal});
 
-  final TradespersonPersonal personal;
+  final WorkerPersonal personal;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +143,16 @@ class _PersonalTab extends StatelessWidget {
             _InfoRow(label: l10n.phone, value: '+91 ${personal.phoneNumber}'),
             _InfoRow(label: l10n.gender, value: personal.gender),
             _InfoRow(label: l10n.dateOfBirth, value: personal.dateOfBirth),
+            _InfoRow(
+              label: l10n.hasDisability,
+              value: personal.hasDisability ? l10n.yes : l10n.no,
+            ),
+            if (personal.hasDisability &&
+                (personal.disabilityDetails?.trim().isNotEmpty ?? false))
+              _InfoRow(
+                label: l10n.disabilityDetails,
+                value: personal.disabilityDetails!.trim(),
+              ),
           ],
         ),
         const SizedBox(height: 16),
@@ -171,15 +181,15 @@ class _PersonalTab extends StatelessWidget {
 }
 
 class _ExperienceTab extends StatelessWidget {
-  const _ExperienceTab({required this.tradesperson});
+  const _ExperienceTab({required this.worker});
 
-  final Tradesperson tradesperson;
+  final Worker worker;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final experience = tradesperson.experience;
-    final history = tradesperson.sortedWorkHistory;
+    final experience = worker.experience;
+    final history = worker.sortedWorkHistory;
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
@@ -188,12 +198,6 @@ class _ExperienceTab extends StatelessWidget {
         _InfoCard(
           rows: [
             _InfoRow(label: l10n.primaryTrade, value: experience.primaryTrade),
-            _InfoRow(
-              label: l10n.subSkills,
-              value: experience.subSkills.isEmpty
-                  ? '—'
-                  : experience.subSkills.join(', '),
-            ),
             _InfoRow(
               label: l10n.experience,
               value: '${experience.yearsOfExperience} ${l10n.years}',
@@ -222,7 +226,7 @@ class _ExperienceTab extends StatelessWidget {
 class _DocumentsTab extends StatelessWidget {
   const _DocumentsTab({required this.documents});
 
-  final List<TradespersonDocument> documents;
+  final List<WorkerDocument> documents;
 
   @override
   Widget build(BuildContext context) {
@@ -244,18 +248,35 @@ class _DocumentsTab extends StatelessWidget {
   }
 }
 
-class _DocumentTile extends ConsumerWidget {
+class _DocumentTile extends ConsumerStatefulWidget {
   const _DocumentTile({required this.document});
 
-  final TradespersonDocument document;
+  final WorkerDocument document;
+
+  @override
+  ConsumerState<_DocumentTile> createState() => _DocumentTileState();
+}
+
+class _DocumentTileState extends ConsumerState<_DocumentTile> {
+  Future<String>? _thumbUrlFuture;
 
   bool get _isGcsKey {
-    final path = document.imagePath;
+    final path = widget.document.imagePath;
     return path != null && path.startsWith('partners/');
   }
 
+  @override
+  void initState() {
+    super.initState();
+    final key = widget.document.imagePath;
+    if (key != null && key.startsWith('partners/')) {
+      _thumbUrlFuture =
+          ref.read(uploadsRepositoryProvider).signedReadUrl(key);
+    }
+  }
+
   void _openPreview(BuildContext context) {
-    final key = document.imagePath;
+    final key = widget.document.imagePath;
     if (key == null || !_isGcsKey) return;
 
     Navigator.of(context).push(
@@ -263,33 +284,86 @@ class _DocumentTile extends ConsumerWidget {
         fullscreenDialog: true,
         builder: (_) => _DocumentImagePreviewPage(
           objectKey: key,
-          title: documentLabel(AppLocalizations.of(context)!, document),
+          title: documentLabel(AppLocalizations.of(context)!, widget.document),
         ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+    final label = documentLabel(l10n, widget.document);
 
     return Card(
-      child: ListTile(
-        leading: Icon(documentTypeIcon(document.type)),
-        title: Text(documentLabel(l10n, document)),
-        trailing: document.imagePath == null
-            ? null
-            : Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: muted.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(Icons.image_outlined, color: muted),
-              ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
         onTap: _isGcsKey ? () => _openPreview(context) : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListTile(
+              leading: Icon(documentTypeIcon(widget.document.type)),
+              title: Text(label),
+              trailing: _isGcsKey
+                  ? Icon(Icons.open_in_full, size: 18, color: muted)
+                  : null,
+            ),
+            AspectRatio(
+              aspectRatio: 16 / 10,
+              child: _thumbUrlFuture == null
+                  ? ColoredBox(
+                      color: muted.withValues(alpha: 0.08),
+                      child: Icon(Icons.image_not_supported_outlined, color: muted),
+                    )
+                  : FutureBuilder<String>(
+                      future: _thumbUrlFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState != ConnectionState.done) {
+                          return ColoredBox(
+                            color: muted.withValues(alpha: 0.08),
+                            child: const Center(
+                              child: SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                          );
+                        }
+                        if (snapshot.hasError || snapshot.data == null) {
+                          return ColoredBox(
+                            color: muted.withValues(alpha: 0.08),
+                            child: Icon(Icons.broken_image_outlined, color: muted),
+                          );
+                        }
+                        return Image.network(
+                          snapshot.data!,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, progress) {
+                            if (progress == null) return child;
+                            return ColoredBox(
+                              color: muted.withValues(alpha: 0.08),
+                              child: const Center(
+                                child: SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (_, _, _) => ColoredBox(
+                            color: muted.withValues(alpha: 0.08),
+                            child: Icon(Icons.broken_image_outlined, color: muted),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

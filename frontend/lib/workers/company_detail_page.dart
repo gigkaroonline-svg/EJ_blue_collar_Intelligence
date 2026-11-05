@@ -8,8 +8,8 @@ import '../core/errors/api_error.dart';
 import '../core/ui/app_shimmer.dart';
 import '../theme/app_styles.dart';
 import 'availability_chip.dart';
-import 'tradesperson.dart';
-import 'tradespeople_provider.dart';
+import 'worker.dart';
+import 'workers_provider.dart';
 
 class CompanyDetailPage extends ConsumerWidget {
   const CompanyDetailPage({super.key, required this.companyId});
@@ -19,12 +19,12 @@ class CompanyDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final asyncList = ref.watch(tradespeopleProvider);
+    final asyncList = ref.watch(workersProvider);
 
     return asyncList.when(
       loading: () => Scaffold(
         appBar: AppBar(title: Text(l10n.company)),
-        body: const TradespeopleListSkeleton(showHeader: false, itemCount: 4),
+        body: const WorkersListSkeleton(showHeader: false, itemCount: 4),
       ),
       error: (error, _) {
         final message = error is ApiError ? error.error : 'Something went wrong';
@@ -33,9 +33,9 @@ class CompanyDetailPage extends ConsumerWidget {
           body: Center(child: Text(message)),
         );
       },
-      data: (tradespeople) {
-        final links = tradespeopleByCompany(companyId, tradespeople);
-        final title = companyNameForId(companyId, tradespeople) ?? l10n.company;
+      data: (workers) {
+        final links = workersByCompany(companyId, workers);
+        final title = companyNameForId(companyId, workers) ?? l10n.company;
 
         return Scaffold(
           appBar: AppBar(title: Text(title)),
@@ -47,11 +47,11 @@ class CompanyDetailPage extends ConsumerWidget {
                   separatorBuilder: (_, _) => SizedBox(height: 8.h),
                   itemBuilder: (context, index) {
                     final link = links[index];
-                    final personal = link.tradesperson.personal;
-                    final experience = link.tradesperson.experience;
+                    final personal = link.worker.personal;
+                    final experience = link.worker.experience;
                     return Card(
                       child: ListTile(
-                        onTap: () => context.push('/tradesperson/${link.tradesperson.id}'),
+                        onTap: () => context.push('/worker/${link.worker.id}'),
                         title: Text(personal.fullName),
                         subtitle: Text(
                           link.isCurrent
@@ -60,7 +60,7 @@ class CompanyDetailPage extends ConsumerWidget {
                         ),
                         isThreeLine: link.isCurrent,
                         trailing: AvailabilityChip(
-                          isAvailable: link.tradesperson.isReadyToWork,
+                          isAvailable: link.worker.isReadyToWork,
                         ),
                       ),
                     );

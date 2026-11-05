@@ -1,20 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../features/tradespeople/data/tradespeople_repository.dart';
-import 'tradesperson.dart';
+import '../features/workers/data/workers_repository.dart';
+import 'worker.dart';
 
-class TradespeopleNotifier extends AsyncNotifier<List<Tradesperson>> {
-  TradespeopleRepository get _repo => ref.read(tradespeopleRepositoryProvider);
+class WorkersNotifier extends AsyncNotifier<List<Worker>> {
+  WorkersRepository get _repo => ref.read(workersRepositoryProvider);
 
   @override
-  Future<List<Tradesperson>> build() => _repo.list();
+  Future<List<Worker>> build() => _repo.list();
 
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(_repo.list);
   }
 
-  Tradesperson? findById(String id) {
+  Worker? findById(String id) {
     final list = state.asData?.value;
     if (list == null) return null;
     for (final item in list) {
@@ -28,14 +28,23 @@ class TradespeopleNotifier extends AsyncNotifier<List<Tradesperson>> {
     await refresh();
   }
 
-  Future<Tradesperson> create(Map<String, dynamic> body) async {
+  Future<Worker> create(Map<String, dynamic> body) async {
     final created = await _repo.create(body);
     await refresh();
     return created;
   }
+
+  Future<Worker> updateWorker(
+    String id,
+    Map<String, dynamic> body,
+  ) async {
+    final updated = await _repo.update(id, body);
+    await refresh();
+    return updated;
+  }
 }
 
-final tradespeopleProvider =
-    AsyncNotifierProvider<TradespeopleNotifier, List<Tradesperson>>(
-  TradespeopleNotifier.new,
+final workersProvider =
+    AsyncNotifierProvider<WorkersNotifier, List<Worker>>(
+  WorkersNotifier.new,
 );

@@ -10,8 +10,9 @@ import '../features/auth/models/partner.dart';
 import '../features/auth/presentation/partner_profile_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_styles.dart';
-import '../tradespeople/tradesperson_tile.dart';
-import '../tradespeople/tradespeople_provider.dart';
+import '../workers/worker_filters.dart';
+import '../workers/worker_tile.dart';
+import '../workers/workers_provider.dart';
 import 'profile_helpers.dart';
 
 class HomeTab extends ConsumerWidget {
@@ -27,13 +28,13 @@ class HomeTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final asyncList = ref.watch(tradespeopleProvider);
+    final asyncList = ref.watch(workersProvider);
     final asyncPartner = ref.watch(partnerProfileProvider);
     final textTheme = Theme.of(context).textTheme;
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
 
     return asyncList.when(
-      loading: () => const TradespeopleListSkeleton(itemCount: 3),
+      loading: () => const WorkersListSkeleton(itemCount: 3),
       error: (error, _) {
         final message = error is ApiError ? error.error : 'Something went wrong';
         return Center(
@@ -46,7 +47,7 @@ class HomeTab extends ConsumerWidget {
                 SizedBox(height: 12.h),
                 FilledButton(
                   onPressed: () =>
-                      ref.read(tradespeopleProvider.notifier).refresh(),
+                      ref.read(workersProvider.notifier).refresh(),
                   child: const Text('Retry'),
                 ),
               ],
@@ -54,17 +55,17 @@ class HomeTab extends ConsumerWidget {
           ),
         );
       },
-      data: (tradespeople) {
+      data: (workers) {
         final available =
-            tradespeople.where((t) => t.isReadyToWork).length;
-        final onJob = tradespeople.length - available;
-        final preview = tradespeople.take(previewCount).toList();
+            workers.where((t) => t.isReadyToWork).length;
+        final onJob = workers.length - available;
+        final preview = workers.take(previewCount).toList();
         final partner = asyncPartner.asData?.value;
 
         return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(partnerProfileProvider);
-            await ref.read(tradespeopleProvider.notifier).refresh();
+            await ref.read(workersProvider.notifier).refresh();
           },
           child: ListView(
             padding: AppStyles.pagePadding,
@@ -77,13 +78,29 @@ class HomeTab extends ConsumerWidget {
               ),
               SizedBox(height: 20.h),
               _SnapshotRow(
-                total: tradespeople.length,
+                total: workers.length,
                 available: available,
                 onJob: onJob,
+                onRegistered: () {
+                  ref.read(workerFiltersProvider.notifier).clear();
+                  context.go('/workers');
+                },
+                onAvailable: () {
+                  ref.read(workerFiltersProvider.notifier).setFilters(
+                        const WorkerFilters(isReadyToWork: true),
+                      );
+                  context.go('/workers');
+                },
+                onOnJob: () {
+                  ref.read(workerFiltersProvider.notifier).setFilters(
+                        const WorkerFilters(isReadyToWork: false),
+                      );
+                  context.go('/workers');
+                },
               ),
               SizedBox(height: 16.h),
               _RegisterAction(
-                onTap: () => context.push('/tradesperson/new'),
+                onTap: () => context.push('/worker/new'),
               ),
               SizedBox(height: 28.h),
               Row(
@@ -97,27 +114,27 @@ class HomeTab extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  if (tradespeople.isNotEmpty)
+                  if (workers.isNotEmpty)
                     TextButton(
-                      onPressed: () => context.go('/tradespeople'),
-                      child: Text(l10n.moreTradespeople),
+                      onPressed: () => context.go('/workers'),
+                      child: Text(l10n.moreWorkers),
                     ),
                 ],
               ),
               SizedBox(height: 4.h),
               Text(
-                l10n.recentTradespeople,
+                l10n.recentWorkers,
                 style: textTheme.bodyMedium?.copyWith(color: muted),
               ),
               SizedBox(height: 14.h),
               if (preview.isEmpty)
                 _EmptyWorkersHint(
-                  onAdd: () => context.push('/tradesperson/new'),
+                  onAdd: () => context.push('/worker/new'),
                 )
               else
                 ...preview.map(
-                  (tradesperson) =>
-                      TradespersonTile(tradesperson: tradesperson),
+                  (worker) =>
+                      WorkerTile(worker: worker),
                 ),
               SizedBox(height: 12.h),
             ],
@@ -178,11 +195,17 @@ class _SnapshotRow extends StatelessWidget {
     required this.total,
     required this.available,
     required this.onJob,
+    required this.onRegistered,
+    required this.onAvailable,
+    required this.onOnJob,
   });
 
   final int total;
   final int available;
   final int onJob;
+  final VoidCallback onRegistered;
+  final VoidCallback onAvailable;
+  final VoidCallback onOnJob;
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +216,7 @@ class _SnapshotRow extends StatelessWidget {
             label: 'Registered',
             value: '$total',
             accent: AppColors.brand,
+            onTap: onRegistered,
           ),
         ),
         SizedBox(width: 10.w),
@@ -201,6 +225,7 @@ class _SnapshotRow extends StatelessWidget {
             label: 'Available',
             value: '$available',
             accent: const Color(0xFF16A34A),
+            onTap: onAvailable,
           ),
         ),
         SizedBox(width: 10.w),
@@ -209,6 +234,7 @@ class _SnapshotRow extends StatelessWidget {
             label: 'On a job',
             value: '$onJob',
             accent: AppColors.accent,
+            onTap: onOnJob,
           ),
         ),
       ],
@@ -221,42 +247,51 @@ class _StatChip extends StatelessWidget {
     required this.label,
     required this.value,
     required this.accent,
+    required this.onTap,
   });
 
   final String label;
   final String value;
   final Color accent;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-      decoration: BoxDecoration(
-        color: AppColors.card,
+    return Material(
+      color: AppColors.card,
+      borderRadius: BorderRadius.circular(AppStyles.radius),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(AppStyles.radius),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: accent,
-              height: 1.1,
-            ),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppStyles.radius),
+            border: Border.all(color: AppColors.border),
           ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: accent,
+                  height: 1.1,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                label,
+                style: textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -301,7 +336,7 @@ class _RegisterAction extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.addTradesperson,
+                      l10n.addWorker,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: AppColors.ink,

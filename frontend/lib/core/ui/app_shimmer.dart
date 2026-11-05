@@ -34,9 +34,9 @@ abstract final class AppShimmer {
   }
 }
 
-/// Skeleton matching [TradespersonTile] card shape.
-class TradespersonTileSkeleton extends StatelessWidget {
-  const TradespersonTileSkeleton({super.key});
+/// Skeleton matching [WorkerTile] card shape.
+class WorkerTileSkeleton extends StatelessWidget {
+  const WorkerTileSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +74,8 @@ class TradespersonTileSkeleton extends StatelessWidget {
   }
 }
 
-class TradespeopleListSkeleton extends StatelessWidget {
-  const TradespeopleListSkeleton({
+class WorkersListSkeleton extends StatelessWidget {
+  const WorkersListSkeleton({
     super.key,
     this.itemCount = 6,
     this.showHeader = true,
@@ -102,14 +102,14 @@ class TradespeopleListSkeleton extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
         ],
-        for (var i = 0; i < itemCount; i++) const TradespersonTileSkeleton(),
+        for (var i = 0; i < itemCount; i++) const WorkerTileSkeleton(),
       ],
     );
   }
 }
 
-class TradespersonDetailSkeleton extends StatelessWidget {
-  const TradespersonDetailSkeleton({super.key});
+class WorkerDetailSkeleton extends StatelessWidget {
+  const WorkerDetailSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {

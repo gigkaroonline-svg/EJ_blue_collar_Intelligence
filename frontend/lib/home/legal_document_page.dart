@@ -1,43 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
-import '../core/brand.dart';
+import '../core/errors/api_error.dart';
+import '../features/legal/data/legal_repository.dart';
 import '../theme/app_styles.dart';
 
-/// Simple scrollable legal page (privacy / terms).
-class LegalDocumentPage extends StatelessWidget {
+/// Fetches privacy / terms from the API (Mongo-backed).
+class LegalDocumentPage extends ConsumerWidget {
   const LegalDocumentPage({
     super.key,
-    required this.title,
-    required this.paragraphs,
+    required this.slug,
+    required this.fallbackTitle,
   });
 
-  final String title;
-  final List<String> paragraphs;
+  final String slug;
+  final String fallbackTitle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncDoc = ref.watch(legalDocumentProvider(slug));
     final textTheme = Theme.of(context).textTheme;
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: ListView(
-        padding: AppStyles.detailPadding,
-        children: [
-          Text(title, style: textTheme.headlineSmall),
-          SizedBox(height: 8.h),
-          Text(
-            'Last updated: 4 Nov 2026',
-            style: textTheme.bodySmall?.copyWith(color: muted),
-          ),
-          SizedBox(height: 20.h),
-          for (final paragraph in paragraphs) ...[
-            Text(paragraph, style: textTheme.bodyLarge?.copyWith(height: 1.45)),
-            SizedBox(height: 16.h),
-          ],
-        ],
+      appBar: AppBar(title: Text(fallbackTitle)),
+      body: asyncDoc.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) {
+          final message =
+              error is ApiError ? error.error : 'Could not load document';
+          return Center(
+            child: Padding(
+              padding: AppStyles.pagePadding,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(message, textAlign: TextAlign.center),
+                  SizedBox(height: 12.h),
+                  FilledButton(
+                    onPressed: () => ref.invalidate(legalDocumentProvider(slug)),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        data: (doc) {
+          final updated = doc.updatedAt;
+          final updatedLabel = updated == null
+              ? null
+              : 'Last updated: ${updated.day.toString().padLeft(2, '0')}/'
+                  '${updated.month.toString().padLeft(2, '0')}/'
+                  '${updated.year}';
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(legalDocumentProvider(slug));
+              await ref.read(legalDocumentProvider(slug).future);
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: AppStyles.detailPadding,
+              children: [
+                Text(
+                  doc.title.isEmpty ? fallbackTitle : doc.title,
+                  style: textTheme.headlineSmall,
+                ),
+                if (updatedLabel != null) ...[
+                  SizedBox(height: 8.h),
+                  Text(
+                    updatedLabel,
+                    style: textTheme.bodySmall?.copyWith(color: muted),
+                  ),
+                ],
+                SizedBox(height: 20.h),
+                for (final paragraph in doc.paragraphs) ...[
+                  Text(
+                    paragraph,
+                    style: textTheme.bodyLarge?.copyWith(height: 1.45),
+                  ),
+                  SizedBox(height: 16.h),
+                ],
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -48,16 +98,9 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = AppLocalizations.of(context)!.privacyPolicy;
     return LegalDocumentPage(
-      title: title,
-      paragraphs: [
-        'We collect only the information needed to register partners and the tradespeople they onboard — such as name, phone number, location, and ID documents you upload.',
-        'Account and registration data is used to verify partners, match workers to opportunities, and keep availability records accurate. We do not sell personal data.',
-        'Documents and identity details are stored securely and shared only with authorised operations staff for verification and placement.',
-        'You may request correction or deletion of your partner account data by contacting ${AppBrand.supportEmail} or visiting ${AppBrand.websiteUrl}. Some records may be retained where required for compliance or dispute resolution.',
-        'By continuing to use this app you agree to this privacy policy. We may update it; continued use after changes means you accept the updated policy.',
-      ],
+      slug: 'privacy',
+      fallbackTitle: AppLocalizations.of(context)!.privacyPolicy,
     );
   }
 }
@@ -67,16 +110,9 @@ class TermsAndConditionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = AppLocalizations.of(context)!.termsAndConditions;
     return LegalDocumentPage(
-      title: title,
-      paragraphs: [
-        '${AppBrand.name} (${AppBrand.websiteHost}) is for authorised sourcing partners to register and manage tradespeople. You must provide accurate information and keep your login credentials private.',
-        'You are responsible for the accuracy of tradesperson details and documents you submit. Misuse, false data, or unauthorised access may result in account suspension.',
-        'Availability status and job placement information are tools for coordination; they do not create employment contracts by themselves.',
-        'We may suspend or terminate access if these terms are violated, or if your partner account is rejected or withdrawn by administrators.',
-        'These terms are governed by applicable Indian law. If a section is found unenforceable, the rest remain in effect.',
-      ],
+      slug: 'terms',
+      fallbackTitle: AppLocalizations.of(context)!.termsAndConditions,
     );
   }
 }

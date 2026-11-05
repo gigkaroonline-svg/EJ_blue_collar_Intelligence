@@ -154,7 +154,6 @@ class _SkillSearchFieldState extends ConsumerState<SkillSearchField> {
           decoration: InputDecoration(
             labelText: widget.label ?? l10n.primaryTrade,
             hintText: 'Search or add a trade',
-            prefixIcon: const Icon(Icons.handyman_outlined),
             suffixIcon: _creating
                 ? const Padding(
                     padding: EdgeInsets.all(12),
@@ -200,11 +199,9 @@ class _SkillSearchFieldState extends ConsumerState<SkillSearchField> {
                   final option = options.elementAt(index);
                   return ListTile(
                     dense: true,
-                    leading: Icon(
-                      option.isCreate
-                          ? Icons.add_circle_outline
-                          : Icons.handyman_outlined,
-                    ),
+                    leading: option.isCreate
+                        ? const Icon(Icons.add_circle_outline)
+                        : null,
                     title: Text(option.label),
                     onTap: () => onSelected(option),
                   );

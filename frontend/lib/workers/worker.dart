@@ -77,8 +77,8 @@ class WorkEntry {
   }
 }
 
-class TradespersonDocument {
-  const TradespersonDocument({
+class WorkerDocument {
+  const WorkerDocument({
     required this.type,
     this.imagePath,
     this.side,
@@ -166,14 +166,16 @@ class Address {
   }
 }
 
-class TradespersonPersonal {
-  const TradespersonPersonal({
+class WorkerPersonal {
+  const WorkerPersonal({
     required this.fullName,
     required this.phoneNumber,
     required this.gender,
     required this.dateOfBirth,
     required this.permanentAddress,
     required this.currentAddress,
+    this.hasDisability = false,
+    this.disabilityDetails,
   });
 
   final String fullName;
@@ -182,28 +184,34 @@ class TradespersonPersonal {
   final String dateOfBirth;
   final Address permanentAddress;
   final Address currentAddress;
+  final bool hasDisability;
+  final String? disabilityDetails;
 
-  TradespersonPersonal copyWith({
+  WorkerPersonal copyWith({
     String? fullName,
     String? phoneNumber,
     String? gender,
     String? dateOfBirth,
     Address? permanentAddress,
     Address? currentAddress,
+    bool? hasDisability,
+    String? disabilityDetails,
   }) {
-    return TradespersonPersonal(
+    return WorkerPersonal(
       fullName: fullName ?? this.fullName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       gender: gender ?? this.gender,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       permanentAddress: permanentAddress ?? this.permanentAddress,
       currentAddress: currentAddress ?? this.currentAddress,
+      hasDisability: hasDisability ?? this.hasDisability,
+      disabilityDetails: disabilityDetails ?? this.disabilityDetails,
     );
   }
 }
 
-class TradespersonExperience {
-  const TradespersonExperience({
+class WorkerExperience {
+  const WorkerExperience({
     required this.primaryTrade,
     required this.subSkills,
     required this.yearsOfExperience,
@@ -215,13 +223,13 @@ class TradespersonExperience {
   final int yearsOfExperience;
   final int dailyWageExpected;
 
-  TradespersonExperience copyWith({
+  WorkerExperience copyWith({
     String? primaryTrade,
     List<String>? subSkills,
     int? yearsOfExperience,
     int? dailyWageExpected,
   }) {
-    return TradespersonExperience(
+    return WorkerExperience(
       primaryTrade: primaryTrade ?? this.primaryTrade,
       subSkills: subSkills ?? this.subSkills,
       yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
@@ -230,8 +238,8 @@ class TradespersonExperience {
   }
 }
 
-class Tradesperson {
-  const Tradesperson({
+class Worker {
+  const Worker({
     required this.id,
     required this.personal,
     required this.experience,
@@ -244,9 +252,9 @@ class Tradesperson {
   });
 
   final String id;
-  final TradespersonPersonal personal;
-  final TradespersonExperience experience;
-  final List<TradespersonDocument> documents;
+  final WorkerPersonal personal;
+  final WorkerExperience experience;
+  final List<WorkerDocument> documents;
   final List<WorkEntry> workHistory;
   final bool isReadyToWork;
   final String? idType;
@@ -264,7 +272,7 @@ class Tradesperson {
     return entries;
   }
 
-  factory Tradesperson.fromJson(Map<String, dynamic> json) {
+  factory Worker.fromJson(Map<String, dynamic> json) {
     final permanent = Address.fromJson(
       json['permanentAddress'] is Map
           ? Map<String, dynamic>.from(json['permanentAddress'] as Map)
@@ -294,7 +302,7 @@ class Tradesperson {
 
     String tradeName = '';
     String? tradeId;
-    final primaryTrade = json['primaryTrade'];
+    final primaryTrade = json['primaryTrade'] ?? json['jobId'];
     if (primaryTrade is Map) {
       tradeId = primaryTrade['id']?.toString() ?? primaryTrade['_id']?.toString();
       tradeName = primaryTrade['name']?.toString() ?? '';
@@ -312,7 +320,7 @@ class Tradesperson {
       }
     }
 
-    final docs = <TradespersonDocument>[];
+    final docs = <WorkerDocument>[];
     final documents = json['documents'];
     final idType = json['idType']?.toString();
     final primaryType =
@@ -324,14 +332,14 @@ class Tradesperson {
       final photo = documents['photoUrl']?.toString();
 
       if (front != null && front.isNotEmpty) {
-        docs.add(TradespersonDocument(
+        docs.add(WorkerDocument(
           type: primaryType,
           imagePath: front,
           side: DocumentSide.front,
         ));
       }
       if (back != null && back.isNotEmpty) {
-        docs.add(TradespersonDocument(
+        docs.add(WorkerDocument(
           type: primaryType,
           imagePath: back,
           side: DocumentSide.back,
@@ -339,13 +347,13 @@ class Tradesperson {
       }
       // Avoid a duplicate row when panCardUrl is the same object as the front ID.
       if (pan != null && pan.isNotEmpty && pan != front) {
-        docs.add(TradespersonDocument(
+        docs.add(WorkerDocument(
           type: DocumentType.pan,
           imagePath: pan,
         ));
       }
       if (photo != null && photo.isNotEmpty) {
-        docs.add(TradespersonDocument(
+        docs.add(WorkerDocument(
           type: DocumentType.photo,
           imagePath: photo,
         ));
@@ -361,21 +369,23 @@ class Tradesperson {
           : dob.toString();
     }
 
-    return Tradesperson(
+    return Worker(
       id: json['id']?.toString() ?? json['_id']?.toString() ?? '',
       idType: json['idType']?.toString(),
       maskedIdentity: json['maskedIdentity']?.toString(),
       primaryTradeId: tradeId,
       isReadyToWork: json['isReadyToWork'] == true,
-      personal: TradespersonPersonal(
+      personal: WorkerPersonal(
         fullName: json['fullName']?.toString() ?? '',
         phoneNumber: json['phoneNumber']?.toString() ?? '',
         gender: json['gender']?.toString() ?? '',
         dateOfBirth: dobText,
         permanentAddress: permanent,
         currentAddress: present,
+        hasDisability: json['hasDisability'] == true,
+        disabilityDetails: json['disabilityDetails']?.toString(),
       ),
-      experience: TradespersonExperience(
+      experience: WorkerExperience(
         primaryTrade: tradeName.isEmpty ? '—' : tradeName,
         subSkills: skillNames,
         yearsOfExperience: maxYears,
@@ -386,18 +396,18 @@ class Tradesperson {
     );
   }
 
-  Tradesperson copyWith({
+  Worker copyWith({
     String? id,
-    TradespersonPersonal? personal,
-    TradespersonExperience? experience,
-    List<TradespersonDocument>? documents,
+    WorkerPersonal? personal,
+    WorkerExperience? experience,
+    List<WorkerDocument>? documents,
     List<WorkEntry>? workHistory,
     bool? isReadyToWork,
     String? idType,
     String? maskedIdentity,
     String? primaryTradeId,
   }) {
-    return Tradesperson(
+    return Worker(
       id: id ?? this.id,
       personal: personal ?? this.personal,
       experience: experience ?? this.experience,
@@ -411,13 +421,13 @@ class Tradesperson {
   }
 }
 
-class CompanyTradespersonLink {
-  const CompanyTradespersonLink({
-    required this.tradesperson,
+class CompanyWorkerLink {
+  const CompanyWorkerLink({
+    required this.worker,
     required this.isCurrent,
   });
 
-  final Tradesperson tradesperson;
+  final Worker worker;
   final bool isCurrent;
 }
 
@@ -428,14 +438,14 @@ String resolveCompanyName(WorkEntry entry) {
   return entry.companyId ?? '';
 }
 
-List<CompanyTradespersonLink> tradespeopleByCompany(
+List<CompanyWorkerLink> workersByCompany(
   String companyId,
-  List<Tradesperson> tradespeople,
+  List<Worker> workers,
 ) {
-  final links = <CompanyTradespersonLink>[];
-  for (final tradesperson in tradespeople) {
+  final links = <CompanyWorkerLink>[];
+  for (final worker in workers) {
     var matched = false;
-    for (final entry in tradesperson.workHistory) {
+    for (final entry in worker.workHistory) {
       if (entry.companyId == companyId) {
         matched = true;
         break;
@@ -443,9 +453,9 @@ List<CompanyTradespersonLink> tradespeopleByCompany(
     }
     if (matched) {
       links.add(
-        CompanyTradespersonLink(
-          tradesperson: tradesperson,
-          isCurrent: !tradesperson.isReadyToWork,
+        CompanyWorkerLink(
+          worker: worker,
+          isCurrent: !worker.isReadyToWork,
         ),
       );
     }
@@ -454,13 +464,13 @@ List<CompanyTradespersonLink> tradespeopleByCompany(
     if (a.isCurrent != b.isCurrent) {
       return a.isCurrent ? -1 : 1;
     }
-    return a.tradesperson.personal.fullName.compareTo(b.tradesperson.personal.fullName);
+    return a.worker.personal.fullName.compareTo(b.worker.personal.fullName);
   });
   return links;
 }
 
-String? companyNameForId(String companyId, List<Tradesperson> tradespeople) {
-  for (final person in tradespeople) {
+String? companyNameForId(String companyId, List<Worker> workers) {
+  for (final person in workers) {
     for (final entry in person.workHistory) {
       if (entry.companyId == companyId &&
           entry.companyName != null &&

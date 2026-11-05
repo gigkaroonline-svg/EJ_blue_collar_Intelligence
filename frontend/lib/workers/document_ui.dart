@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
-import 'tradesperson.dart';
+import 'worker.dart';
 
 IconData documentTypeIcon(DocumentType type) {
   switch (type) {
@@ -33,7 +33,7 @@ String documentTypeLabel(AppLocalizations l10n, DocumentType type) {
   }
 }
 
-String documentLabel(AppLocalizations l10n, TradespersonDocument document) {
+String documentLabel(AppLocalizations l10n, WorkerDocument document) {
   final base = documentTypeLabel(l10n, document.type);
   switch (document.side) {
     case DocumentSide.front:

@@ -28,6 +28,7 @@ Future<void> showLanguagePicker(BuildContext context, WidgetRef ref) {
 
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     showDragHandle: true,
     builder: (sheetContext) {
       final textTheme = Theme.of(sheetContext).textTheme;
