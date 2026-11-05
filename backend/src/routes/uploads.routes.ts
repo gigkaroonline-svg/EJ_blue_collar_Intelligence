@@ -14,7 +14,7 @@ export const uploadsRouter = Router();
 
 uploadsRouter.use(requireAuth, requireAccepted);
 
-const KINDS = new Set(['id-front', 'id-back', 'pan', 'photo']);
+const KINDS = new Set(['id-front', 'id-back', 'pan', 'photo', 'avatar']);
 
 uploadsRouter.post(
   '/signed-url',
@@ -24,7 +24,7 @@ uploadsRouter.post(
     if (!KINDS.has(kind)) {
       throw new AppError(
         400,
-        'kind must be one of: id-front, id-back, pan, photo',
+        'kind must be one of: id-front, id-back, pan, photo, avatar',
         'invalid_kind',
       );
     }

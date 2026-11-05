@@ -1,10 +1,10 @@
-// Sample partner/company/tradesperson data for local/dev.
+// Sample partner/company/worker data for local/dev.
 // Does NOT wipe the catalog (categories / skills / jobs) — run import:catalog for that.
 import bcrypt from 'bcryptjs';
 import mongoose, { Types } from 'mongoose';
 import { connectToMongoDB, disconnectFromMongoDB } from '../config/db';
 import {
-  Admin, Company, Job, Tradesperson, TradespersonAvailabilityLog, SourcingPartner, PartnerOtp,
+  Admin, Company, Job, Worker, WorkerAvailabilityLog, SourcingPartner, PartnerOtp,
 } from '../models';
 import { normalize } from '../services/catalog';
 
@@ -97,7 +97,7 @@ async function main() {
   await connectToMongoDB();
   await dropLegacyCollections();
   await Promise.all([
-    Tradesperson.deleteMany({}), TradespersonAvailabilityLog.deleteMany({}),
+    Worker.deleteMany({}), WorkerAvailabilityLog.deleteMany({}),
     SourcingPartner.deleteMany({}), PartnerOtp.deleteMany({}),
     Admin.deleteMany({}), Company.deleteMany({}),
   ]);
@@ -107,7 +107,7 @@ async function main() {
   const job1 = sampleJobs[1] ?? sampleJobs[0];
   const job2 = sampleJobs[2] ?? sampleJobs[0];
 
-  const tradespeople = [
+  const workers = [
     {
       _id: id(), idType: 'aadhaar', identityHash: hash('a'), maskedIdentity: 'XXXX-XXXX-1234',
       fullName: 'Mohan Singh', dateOfBirth: new Date('1990-04-12'), gender: 'male', phoneNumber: '9000000001',
@@ -162,11 +162,11 @@ async function main() {
   await SourcingPartner.insertMany(await buildPartners(passwordHash));
   console.log(`Partner password (dev): ${DEV_PASSWORD}`);
   await Company.insertMany(companies);
-  await Tradesperson.insertMany(tradespeople);
-  await TradespersonAvailabilityLog.insertMany([
-    { tradespersonId: tradespeople[0]._id, previousStatus: false, newStatus: true, updatedBy: { partnerId: cscId, role: 'csc' } },
-    { tradespersonId: tradespeople[1]._id, previousStatus: true, newStatus: false, updatedBy: { partnerId: cmcId, role: 'cmc' } },
-    { tradespersonId: tradespeople[2]._id, previousStatus: false, newStatus: true, updatedBy: { partnerId: ngoId, role: 'gov_ngo' } },
+  await Worker.insertMany(workers);
+  await WorkerAvailabilityLog.insertMany([
+    { workerId: workers[0]._id, previousStatus: false, newStatus: true, updatedBy: { partnerId: cscId, role: 'csc' } },
+    { workerId: workers[1]._id, previousStatus: true, newStatus: false, updatedBy: { partnerId: cmcId, role: 'cmc' } },
+    { workerId: workers[2]._id, previousStatus: false, newStatus: true, updatedBy: { partnerId: ngoId, role: 'gov_ngo' } },
   ]);
   await PartnerOtp.create({
     phoneNumber: '9876500003', otpHmac: 'dummy-hmac-not-a-real-otp', purpose: 'signup',
@@ -174,7 +174,7 @@ async function main() {
   });
 
   console.log(
-    `Seeded: 1 admin, 4 partners, 3 companies, 3 tradespeople (linked to ${sampleJobs.length} catalog jobs)`,
+    `Seeded: 1 admin, 4 partners, 3 companies, 3 workers (linked to ${sampleJobs.length} catalog jobs)`,
   );
   if (!sampleJobs.length) {
     console.warn('No accepted jobs found — run npm run import:catalog -- --reset first');

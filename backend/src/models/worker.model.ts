@@ -18,7 +18,7 @@ const workExperience = new Schema({
   },
 });
 
-const tradespersonSchema = new Schema(
+const workerSchema = new Schema(
   {
     idType: { type: String, required: true },
     identityHash: { type: String, required: true },
@@ -29,6 +29,10 @@ const tradespersonSchema = new Schema(
     dateOfBirth: Date,
     gender: String,
     phoneNumber: String,
+
+    /** Person with disability (PwD). Optional details when true. */
+    hasDisability: { type: Boolean, default: false },
+    disabilityDetails: { type: String, trim: true },
 
     permanentAddress: address,
     presentAddress: address,
@@ -59,12 +63,12 @@ const tradespersonSchema = new Schema(
   { timestamps: true },
 );
 
-tradespersonSchema.index({ idType: 1, identityHash: 1 }, { unique: true });
-tradespersonSchema.index({ 'permanentAddress.state': 1, 'permanentAddress.district': 1 });
-tradespersonSchema.index({ isReadyToWork: 1, skillIds: 1 });
-tradespersonSchema.index({ skillIds: 1 });
-tradespersonSchema.index({ jobId: 1 });
-tradespersonSchema.index({ 'workExperiences.companyId': 1 });
-tradespersonSchema.index({ 'registeredBy.partnerId': 1 });
+workerSchema.index({ idType: 1, identityHash: 1 }, { unique: true });
+workerSchema.index({ 'permanentAddress.state': 1, 'permanentAddress.district': 1 });
+workerSchema.index({ isReadyToWork: 1, skillIds: 1 });
+workerSchema.index({ skillIds: 1 });
+workerSchema.index({ jobId: 1 });
+workerSchema.index({ 'workExperiences.companyId': 1 });
+workerSchema.index({ 'registeredBy.partnerId': 1 });
 
-export const Tradesperson = model('Tradesperson', tradespersonSchema, 'tradespeople');
+export const Worker = model('Worker', workerSchema, 'workers');

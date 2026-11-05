@@ -6,7 +6,9 @@ import {
   searchJobs,
   searchCompanies,
   skillDisplayName,
+  jobDisplayName,
   getOrCreateSkill,
+  getOrCreateJob,
   getOrCreateCompany,
   jobView,
   levelsForLang,
@@ -80,6 +82,29 @@ catalogRouter.post(
       id: skill.id,
       name: skillDisplayName(skill, typeof lang === 'string' ? lang : undefined),
       status: skill.status,
+    });
+  }),
+);
+
+catalogRouter.post(
+  '/jobs',
+  requireAuth,
+  requireAccepted,
+  asyncHandler(async (req, res) => {
+    const { name, lang } = req.body ?? {};
+    if (typeof name !== 'string' || !name.trim()) {
+      throw new AppError(400, 'name is required', 'validation_error', { name: 'missing_field' });
+    }
+    const job = await getOrCreateJob({
+      name,
+      lang: typeof lang === 'string' ? lang : undefined,
+      partnerId: req.partner!.id,
+    });
+    if (!job) throw new AppError(422, 'Job was rejected', 'catalog_item_rejected');
+    res.json({
+      id: job.id,
+      name: jobDisplayName(job, typeof lang === 'string' ? lang : undefined),
+      status: job.status,
     });
   }),
 );

@@ -1,5 +1,5 @@
-export * from './tradesperson.model';
-export * from './tradespersonAvailabilityLog.model';
+export * from './worker.model';
+export * from './workerAvailabilityLog.model';
 export * from './sourcingPartner.model';
 export * from './partnerOtp.model';
 export * from './admin.model';
@@ -7,4 +7,5 @@ export * from './company.model';
 export * from './category.model';
 export * from './skill.model';
 export * from './job.model';
+export * from './legalDocument.model';
 export * from './i18n';

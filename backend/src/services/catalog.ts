@@ -85,6 +85,51 @@ export async function getOrCreateSkill({
   return resolveSkill(doc);
 }
 
+async function resolveJob(doc: any) {
+  if (!doc || doc.status === 'rejected') return null;
+  return doc;
+}
+
+/** Partner-suggested main work (job/trade). Created as pending for admin review. */
+export async function getOrCreateJob({
+  name,
+  lang,
+  partnerId,
+}: {
+  name: string;
+  lang?: string;
+  partnerId: Types.ObjectId | string;
+}) {
+  const trimmed = name.trim();
+  const term = normalize(name);
+  let doc = await Job.findOne({ searchTerms: term });
+
+  if (!doc) {
+    try {
+      doc = await Job.create({
+        names: { [lang ?? 'en']: trimmed },
+        aliases: [],
+        searchTerms: [term],
+        skills: [],
+        status: 'pending',
+        suggestedBy: partnerId,
+      });
+    } catch (err: any) {
+      if (err?.code !== 11000) throw err;
+      doc = await Job.findOne({ searchTerms: term });
+    }
+  }
+
+  return resolveJob(doc);
+}
+
+export function jobDisplayName(
+  job: { names?: Map<string, string> | Record<string, string> },
+  lang?: string,
+): string {
+  return skillDisplayName(job, lang);
+}
+
 export function buildSearchTerms(
   names: Map<string, string> | Record<string, string> | Iterable<[string, string]>,
   aliases: string[] = [],

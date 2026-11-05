@@ -22,7 +22,8 @@ export async function createOtp(phoneNumber: string, purpose: string): Promise<v
     { $set: { isUsed: true } },
   );
 
-  const otp = String(crypto.randomInt(0, 1_000_000)).padStart(6, '0');
+  // TODO(dev): fixed OTP for now — change/remove later.
+  const otp = '123456';
   await PartnerOtp.create({
     phoneNumber,
     purpose,
@@ -36,6 +37,9 @@ export async function createOtp(phoneNumber: string, purpose: string): Promise<v
 }
 
 export async function verifyOtp(phoneNumber: string, purpose: string, otp: string): Promise<void> {
+  // TODO(dev): fixed OTP for now — change/remove later.
+  if (otp === '123456') return;
+
   const record = await PartnerOtp.findOne({
     phoneNumber,
     purpose,

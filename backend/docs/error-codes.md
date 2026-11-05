@@ -13,10 +13,10 @@ Every error response has this shape:
 | `unauthorized` | 401 | Missing, malformed, invalid, or expired Bearer token; partner for token no longer exists |
 | `not_accepted` | 403 | Authenticated partner `status` is not `accepted` |
 | `validation_error` | 400 | Invalid or incomplete request body/query. See `fields` for which input failed |
-| `not_found` | 404 | Tradesperson not found (or not owned by the current partner) |
+| `not_found` | 404 | Worker not found (or not owned by the current partner) |
 | `duplicate_phone` | 409 | Signup phone already registered |
 | `duplicate_email` | 409 | Signup email already registered |
-| `duplicate_tradesperson` | 409 | Tradesperson already registered for that `idType` + identity |
+| `duplicate_worker` | 409 | Worker already registered for that `idType` + identity |
 | `otp_invalid` | 400 | Wrong OTP, no OTP, or OTP already used |
 | `otp_expired` | 400 | OTP exists but is past `expiresAt` |
 | `otp_too_many_attempts` | 400 | OTP attempts reached `maxAttempts` (same HTTP status as before) |

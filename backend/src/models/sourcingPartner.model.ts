@@ -7,17 +7,30 @@ import { Schema, model } from 'mongoose';
 //   anganwadi: { awcCode, centerName, sectorCircle, cdpoOfficeName }
 //   gov_ngo:   { organizationName, registrationOrDarpanId, designation, jurisdictionLevel }
 // Per-role validation belongs in the service layer, once signup is built.
+
+const address = new Schema(
+  { line: String, villageOrTown: String, district: String, state: String, pincode: String },
+  { _id: false },
+);
+
 const partnerSchema = new Schema(
   {
     role: { type: String, required: true, enum: ['csc', 'cmc', 'anganwadi', 'gov_ngo'] },
     fullName: { type: String, required: true },
     phoneNumber: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
+    /** Optional — sparse unique so missing/empty emails don't collide. */
+    email: { type: String, unique: true, sparse: true, lowercase: true },
     passwordHash: { type: String, select: false },
+    /** Optional profile photo — GCS object key from /api/uploads/signed-url. */
+    avatarUrl: String,
     status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
     reviewedBy: { type: Schema.Types.ObjectId, ref: 'Admin' },
     reviewedAt: Date,
     rejectionReason: String,
+    permanentAddress: address,
+    presentAddress: address,
+    presentSameAsPermanent: { type: Boolean, default: false },
+    /** Mirrored from permanentAddress for existing filters/indexes. */
     state: String,
     district: String,
     subDistrict: String,
