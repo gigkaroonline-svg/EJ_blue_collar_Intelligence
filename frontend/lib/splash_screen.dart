@@ -35,11 +35,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     _navigated = true;
 
-    if (!localeState.hasSavedLanguage) {
-      context.go('/choose-language');
-      return;
-    }
-
+    // Language is optional (Preferences / login picker). First open → login or home.
     try {
       await ref.read(authNotifierProvider.notifier).checkAuthStatus();
     } catch (_) {
