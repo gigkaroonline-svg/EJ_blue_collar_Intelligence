@@ -16,10 +16,61 @@ class AppLocalizationsGu extends AppLocalizations {
   String get home => 'હોમ';
 
   @override
-  String get candidates => 'કારીગરો';
+  String get workers => 'વર્કર';
 
   @override
-  String get profile => 'પ્રોફાઇલ';
+  String get filter => 'ફિલ્ટર';
+
+  @override
+  String get filters => 'ફિલ્ટર';
+
+  @override
+  String get clearFilters => 'ફિલ્ટર દૂર કરો';
+
+  @override
+  String get applyFilters => 'લાગુ કરો';
+
+  @override
+  String get filterAvailability => 'ઉપલબ્ધતા';
+
+  @override
+  String get filterAll => 'બધા';
+
+  @override
+  String get filterAvailable => 'ઉપલબ્ધ';
+
+  @override
+  String get filterOnJob => 'કામ પર';
+
+  @override
+  String get filterDisability => 'દિવ્યાંગતા';
+
+  @override
+  String get filterWithDisability => 'દિવ્યાંગ';
+
+  @override
+  String get filterWithoutDisability => 'દિવ્યાંગતા વગર';
+
+  @override
+  String get filterTrade => 'મુખ્ય કામ';
+
+  @override
+  String get filterTradeHint => 'જેમ કે મેસન';
+
+  @override
+  String get filterDistrict => 'જિલ્લો';
+
+  @override
+  String get filterDistrictHint => 'જેમ કે સુરત';
+
+  @override
+  String get searchWorkers => 'નામથી શોધો';
+
+  @override
+  String get noWorkersMatchFilters => 'આ ફિલ્ટર સાથે કોઈ વર્કર મળ્યો નથી.';
+
+  @override
+  String get profile => 'એકાઉન્ટ';
 
   @override
   String get signOut => 'સાઇન આઉટ';
@@ -34,30 +85,30 @@ class AppLocalizationsGu extends AppLocalizations {
   String get logIn => 'લૉગ ઇન';
 
   @override
-  String get moreCandidates => 'વધુ કારીગરો';
+  String get moreWorkers => 'વધુ વર્કર';
 
   @override
-  String get recentCandidates => 'તમારી નજીકના કારીગરો.';
+  String get recentWorkers => 'તમારી નજીકના વર્કર.';
 
   @override
-  String candidatesCount(int count) {
+  String workersCount(int count) {
     return 'તમારી યાદીમાં $count લોકો છે.';
   }
 
   @override
-  String get candidate => 'કારીગર';
+  String get worker => 'વર્કર';
 
   @override
-  String get candidateNotFound => 'કારીગર મળ્યો નથી.';
+  String get workerNotFound => 'વર્કર મળ્યો નથી.';
 
   @override
-  String get addCandidate => 'કારીગર ઉમેરો';
+  String get addWorker => 'વર્કર ઉમેરો';
 
   @override
-  String get editCandidate => 'કારીગર બદલો';
+  String get editWorker => 'વર્કર બદલો';
 
   @override
-  String get saveCandidate => 'કારીગર સાચવો';
+  String get saveWorker => 'વર્કર સાચવો';
 
   @override
   String get readyToWork => 'કામ માટે તૈયાર';
@@ -87,7 +138,7 @@ class AppLocalizationsGu extends AppLocalizations {
   String get noDocuments => 'હજી કોઈ દસ્તાવેજ નથી.';
 
   @override
-  String get aadhaar => 'આધાર';
+  String get aadhaar => 'આધાર કાર્ડ';
 
   @override
   String get pan => 'પાન કાર્ડ';
@@ -114,7 +165,85 @@ class AppLocalizationsGu extends AppLocalizations {
   String get gender => 'લિંગ';
 
   @override
+  String get male => 'પુરુષ';
+
+  @override
+  String get female => 'સ્ત્રી';
+
+  @override
+  String get other => 'અન્ય';
+
+  @override
+  String get selectGender => 'લિંગ પસંદ કરો';
+
+  @override
+  String get selectIdType => 'દસ્તાવેજ આઈડી પ્રકાર પસંદ કરો';
+
+  @override
   String get dateOfBirth => 'જન્મ તારીખ';
+
+  @override
+  String get hasDisability => 'દિવ્યાંગ વ્યક્તિ';
+
+  @override
+  String get disabilityDetails => 'દિવ્યાંગતાની વિગત';
+
+  @override
+  String get disabilityDetailsHint => 'દિવ્યાંગતાનો પ્રકાર (વૈકલ્પિક)';
+
+  @override
+  String get yes => 'હા';
+
+  @override
+  String get no => 'ના';
+
+  @override
+  String get idType => 'દસ્તાવેજ આઈડી પ્રકાર';
+
+  @override
+  String get idNumber => 'દસ્તાવેજ આઈડી નંબર';
+
+  @override
+  String get invalidAadhaar => '12 અંકનો માન્ય આધાર નંબર લખો';
+
+  @override
+  String get invalidPan => 'માન્ય પાન લખો (જેમ કે ABCDE1234F)';
+
+  @override
+  String get documentFront => 'આગળ';
+
+  @override
+  String get documentBack => 'પાછળ';
+
+  @override
+  String get addFrontImage => 'આગળની તસવીર ઉમેરો';
+
+  @override
+  String get addBackImage => 'પાછળની તસવીર ઉમેરો';
+
+  @override
+  String get idFront => 'આગળ';
+
+  @override
+  String get idBack => 'પાછળ';
+
+  @override
+  String get takePhoto => 'ફોટો લો';
+
+  @override
+  String get chooseGallery => 'ગેલરીમાંથી પસંદ કરો';
+
+  @override
+  String get removePhoto => 'ફોટો કાઢો';
+
+  @override
+  String get addPhotoOptional => 'ફોટો ઉમેરો (વૈકલ્પિક)';
+
+  @override
+  String get changePhoto => 'ફોટો બદલો';
+
+  @override
+  String get idImagesRequired => 'આઈડીની આગળ અને પાછળ બંને તસવીરો ઉમેરો.';
 
   @override
   String get idLabel => 'આઈડી';
@@ -230,6 +359,12 @@ class AppLocalizationsGu extends AppLocalizations {
   String get forgotPassword => 'પાસવર્ડ ભૂલી ગયા?';
 
   @override
+  String get loginWithPasswordInstead => 'તેના બદલે પાસવર્ડથી લૉગિન કરો';
+
+  @override
+  String get loginWithOtpInstead => 'તેના બદલે ઓટીપીથી લૉગિન કરો';
+
+  @override
   String get newHere => 'નવા છો?';
 
   @override
@@ -239,7 +374,7 @@ class AppLocalizationsGu extends AppLocalizations {
   String get sendOtp => 'ઓટીપી મોકલો';
 
   @override
-  String get verifyOtp => 'ઓટીપી તપાસો';
+  String get verifyOtp => 'ઓટીપી ચકાસો';
 
   @override
   String get resendOtp => 'ઓટીપી ફરી મોકલો';
@@ -248,20 +383,65 @@ class AppLocalizationsGu extends AppLocalizations {
   String get createAccount => 'નવું એકાઉન્ટ બનાવો';
 
   @override
-  String get pendingApproval => 'મંજૂરીની રાહ';
+  String get pendingApproval => 'મંજૂરી બાકી છે';
 
   @override
   String get pendingApprovalBody =>
-      'તમારું એકાઉન્ટ રાહ જુએ છે. આગળ વધતા પહેલાં કોઈએ મંજૂરી આપવી જોઈએ.';
+      'તમારું સાઇનઅપ થઈ ગયું છે. એપ વાપરતા પહેલાં એડમિને તમારું પાર્ટનર એકાઉન્ટ મંજૂર કરવું જોઈએ.';
 
   @override
-  String get myProfile => 'મારી પ્રોફાઇલ';
+  String get myProfile => 'મારું એકાઉન્ટ';
+
+  @override
+  String get authenticationDetails => 'પ્રમાણીકરણ';
+
+  @override
+  String get personalDetails => 'વ્યક્તિગત વિગતો';
+
+  @override
+  String get saveChanges => 'સાચવો';
+
+  @override
+  String get changesSaved => 'ફેરફારો સાચવાયા.';
+
+  @override
+  String get phoneCannotChange => 'ફોન નંબર બદલી શકાતો નથી.';
+
+  @override
+  String get preferences => 'પસંદગીઓ';
+
+  @override
+  String get contactSupport => 'સપોર્ટનો સંપર્ક કરો';
+
+  @override
+  String get contactSupportBody =>
+      'પાર્ટનર એકાઉન્ટમાં મદદ જોઈએ? અમને ઈમેલ કરો, અમે જલ્દી જવાબ આપીશું.';
+
+  @override
+  String get copyEmail => 'ઈમેલ કૉપિ કરો';
+
+  @override
+  String get emailCopied => 'સપોર્ટ ઈમેલ કૉપિ થયો';
+
+  @override
+  String get legal => 'કાનૂની';
+
+  @override
+  String get privacyPolicy => 'ગોપનીયતા નીતિ';
+
+  @override
+  String get termsAndConditions => 'નિયમો અને શરતો';
+
+  @override
+  String appVersion(String version) {
+    return 'વર્ઝન $version';
+  }
 
   @override
   String get requiredField => 'આ ભરવું જરૂરી છે';
 
   @override
-  String get systemDefault => 'ફોનની ભાષા';
+  String get systemDefault => 'ફોનની ભાષા (ડિફોલ્ટ)';
 
   @override
   String get language => 'ભાષા';
@@ -270,11 +450,11 @@ class AppLocalizationsGu extends AppLocalizations {
   String get chooseLanguage => 'ભાષા પસંદ કરો';
 
   @override
-  String get submitForApproval => 'મંજૂરી માટે મોકલો';
+  String get submitForApproval => 'સમીક્ષા માટે સબમિટ કરો';
 
   @override
   String get signupBody =>
-      'આગળના પગલાં અહીં આવશે. મોકલ્યા પછી કોઈ મંજૂરી આપે ત્યાં સુધી રાહ જુઓ.';
+      'સોર્સિંગ પાર્ટનર તરીકે રજિસ્ટર કરો. OTP પછી એડમિન તમારું એકાઉન્ટ તપાસશે.';
 
   @override
   String enterOtpForPhone(String phone) {

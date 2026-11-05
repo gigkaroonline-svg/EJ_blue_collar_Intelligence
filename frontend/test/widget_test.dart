@@ -39,7 +39,7 @@ void main() {
 
     expect(find.text('Home'), findsWidgets);
     expect(find.text('Ramesh Kumar'), findsOneWidget);
-    expect(find.text('More tradespeople'), findsOneWidget);
+    expect(find.text('More workers'), findsOneWidget);
 
     await tester.tap(find.text('Ramesh Kumar'));
     await tester.pumpAndSettle();
@@ -50,23 +50,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Brick work, Plaster'), findsOneWidget);
 
-    await tester.tap(find.text('Edit tradesperson'));
+    await tester.tap(find.text('Edit worker'));
     await tester.pumpAndSettle();
-    expect(find.text('Save tradesperson'), findsOneWidget);
+    expect(find.text('Save worker'), findsOneWidget);
     await tester.enterText(find.widgetWithText(TextFormField, 'Full name'), 'Ramesh Updated');
-    await tester.tap(find.widgetWithText(FilledButton, 'Save tradesperson'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save worker'));
     await tester.pumpAndSettle();
     expect(find.text('Ramesh Updated'), findsWidgets);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Tradespeople'));
+    await tester.tap(find.text('Workers'));
     await tester.pumpAndSettle();
-    expect(find.text('Add tradesperson'), findsOneWidget);
-    await tester.tap(find.text('Add tradesperson'));
+    expect(find.text('Add worker'), findsOneWidget);
+    await tester.tap(find.text('Add worker'));
     await tester.pumpAndSettle();
-    expect(find.text('Save tradesperson'), findsOneWidget);
+    expect(find.text('Save worker'), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();
@@ -98,7 +98,7 @@ void main() {
     await tester.tap(find.text('Sign up'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('phone-field')), '9876543210');
-    await tester.tap(find.widgetWithText(FilledButton, 'Send for okay'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Submit for Review'));
     await tester.pumpAndSettle();
 
     expect(find.text('Waiting for okay'), findsOneWidget);
@@ -112,13 +112,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Waiting for okay'), findsOneWidget);
-    expect(find.text('More tradespeople'), findsNothing);
+    expect(find.text('More workers'), findsNothing);
   });
 
   testWidgets('otp sign in asks for a code', (WidgetTester tester) async {
     await openLogin(tester);
 
-    await tester.tap(find.text('OTP'));
+    await tester.tap(find.text('Login with OTP instead'));
     await tester.pump();
     await tester.enterText(find.byKey(const Key('phone-field')), '9876543210');
     await tester.tap(find.widgetWithText(FilledButton, 'Send OTP'));
@@ -127,10 +127,10 @@ void main() {
     expect(find.text('Enter the 6-digit code for +91 9876543210.'), findsOneWidget);
 
     await tester.enterText(find.byKey(const Key('otp-field')), '123456');
-    await tester.tap(find.widgetWithText(FilledButton, 'Check OTP'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Verify OTP'));
     await tester.pumpAndSettle();
 
-    expect(find.text('More tradespeople'), findsOneWidget);
+    expect(find.text('More workers'), findsOneWidget);
   });
 
   testWidgets('first launch asks for language', (WidgetTester tester) async {

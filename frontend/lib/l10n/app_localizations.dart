@@ -112,16 +112,118 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
-  /// No description provided for @candidates.
+  /// No description provided for @workers.
   ///
   /// In en, this message translates to:
-  /// **'Tradespeople'**
-  String get candidates;
+  /// **'Workers'**
+  String get workers;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyFilters;
+
+  /// No description provided for @filterAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get filterAvailability;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get filterAvailable;
+
+  /// No description provided for @filterOnJob.
+  ///
+  /// In en, this message translates to:
+  /// **'On a job'**
+  String get filterOnJob;
+
+  /// No description provided for @filterDisability.
+  ///
+  /// In en, this message translates to:
+  /// **'Disability'**
+  String get filterDisability;
+
+  /// No description provided for @filterWithDisability.
+  ///
+  /// In en, this message translates to:
+  /// **'With disability'**
+  String get filterWithDisability;
+
+  /// No description provided for @filterWithoutDisability.
+  ///
+  /// In en, this message translates to:
+  /// **'Without disability'**
+  String get filterWithoutDisability;
+
+  /// No description provided for @filterTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Main work'**
+  String get filterTrade;
+
+  /// No description provided for @filterTradeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Mason'**
+  String get filterTradeHint;
+
+  /// No description provided for @filterDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get filterDistrict;
+
+  /// No description provided for @filterDistrictHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Surat'**
+  String get filterDistrictHint;
+
+  /// No description provided for @searchWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get searchWorkers;
+
+  /// No description provided for @noWorkersMatchFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'No workers match these filters.'**
+  String get noWorkersMatchFilters;
 
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
+  /// **'Account'**
   String get profile;
 
   /// No description provided for @signOut.
@@ -148,53 +250,53 @@ abstract class AppLocalizations {
   /// **'Log in'**
   String get logIn;
 
-  /// No description provided for @moreCandidates.
+  /// No description provided for @moreWorkers.
   ///
   /// In en, this message translates to:
-  /// **'More tradespeople'**
-  String get moreCandidates;
+  /// **'More workers'**
+  String get moreWorkers;
 
-  /// No description provided for @recentCandidates.
+  /// No description provided for @recentWorkers.
   ///
   /// In en, this message translates to:
-  /// **'Tradespeople near you.'**
-  String get recentCandidates;
+  /// **'Workers near you.'**
+  String get recentWorkers;
 
-  /// No description provided for @candidatesCount.
+  /// No description provided for @workersCount.
   ///
   /// In en, this message translates to:
   /// **'{count} people in your list.'**
-  String candidatesCount(int count);
+  String workersCount(int count);
 
-  /// No description provided for @candidate.
+  /// No description provided for @worker.
   ///
   /// In en, this message translates to:
-  /// **'Tradesperson'**
-  String get candidate;
+  /// **'Worker'**
+  String get worker;
 
-  /// No description provided for @candidateNotFound.
+  /// No description provided for @workerNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Tradesperson not found.'**
-  String get candidateNotFound;
+  /// **'Worker not found.'**
+  String get workerNotFound;
 
-  /// No description provided for @addCandidate.
+  /// No description provided for @addWorker.
   ///
   /// In en, this message translates to:
-  /// **'Add tradesperson'**
-  String get addCandidate;
+  /// **'Add worker'**
+  String get addWorker;
 
-  /// No description provided for @editCandidate.
+  /// No description provided for @editWorker.
   ///
   /// In en, this message translates to:
-  /// **'Edit tradesperson'**
-  String get editCandidate;
+  /// **'Edit worker'**
+  String get editWorker;
 
-  /// No description provided for @saveCandidate.
+  /// No description provided for @saveWorker.
   ///
   /// In en, this message translates to:
-  /// **'Save tradesperson'**
-  String get saveCandidate;
+  /// **'Save worker'**
+  String get saveWorker;
 
   /// No description provided for @readyToWork.
   ///
@@ -253,13 +355,13 @@ abstract class AppLocalizations {
   /// No description provided for @aadhaar.
   ///
   /// In en, this message translates to:
-  /// **'Aadhaar'**
+  /// **'Aadhaar Card'**
   String get aadhaar;
 
   /// No description provided for @pan.
   ///
   /// In en, this message translates to:
-  /// **'PAN card'**
+  /// **'PAN Card'**
   String get pan;
 
   /// No description provided for @bankPassbook.
@@ -304,11 +406,167 @@ abstract class AppLocalizations {
   /// **'Gender'**
   String get gender;
 
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @selectGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select gender'**
+  String get selectGender;
+
+  /// No description provided for @selectIdType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select document ID type'**
+  String get selectIdType;
+
   /// No description provided for @dateOfBirth.
   ///
   /// In en, this message translates to:
   /// **'Date of birth'**
   String get dateOfBirth;
+
+  /// No description provided for @hasDisability.
+  ///
+  /// In en, this message translates to:
+  /// **'Person with disability'**
+  String get hasDisability;
+
+  /// No description provided for @disabilityDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Disability details'**
+  String get disabilityDetails;
+
+  /// No description provided for @disabilityDetailsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type of disability (optional)'**
+  String get disabilityDetailsHint;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @idType.
+  ///
+  /// In en, this message translates to:
+  /// **'Document ID Type'**
+  String get idType;
+
+  /// No description provided for @idNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Document ID Number'**
+  String get idNumber;
+
+  /// No description provided for @invalidAadhaar.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid 12-digit Aadhaar number'**
+  String get invalidAadhaar;
+
+  /// No description provided for @invalidPan.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid PAN (e.g. ABCDE1234F)'**
+  String get invalidPan;
+
+  /// No description provided for @documentFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get documentFront;
+
+  /// No description provided for @documentBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get documentBack;
+
+  /// No description provided for @addFrontImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add front image'**
+  String get addFrontImage;
+
+  /// No description provided for @addBackImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add back image'**
+  String get addBackImage;
+
+  /// No description provided for @idFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get idFront;
+
+  /// No description provided for @idBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get idBack;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get chooseGallery;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get removePhoto;
+
+  /// No description provided for @addPhotoOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo (optional)'**
+  String get addPhotoOptional;
+
+  /// No description provided for @changePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get changePhoto;
+
+  /// No description provided for @idImagesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Add front and back images of the ID.'**
+  String get idImagesRequired;
 
   /// No description provided for @idLabel.
   ///
@@ -457,7 +715,7 @@ abstract class AppLocalizations {
   /// No description provided for @availabilityHint.
   ///
   /// In en, this message translates to:
-  /// **'Tap Available / On a job to change it.'**
+  /// **'Toggle Available / On a job to change it.'**
   String get availabilityHint;
 
   /// No description provided for @leaveJobTitle.
@@ -532,6 +790,18 @@ abstract class AppLocalizations {
   /// **'Forgot password?'**
   String get forgotPassword;
 
+  /// No description provided for @loginWithPasswordInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with password instead'**
+  String get loginWithPasswordInstead;
+
+  /// No description provided for @loginWithOtpInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with OTP instead'**
+  String get loginWithOtpInstead;
+
   /// No description provided for @newHere.
   ///
   /// In en, this message translates to:
@@ -553,7 +823,7 @@ abstract class AppLocalizations {
   /// No description provided for @verifyOtp.
   ///
   /// In en, this message translates to:
-  /// **'Check OTP'**
+  /// **'Verify OTP'**
   String get verifyOtp;
 
   /// No description provided for @resendOtp.
@@ -571,20 +841,104 @@ abstract class AppLocalizations {
   /// No description provided for @pendingApproval.
   ///
   /// In en, this message translates to:
-  /// **'Waiting for okay'**
+  /// **'Pending approval'**
   String get pendingApproval;
 
   /// No description provided for @pendingApprovalBody.
   ///
   /// In en, this message translates to:
-  /// **'Your account is waiting. Someone must give okay before you can continue.'**
+  /// **'Your signup is in. An admin must approve your partner account before you can use the app.'**
   String get pendingApprovalBody;
 
   /// No description provided for @myProfile.
   ///
   /// In en, this message translates to:
-  /// **'My profile'**
+  /// **'My account'**
   String get myProfile;
+
+  /// No description provided for @authenticationDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication'**
+  String get authenticationDetails;
+
+  /// No description provided for @personalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal details'**
+  String get personalDetails;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
+  /// No description provided for @changesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes saved.'**
+  String get changesSaved;
+
+  /// No description provided for @phoneCannotChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number cannot be changed.'**
+  String get phoneCannotChange;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get contactSupport;
+
+  /// No description provided for @contactSupportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help with your partner account? Email us and we’ll get back to you.'**
+  String get contactSupportBody;
+
+  /// No description provided for @copyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy email'**
+  String get copyEmail;
+
+  /// No description provided for @emailCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Support email copied'**
+  String get emailCopied;
+
+  /// No description provided for @legal.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get legal;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsAndConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and conditions'**
+  String get termsAndConditions;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersion(String version);
 
   /// No description provided for @requiredField.
   ///
@@ -595,7 +949,7 @@ abstract class AppLocalizations {
   /// No description provided for @systemDefault.
   ///
   /// In en, this message translates to:
-  /// **'Phone language'**
+  /// **'Phone language (Default)'**
   String get systemDefault;
 
   /// No description provided for @language.
@@ -613,13 +967,13 @@ abstract class AppLocalizations {
   /// No description provided for @submitForApproval.
   ///
   /// In en, this message translates to:
-  /// **'Send for okay'**
+  /// **'Submit for Review'**
   String get submitForApproval;
 
   /// No description provided for @signupBody.
   ///
   /// In en, this message translates to:
-  /// **'Next steps come here. After you send, wait until someone gives okay.'**
+  /// **'Register as a sourcing partner. After OTP check, an admin will review your account.'**
   String get signupBody;
 
   /// No description provided for @enterOtpForPhone.

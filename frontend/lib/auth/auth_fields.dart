@@ -26,9 +26,14 @@ class AuthPageFrame extends StatelessWidget {
 }
 
 class PhoneField extends StatelessWidget {
-  const PhoneField({super.key, required this.controller});
+  const PhoneField({
+    super.key,
+    required this.controller,
+    this.enabled = true,
+  });
 
   final TextEditingController controller;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class PhoneField extends StatelessWidget {
     return TextFormField(
       key: const Key('phone-field'),
       controller: controller,
+      enabled: enabled,
       keyboardType: TextInputType.phone,
       textInputAction: TextInputAction.next,
       autofillHints: const [AutofillHints.telephoneNumber],

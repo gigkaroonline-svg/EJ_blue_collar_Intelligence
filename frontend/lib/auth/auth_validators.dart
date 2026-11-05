@@ -11,6 +11,29 @@ String? validateIndianMobile(String? value, AppLocalizations l10n) {
   return null;
 }
 
+/// Optional email: empty OK; otherwise basic format check.
+String? validateOptionalEmail(String? value) {
+  final email = value?.trim() ?? '';
+  if (email.isEmpty) return null;
+  if (!email.contains('@') || !email.contains('.')) {
+    return 'Enter a valid email';
+  }
+  return null;
+}
+
+/// Supervisor / secondary phone: required 10-digit Indian mobile, ≠ [ownPhone].
+String? validateOtherMobile(
+  String? value,
+  String ownPhone,
+  AppLocalizations l10n, {
+  String sameAsOwnMessage = 'Must be different from your mobile number',
+}) {
+  final err = validateIndianMobile(value, l10n);
+  if (err != null) return err;
+  if (value!.trim() == ownPhone.trim()) return sameAsOwnMessage;
+  return null;
+}
+
 String? validatePassword(String? value, AppLocalizations l10n) {
   if (value == null || value.isEmpty) {
     return l10n.enterPassword;

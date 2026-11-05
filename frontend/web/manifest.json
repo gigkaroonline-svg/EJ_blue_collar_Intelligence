@@ -1,11 +1,11 @@
 {
-    "name": "EarlyJobs",
-    "short_name": "EarlyJobs",
+    "name": "RojMitra",
+    "short_name": "RojMitra",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",
-    "theme_color": "#F15A29",
-    "description": "EarlyJobs",
+    "theme_color": "#00409C",
+    "description": "RojMitra — Mapping India’s Workforce.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

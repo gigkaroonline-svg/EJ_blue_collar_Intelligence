@@ -16,10 +16,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home => 'Home';
 
   @override
-  String get candidates => 'Tradespeople';
+  String get workers => 'Workers';
 
   @override
-  String get profile => 'Profile';
+  String get filter => 'Filter';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get clearFilters => 'Clear filters';
+
+  @override
+  String get applyFilters => 'Apply';
+
+  @override
+  String get filterAvailability => 'Availability';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterAvailable => 'Available';
+
+  @override
+  String get filterOnJob => 'On a job';
+
+  @override
+  String get filterDisability => 'Disability';
+
+  @override
+  String get filterWithDisability => 'With disability';
+
+  @override
+  String get filterWithoutDisability => 'Without disability';
+
+  @override
+  String get filterTrade => 'Main work';
+
+  @override
+  String get filterTradeHint => 'e.g. Mason';
+
+  @override
+  String get filterDistrict => 'District';
+
+  @override
+  String get filterDistrictHint => 'e.g. Surat';
+
+  @override
+  String get searchWorkers => 'Search by name';
+
+  @override
+  String get noWorkersMatchFilters => 'No workers match these filters.';
+
+  @override
+  String get profile => 'Account';
 
   @override
   String get signOut => 'Sign out';
@@ -34,30 +85,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logIn => 'Log in';
 
   @override
-  String get moreCandidates => 'More tradespeople';
+  String get moreWorkers => 'More workers';
 
   @override
-  String get recentCandidates => 'Tradespeople near you.';
+  String get recentWorkers => 'Workers near you.';
 
   @override
-  String candidatesCount(int count) {
+  String workersCount(int count) {
     return '$count people in your list.';
   }
 
   @override
-  String get candidate => 'Tradesperson';
+  String get worker => 'Worker';
 
   @override
-  String get candidateNotFound => 'Tradesperson not found.';
+  String get workerNotFound => 'Worker not found.';
 
   @override
-  String get addCandidate => 'Add tradesperson';
+  String get addWorker => 'Add worker';
 
   @override
-  String get editCandidate => 'Edit tradesperson';
+  String get editWorker => 'Edit worker';
 
   @override
-  String get saveCandidate => 'Save tradesperson';
+  String get saveWorker => 'Save worker';
 
   @override
   String get readyToWork => 'Available for work';
@@ -87,10 +138,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDocuments => 'No documents yet.';
 
   @override
-  String get aadhaar => 'Aadhaar';
+  String get aadhaar => 'Aadhaar Card';
 
   @override
-  String get pan => 'PAN card';
+  String get pan => 'PAN Card';
 
   @override
   String get bankPassbook => 'Bank passbook';
@@ -114,7 +165,85 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gender => 'Gender';
 
   @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get selectGender => 'Select gender';
+
+  @override
+  String get selectIdType => 'Select document ID type';
+
+  @override
   String get dateOfBirth => 'Date of birth';
+
+  @override
+  String get hasDisability => 'Person with disability';
+
+  @override
+  String get disabilityDetails => 'Disability details';
+
+  @override
+  String get disabilityDetailsHint => 'Type of disability (optional)';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get idType => 'Document ID Type';
+
+  @override
+  String get idNumber => 'Document ID Number';
+
+  @override
+  String get invalidAadhaar => 'Enter a valid 12-digit Aadhaar number';
+
+  @override
+  String get invalidPan => 'Enter a valid PAN (e.g. ABCDE1234F)';
+
+  @override
+  String get documentFront => 'Front';
+
+  @override
+  String get documentBack => 'Back';
+
+  @override
+  String get addFrontImage => 'Add front image';
+
+  @override
+  String get addBackImage => 'Add back image';
+
+  @override
+  String get idFront => 'Front';
+
+  @override
+  String get idBack => 'Back';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseGallery => 'Choose from gallery';
+
+  @override
+  String get removePhoto => 'Remove photo';
+
+  @override
+  String get addPhotoOptional => 'Add photo (optional)';
+
+  @override
+  String get changePhoto => 'Change photo';
+
+  @override
+  String get idImagesRequired => 'Add front and back images of the ID.';
 
   @override
   String get idLabel => 'ID';
@@ -189,7 +318,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get now => 'Now';
 
   @override
-  String get availabilityHint => 'Tap Available / On a job to change it.';
+  String get availabilityHint => 'Toggle Available / On a job to change it.';
 
   @override
   String get leaveJobTitle => 'Ready to leave?';
@@ -230,6 +359,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot password?';
 
   @override
+  String get loginWithPasswordInstead => 'Login with password instead';
+
+  @override
+  String get loginWithOtpInstead => 'Login with OTP instead';
+
+  @override
   String get newHere => 'New here?';
 
   @override
@@ -239,7 +374,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sendOtp => 'Send OTP';
 
   @override
-  String get verifyOtp => 'Check OTP';
+  String get verifyOtp => 'Verify OTP';
 
   @override
   String get resendOtp => 'Send OTP again';
@@ -248,20 +383,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create an account';
 
   @override
-  String get pendingApproval => 'Waiting for okay';
+  String get pendingApproval => 'Pending approval';
 
   @override
   String get pendingApprovalBody =>
-      'Your account is waiting. Someone must give okay before you can continue.';
+      'Your signup is in. An admin must approve your partner account before you can use the app.';
 
   @override
-  String get myProfile => 'My profile';
+  String get myProfile => 'My account';
+
+  @override
+  String get authenticationDetails => 'Authentication';
+
+  @override
+  String get personalDetails => 'Personal details';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get changesSaved => 'Changes saved.';
+
+  @override
+  String get phoneCannotChange => 'Phone number cannot be changed.';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get contactSupport => 'Contact support';
+
+  @override
+  String get contactSupportBody =>
+      'Need help with your partner account? Email us and we’ll get back to you.';
+
+  @override
+  String get copyEmail => 'Copy email';
+
+  @override
+  String get emailCopied => 'Support email copied';
+
+  @override
+  String get legal => 'Legal';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get termsAndConditions => 'Terms and conditions';
+
+  @override
+  String appVersion(String version) {
+    return 'Version $version';
+  }
 
   @override
   String get requiredField => 'Please fill this';
 
   @override
-  String get systemDefault => 'Phone language';
+  String get systemDefault => 'Phone language (Default)';
 
   @override
   String get language => 'Language';
@@ -270,11 +450,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseLanguage => 'Choose language';
 
   @override
-  String get submitForApproval => 'Send for okay';
+  String get submitForApproval => 'Submit for Review';
 
   @override
   String get signupBody =>
-      'Next steps come here. After you send, wait until someone gives okay.';
+      'Register as a sourcing partner. After OTP check, an admin will review your account.';
 
   @override
   String enterOtpForPhone(String phone) {

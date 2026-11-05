@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
 import 'app_styles.dart';
 
 ThemeData buildAppTheme() {
-  final colorScheme = ColorScheme.fromSeed(seedColor: AppColors.brand);
+  final colorScheme = ColorScheme.fromSeed(
+    seedColor: AppColors.brand,
+    primary: AppColors.brand,
+    secondary: AppColors.accent,
+    surface: AppColors.card,
+  );
 
   return ThemeData(
     useMaterial3: true,
@@ -25,7 +31,7 @@ ThemeData buildAppTheme() {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.card,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppStyles.radius),
         borderSide: const BorderSide(color: AppColors.border),
@@ -41,12 +47,17 @@ ThemeData buildAppTheme() {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(52),
+        minimumSize: Size.fromHeight(52.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppStyles.radius),
         ),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
+    ),
+    // M3 refreshed progress look (not the old 2023 spinner).
+    // Full "Expressive" morphing loaders aren't a good fit for field-ops chrome.
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      year2023: false,
     ),
   );
 }

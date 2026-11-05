@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
 
 abstract final class AppStyles {
-  static const pagePadding = EdgeInsets.fromLTRB(20, 12, 20, 24);
-  static const detailPadding = EdgeInsets.fromLTRB(20, 12, 20, 28);
-  static const cardPadding = EdgeInsets.all(20);
-  static const radius = 12.0;
+  static EdgeInsets get pagePadding =>
+      EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h);
 
-  static final cardShape = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(radius),
-    side: const BorderSide(color: AppColors.border),
-  );
+  static EdgeInsets get detailPadding =>
+      EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 28.h);
 
-  static ButtonStyle outlinedTall = OutlinedButton.styleFrom(
-    minimumSize: const Size.fromHeight(52),
-  );
+  static EdgeInsets get cardPadding => EdgeInsets.all(20.r);
+
+  static double get radius => 12.r;
+
+  static RoundedRectangleBorder get cardShape => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius),
+        side: const BorderSide(color: AppColors.border),
+      );
+
+  static ButtonStyle get outlinedTall => OutlinedButton.styleFrom(
+        minimumSize: Size.fromHeight(52.h),
+      );
 }

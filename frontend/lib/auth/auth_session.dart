@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum AccountStatus { pending, approved }
+enum AccountStatus { pending, accepted, rejected }
 
 class AuthSession {
   const AuthSession({required this.phone, required this.status});
@@ -27,7 +27,7 @@ class AuthSessionNotifier extends Notifier<AuthSession?> {
       phone: phone,
       status: _pendingPhones.contains(phone)
           ? AccountStatus.pending
-          : AccountStatus.approved,
+          : AccountStatus.accepted,
     );
     state = session;
     return session;
