@@ -4,4 +4,7 @@ export * from './sourcingPartner.model';
 export * from './partnerOtp.model';
 export * from './admin.model';
 export * from './company.model';
+export * from './category.model';
 export * from './skill.model';
+export * from './job.model';
+export * from './i18n';

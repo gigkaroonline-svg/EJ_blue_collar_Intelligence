@@ -1,88 +1,59 @@
-// Sample data for local/dev. WARNING: wipes the collections first.
+// Sample partner/company/tradesperson data for local/dev.
+// Does NOT wipe the catalog (categories / skills / jobs) — run import:catalog for that.
+import bcrypt from 'bcryptjs';
 import mongoose, { Types } from 'mongoose';
 import { connectToMongoDB, disconnectFromMongoDB } from '../config/db';
 import {
-  Admin, Company, Skill, Tradesperson, TradespersonAvailabilityLog, SourcingPartner, PartnerOtp,
+  Admin, Company, Job, Tradesperson, TradespersonAvailabilityLog, SourcingPartner, PartnerOtp,
 } from '../models';
-import { normalize, buildSearchTerms } from '../services/catalog';
+import { normalize } from '../services/catalog';
 
 const id = () => new Types.ObjectId();
 const cscId = id(), cmcId = id(), awcId = id(), ngoId = id(), adminId = id();
-const masonId = id(), painterId = id(), tailorId = id(), electricianId = id(), welderId = id();
-const pendingSkillId = id();
 const acmeId = id(), shaktiId = id(), pendingCompanyId = id();
 const hash = (c: string) => c.repeat(64);
 
-const partners = [
-  {
-    _id: cscId, role: 'csc', fullName: 'Ramesh Patel', phoneNumber: '9876500001',
-    email: 'ramesh.csc@example.com', status: 'accepted', state: 'Gujarat', district: 'Ahmedabad',
-    subDistrict: 'Daskroi', pincode: '382430',
-    profile: {
-      vleId: 'VLE-GJ-1001', kioskName: 'Patel Digital Seva', kioskAddress: 'Main Bazaar, Daskroi',
-      certificateDocUrl: 'https://example.com/docs/csc1001.pdf',
-      location: { type: 'Point', coordinates: [72.6869, 22.9676] },
-    },
-  },
-  {
-    _id: cmcId, role: 'cmc', fullName: 'Sunita Devi', phoneNumber: '9876500002',
-    email: 'sunita.cmc@example.com', status: 'accepted', state: 'Bihar', district: 'Patna',
-    subDistrict: 'Danapur', pincode: '801503',
-    profile: {
-      mobilizerId: 'MOB-BR-2002', agencyOrPartnerName: 'Rozgar Seva Trust',
-      supervisorName: 'Anil Kumar', supervisorPhone: '9876500099', assignedPanchayat: 'Danapur Khagaul',
-    },
-  },
-  {
-    _id: awcId, role: 'anganwadi', fullName: 'Lakshmi Bai', phoneNumber: '9876500003',
-    email: 'lakshmi.awc@example.com', status: 'pending', state: 'Maharashtra', district: 'Pune',
-    pincode: '412205',
-    profile: { awcCode: 'AWC-MH-3003', centerName: 'Shivaji Nagar AWC', sectorCircle: 'Haveli-2', cdpoOfficeName: 'CDPO Haveli' },
-  },
-  {
-    _id: ngoId, role: 'gov_ngo', fullName: 'Dr. Meera Iyer', phoneNumber: '9876500004',
-    email: 'meera.ngo@example.com', status: 'accepted', state: 'Karnataka', district: 'Bengaluru Urban',
-    pincode: '560001',
-    profile: {
-      organizationName: 'Skill Bharat Foundation', registrationOrDarpanId: 'KA/2020/0012345',
-      designation: 'Program Director', jurisdictionLevel: 'state',
-    },
-  },
-];
+/** Dev password for all seeded accepted partners: Password1 */
+const DEV_PASSWORD = 'Password1';
 
-const masonNames = { en: 'Mason', hi: 'राजमिस्त्री', gu: 'કડિયા' };
-const skills = [
-  {
-    _id: masonId, names: masonNames, aliases: ['kadiya'],
-    searchTerms: buildSearchTerms(masonNames, ['kadiya']),
-    status: 'accepted', suggestedBy: [cscId],
-  },
-  {
-    _id: painterId, names: { en: 'Painter', hi: 'पेंटर' }, aliases: [],
-    searchTerms: buildSearchTerms({ en: 'Painter', hi: 'पेंटर' }),
-    status: 'accepted', suggestedBy: [cscId],
-  },
-  {
-    _id: tailorId, names: { en: 'Tailor', hi: 'दर्जी' }, aliases: [],
-    searchTerms: buildSearchTerms({ en: 'Tailor', hi: 'दर्जी' }),
-    status: 'accepted', suggestedBy: [cmcId],
-  },
-  {
-    _id: electricianId, names: { en: 'Electrician', hi: 'बिजली मिस्त्री' }, aliases: [],
-    searchTerms: buildSearchTerms({ en: 'Electrician', hi: 'बिजली मिस्त्री' }),
-    status: 'accepted', suggestedBy: [ngoId],
-  },
-  {
-    _id: welderId, names: { en: 'Welder' }, aliases: [],
-    searchTerms: buildSearchTerms({ en: 'Welder' }),
-    status: 'accepted', suggestedBy: [cscId],
-  },
-  {
-    _id: pendingSkillId, names: { en: 'Scaffolding' }, aliases: [],
-    searchTerms: buildSearchTerms({ en: 'Scaffolding' }),
-    status: 'pending', suggestedBy: [cmcId],
-  },
-];
+async function buildPartners(passwordHash: string) {
+  return [
+    {
+      _id: cscId, role: 'csc', fullName: 'Ramesh Patel', phoneNumber: '9876500001',
+      email: 'ramesh.csc@example.com', passwordHash, status: 'accepted', state: 'Gujarat', district: 'Ahmedabad',
+      subDistrict: 'Daskroi', pincode: '382430',
+      profile: {
+        vleId: 'VLE-GJ-1001', kioskName: 'Patel Digital Seva', kioskAddress: 'Main Bazaar, Daskroi',
+        certificateDocUrl: 'https://example.com/docs/csc1001.pdf',
+        location: { type: 'Point', coordinates: [72.6869, 22.9676] },
+      },
+    },
+    {
+      _id: cmcId, role: 'cmc', fullName: 'Sunita Devi', phoneNumber: '9876500002',
+      email: 'sunita.cmc@example.com', passwordHash, status: 'accepted', state: 'Bihar', district: 'Patna',
+      subDistrict: 'Danapur', pincode: '801503',
+      profile: {
+        mobilizerId: 'MOB-BR-2002', agencyOrPartnerName: 'Rozgar Seva Trust',
+        supervisorName: 'Anil Kumar', supervisorPhone: '9876500099', assignedPanchayat: 'Danapur Khagaul',
+      },
+    },
+    {
+      _id: awcId, role: 'anganwadi', fullName: 'Lakshmi Bai', phoneNumber: '9876500003',
+      email: 'lakshmi.awc@example.com', passwordHash, status: 'pending', state: 'Maharashtra', district: 'Pune',
+      pincode: '412205',
+      profile: { awcCode: 'AWC-MH-3003', centerName: 'Shivaji Nagar AWC', sectorCircle: 'Haveli-2', cdpoOfficeName: 'CDPO Haveli' },
+    },
+    {
+      _id: ngoId, role: 'gov_ngo', fullName: 'Dr. Meera Iyer', phoneNumber: '9876500004',
+      email: 'meera.ngo@example.com', passwordHash, status: 'accepted', state: 'Karnataka', district: 'Bengaluru Urban',
+      pincode: '560001',
+      profile: {
+        organizationName: 'Skill Bharat Foundation', registrationOrDarpanId: 'KA/2020/0012345',
+        designation: 'Program Director', jurisdictionLevel: 'state',
+      },
+    },
+  ];
+}
 
 const companies = [
   {
@@ -103,44 +74,6 @@ const addr = (district: string, state: string, pincode: string) => ({
   line: '12, Gandhi Road', villageOrTown: district, district, state, pincode,
 });
 
-const tradespeople = [
-  // No skills, no experience
-  {
-    _id: id(), idType: 'aadhaar', identityHash: hash('a'), maskedIdentity: 'XXXX-XXXX-1234',
-    fullName: 'Mohan Singh', dateOfBirth: new Date('1990-04-12'), gender: 'male', phoneNumber: '9000000001',
-    permanentAddress: addr('Ahmedabad', 'Gujarat', '382430'), presentSameAsPermanent: true,
-    isReadyToWork: true, statusUpdatedAt: new Date(),
-    registeredBy: { partnerId: cscId, role: 'csc' },
-    registrationLocation: { type: 'Point', coordinates: [72.6869, 22.9676] },
-    documents: { primaryIdFrontUrl: 'https://example.com/m1/front.jpg', primaryIdBackUrl: 'https://example.com/m1/back.jpg', photoUrl: 'https://example.com/m1/photo.jpg' },
-  },
-  // skillIds + dailyWageExpected, no experience
-  {
-    _id: id(), idType: 'aadhaar', identityHash: hash('b'), maskedIdentity: 'XXXX-XXXX-5678',
-    panNumber: 'ABCDE1234F', fullName: 'Geeta Kumari', dateOfBirth: new Date('1995-09-30'), gender: 'female',
-    phoneNumber: '9000000002',
-    permanentAddress: addr('Patna', 'Bihar', '801503'),
-    presentAddress: addr('Pune', 'Maharashtra', '411001'), presentSameAsPermanent: false,
-    isReadyToWork: false, statusUpdatedAt: new Date(),
-    dailyWageExpected: 550, primaryTrade: tailorId, skillIds: [tailorId, painterId],
-    registeredBy: { partnerId: cmcId, role: 'cmc' },
-    documents: { primaryIdFrontUrl: 'https://example.com/g2/front.jpg', panCardUrl: 'https://example.com/g2/pan.jpg' },
-  },
-  // skillIds + one experience with companyId
-  {
-    _id: id(), idType: 'voter_id', identityHash: hash('c'), maskedIdentity: 'XXXXXX7890',
-    fullName: 'Suresh Yadav', dateOfBirth: new Date('1987-01-05'), gender: 'male', phoneNumber: '9000000003',
-    permanentAddress: addr('Pune', 'Maharashtra', '412205'), presentSameAsPermanent: true,
-    isReadyToWork: true, statusUpdatedAt: new Date(),
-    dailyWageExpected: 900, primaryTrade: electricianId, skillIds: [electricianId, masonId],
-    registeredBy: { partnerId: ngoId, role: 'gov_ngo' },
-    workExperiences: [{
-      companyId: acmeId, skillId: electricianId, yearsOfExperience: 12,
-      addedBy: { partnerId: ngoId, role: 'gov_ngo' },
-    }],
-  },
-];
-
 async function dropLegacyCollections() {
   const db = mongoose.connection.db;
   if (!db) return;
@@ -154,7 +87,6 @@ async function dropLegacyCollections() {
       await db.dropCollection(name);
     } catch (err: any) {
       if (err?.codeName !== 'NamespaceNotFound' && err?.message !== 'ns not found' && !/ns not found/i.test(err?.message ?? '')) {
-        // ignore missing collections only
         if (err?.code !== 26) throw err;
       }
     }
@@ -167,15 +99,68 @@ async function main() {
   await Promise.all([
     Tradesperson.deleteMany({}), TradespersonAvailabilityLog.deleteMany({}),
     SourcingPartner.deleteMany({}), PartnerOtp.deleteMany({}),
-    Admin.deleteMany({}), Company.deleteMany({}), Skill.deleteMany({}),
+    Admin.deleteMany({}), Company.deleteMany({}),
   ]);
+
+  const sampleJobs = await Job.find({ status: 'accepted' }).limit(3);
+  const job0 = sampleJobs[0];
+  const job1 = sampleJobs[1] ?? sampleJobs[0];
+  const job2 = sampleJobs[2] ?? sampleJobs[0];
+
+  const tradespeople = [
+    {
+      _id: id(), idType: 'aadhaar', identityHash: hash('a'), maskedIdentity: 'XXXX-XXXX-1234',
+      fullName: 'Mohan Singh', dateOfBirth: new Date('1990-04-12'), gender: 'male', phoneNumber: '9000000001',
+      permanentAddress: addr('Ahmedabad', 'Gujarat', '382430'), presentSameAsPermanent: true,
+      isReadyToWork: true, statusUpdatedAt: new Date(),
+      jobId: job0?._id,
+      skillIds: job0?.skills ?? [],
+      registeredBy: { partnerId: cscId, role: 'csc' },
+      registrationLocation: { type: 'Point', coordinates: [72.6869, 22.9676] },
+      documents: { primaryIdFrontUrl: 'https://example.com/m1/front.jpg', primaryIdBackUrl: 'https://example.com/m1/back.jpg', photoUrl: 'https://example.com/m1/photo.jpg' },
+    },
+    {
+      _id: id(), idType: 'aadhaar', identityHash: hash('b'), maskedIdentity: 'XXXX-XXXX-5678',
+      panNumber: 'ABCDE1234F', fullName: 'Geeta Kumari', dateOfBirth: new Date('1995-09-30'), gender: 'female',
+      phoneNumber: '9000000002',
+      permanentAddress: addr('Patna', 'Bihar', '801503'),
+      presentAddress: addr('Pune', 'Maharashtra', '411001'), presentSameAsPermanent: false,
+      isReadyToWork: false, statusUpdatedAt: new Date(),
+      dailyWageExpected: 550,
+      jobId: job1?._id,
+      skillIds: job1?.skills ?? [],
+      registeredBy: { partnerId: cmcId, role: 'cmc' },
+      documents: { primaryIdFrontUrl: 'https://example.com/g2/front.jpg', panCardUrl: 'https://example.com/g2/pan.jpg' },
+    },
+    {
+      _id: id(), idType: 'voter_id', identityHash: hash('c'), maskedIdentity: 'XXXXXX7890',
+      fullName: 'Suresh Yadav', dateOfBirth: new Date('1987-01-05'), gender: 'male', phoneNumber: '9000000003',
+      permanentAddress: addr('Pune', 'Maharashtra', '412205'), presentSameAsPermanent: true,
+      isReadyToWork: true, statusUpdatedAt: new Date(),
+      dailyWageExpected: 900,
+      jobId: job2?._id,
+      skillIds: job2?.skills ?? [],
+      registeredBy: { partnerId: ngoId, role: 'gov_ngo' },
+      workExperiences: job2
+        ? [{
+            companyId: acmeId,
+            skillId: job2.skills?.[0],
+            level: 'skilled',
+            yearsOfExperience: 12,
+            addedBy: { partnerId: ngoId, role: 'gov_ngo' },
+          }]
+        : [],
+    },
+  ];
+
+  const passwordHash = await bcrypt.hash(DEV_PASSWORD, 10);
 
   await Admin.create({
     _id: adminId, name: 'Platform Admin', email: 'admin@example.com',
-    passwordHash: 'dummy-hash-not-a-real-password',
+    passwordHash,
   });
-  await SourcingPartner.insertMany(partners);
-  await Skill.insertMany(skills);
+  await SourcingPartner.insertMany(await buildPartners(passwordHash));
+  console.log(`Partner password (dev): ${DEV_PASSWORD}`);
   await Company.insertMany(companies);
   await Tradesperson.insertMany(tradespeople);
   await TradespersonAvailabilityLog.insertMany([
@@ -188,7 +173,12 @@ async function main() {
     expiresAt: new Date(Date.now() + 10 * 60 * 1000),
   });
 
-  console.log('Seeded: 1 admin, 4 partners, 6 skills, 3 companies, 3 tradespeople, 3 availability logs, 1 OTP');
+  console.log(
+    `Seeded: 1 admin, 4 partners, 3 companies, 3 tradespeople (linked to ${sampleJobs.length} catalog jobs)`,
+  );
+  if (!sampleJobs.length) {
+    console.warn('No accepted jobs found — run npm run import:catalog -- --reset first');
+  }
 }
 
 main()

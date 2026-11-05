@@ -1,15 +1,39 @@
 import crypto from 'crypto';
 import { Router } from 'express';
 import { Types } from 'mongoose';
-import { Tradesperson, TradespersonAvailabilityLog, Skill, Company } from '../models';
+import { Tradesperson, TradespersonAvailabilityLog, Skill, Company, Job } from '../models';
 import { asyncHandler, AppError } from '../middleware/asyncHandler';
 import { requireAuth, requireAccepted } from '../middleware/auth';
 import { skillDisplayName } from '../services/catalog';
+import { catalogView } from '../models/i18n';
+import { parseLang } from '../config/languages';
+import { isLevel } from '../config/levels';
 import { env } from '../config/env';
+import { isOurObjectKey } from '../services/gcs';
 
 export const tradespersonRouter = Router();
 
 tradespersonRouter.use(requireAuth, requireAccepted);
+
+function assertDocumentObjectKeys(documents: unknown) {
+  if (documents == null) return;
+  if (typeof documents !== 'object' || Array.isArray(documents)) {
+    throw new AppError(400, 'documents must be an object', 'validation_error', {
+      documents: 'invalid_type',
+    });
+  }
+  for (const [field, value] of Object.entries(documents as Record<string, unknown>)) {
+    if (value == null || value === '') continue;
+    if (typeof value !== 'string' || !isOurObjectKey(value)) {
+      throw new AppError(
+        400,
+        `${field} must be a GCS object key from /api/uploads/signed-url`,
+        'validation_error',
+        { [field]: 'invalid_object_key' },
+      );
+    }
+  }
+}
 
 function normalizeIdNumber(idNumber: string): string {
   return idNumber.trim().replace(/[\s-]/g, '').toLowerCase();
@@ -48,13 +72,19 @@ function refName(doc: any, lang?: string): { id: string; name: string } | null {
   if (doc.name != null && typeof doc.name === 'string' && !doc.names) {
     return { id, name: doc.name };
   }
+  if (doc.names) {
+    const view = catalogView(doc, parseLang(lang));
+    return { id, name: String(view.name ?? skillDisplayName(doc, lang)) };
+  }
   return { id, name: skillDisplayName(doc, lang) };
 }
 
 function formatTradesperson(doc: InstanceType<typeof Tradesperson>, lang?: string) {
   const o = stripIdentityHash(doc);
-  if (o.primaryTrade && typeof o.primaryTrade === 'object' && o.primaryTrade._id) {
-    o.primaryTrade = refName(o.primaryTrade, lang);
+  if (o.jobId && typeof o.jobId === 'object' && o.jobId._id) {
+    o.jobId = refName(o.jobId, lang);
+    // Back-compat for clients still reading primaryTrade as the trade label.
+    o.primaryTrade = o.jobId;
   }
   if (Array.isArray(o.skillIds)) {
     o.skillIds = o.skillIds
@@ -101,8 +131,10 @@ tradespersonRouter.post(
     const {
       idType, idNumber, panNumber, fullName, dateOfBirth, gender, phoneNumber,
       permanentAddress, presentSameAsPermanent, presentAddress, documents,
-      registrationLocation, dailyWageExpected, primaryTrade, skillIds, workExperiences,
+      registrationLocation, dailyWageExpected, jobId, workExperiences,
     } = body;
+    // Accept legacy primaryTrade as jobId alias during client migration.
+    const resolvedJobId = jobId ?? body.primaryTrade;
 
     if (typeof fullName !== 'string' || !fullName.trim()) {
       throw new AppError(400, 'fullName is required', 'validation_error', { fullName: 'missing_field' });
@@ -122,14 +154,15 @@ tradespersonRouter.post(
       }
     }
 
-    const skillIdList: string[] = Array.isArray(skillIds) ? skillIds : [];
-    await assertSkillIds(skillIdList);
-    if (primaryTrade != null) {
-      if (!isObjectId(primaryTrade)) {
-        throw new AppError(400, 'Invalid primaryTrade', 'validation_error', { primaryTrade: 'invalid_id' });
-      }
-      await assertSkillIds([primaryTrade]);
+    if (!isObjectId(resolvedJobId)) {
+      throw new AppError(400, 'jobId is required', 'validation_error', { jobId: 'missing_field' });
     }
+    const job = await Job.findById(resolvedJobId);
+    if (!job || job.status === 'rejected') {
+      throw new AppError(400, 'Invalid jobId', 'validation_error', { jobId: 'invalid_id' });
+    }
+    const skillIdList = (job.skills ?? []).map((s) => String(s));
+    await assertSkillIds(skillIdList);
 
     const experiencesIn = Array.isArray(workExperiences) ? workExperiences : [];
     const experiences = [];
@@ -148,6 +181,9 @@ tradespersonRouter.post(
         }
         await assertSkillIds([ex.skillId]);
       }
+      if (ex.level != null && !isLevel(ex.level)) {
+        throw new AppError(400, 'Invalid level', 'validation_error', { level: 'invalid_value' });
+      }
       if (ex.yearsOfExperience != null) {
         if (typeof ex.yearsOfExperience !== 'number' || ex.yearsOfExperience < 0) {
           throw new AppError(400, 'yearsOfExperience must be >= 0', 'validation_error', {
@@ -158,6 +194,7 @@ tradespersonRouter.post(
       experiences.push({
         companyId: ex.companyId,
         skillId: ex.skillId,
+        level: ex.level,
         yearsOfExperience: ex.yearsOfExperience,
         addedBy: { partnerId: req.partner!.id, role: req.partner!.role },
       });
@@ -165,6 +202,7 @@ tradespersonRouter.post(
 
     const identityHash = hashIdentity(idNumber);
     const maskedIdentity = maskIdentity(idNumber);
+    assertDocumentObjectKeys(documents);
 
     let tradesperson;
     try {
@@ -183,7 +221,7 @@ tradespersonRouter.post(
         documents,
         registrationLocation,
         dailyWageExpected,
-        primaryTrade,
+        jobId: resolvedJobId,
         skillIds: skillIdList,
         workExperiences: experiences,
         isReadyToWork: false,
@@ -220,6 +258,12 @@ tradespersonRouter.get(
       }
       filter.skillIds = req.query.skillId;
     }
+    if (typeof req.query.jobId === 'string' && req.query.jobId) {
+      if (!isObjectId(req.query.jobId)) {
+        throw new AppError(400, 'Invalid jobId', 'validation_error', { jobId: 'invalid_id' });
+      }
+      filter.jobId = req.query.jobId;
+    }
 
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
@@ -231,7 +275,7 @@ tradespersonRouter.get(
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate('primaryTrade')
+        .populate('jobId')
         .populate('skillIds')
         .populate('workExperiences.companyId')
         .populate('workExperiences.skillId'),
@@ -257,7 +301,7 @@ tradespersonRouter.get(
       _id: req.params.id,
       'registeredBy.partnerId': req.partner!.id,
     })
-      .populate('primaryTrade')
+      .populate('jobId')
       .populate('skillIds')
       .populate('workExperiences.companyId')
       .populate('workExperiences.skillId');

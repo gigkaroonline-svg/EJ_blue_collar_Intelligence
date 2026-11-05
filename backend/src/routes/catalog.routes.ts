@@ -3,11 +3,16 @@ import { asyncHandler, AppError } from '../middleware/asyncHandler';
 import { requireAuth, requireAccepted } from '../middleware/auth';
 import {
   searchSkills,
+  searchJobs,
   searchCompanies,
   skillDisplayName,
   getOrCreateSkill,
   getOrCreateCompany,
+  jobView,
+  levelsForLang,
 } from '../services/catalog';
+import { parseLang } from '../config/languages';
+import { catalogView } from '../models/i18n';
 
 export const catalogRouter = Router();
 
@@ -15,13 +20,31 @@ catalogRouter.get(
   '/skills',
   asyncHandler(async (req, res) => {
     const q = typeof req.query.q === 'string' ? req.query.q : '';
-    const lang = typeof req.query.lang === 'string' ? req.query.lang : undefined;
+    const lang = parseLang(req.query.lang);
     if (!q.trim()) {
       res.json([]);
       return;
     }
     const skills = await searchSkills(q, 10);
-    res.json(skills.map((s) => ({ id: s.id, name: skillDisplayName(s, lang) })));
+    res.json(skills.map((s) => catalogView(s as any, lang)));
+  }),
+);
+
+catalogRouter.get(
+  '/jobs',
+  asyncHandler(async (req, res) => {
+    const q = typeof req.query.q === 'string' ? req.query.q : '';
+    const lang = parseLang(req.query.lang);
+    const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+    const jobs = await searchJobs(q, limit);
+    res.json(jobs.map((j) => jobView(j, lang)));
+  }),
+);
+
+catalogRouter.get(
+  '/levels',
+  asyncHandler(async (req, res) => {
+    res.json(levelsForLang(typeof req.query.lang === 'string' ? req.query.lang : undefined));
   }),
 );
 

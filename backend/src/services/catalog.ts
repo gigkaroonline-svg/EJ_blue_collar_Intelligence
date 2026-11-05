@@ -1,5 +1,8 @@
 import { Types } from 'mongoose';
-import { Company, Skill } from '../models';
+import { Company, Skill, Job } from '../models';
+import { catalogView } from '../models/i18n';
+import { Lang, parseLang } from '../config/languages';
+import { LEVEL_KEYS, levelView } from '../config/levels';
 
 export function normalize(s: string): string {
   return s.normalize('NFC').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -67,21 +70,16 @@ export async function getOrCreateSkill({
   if (!doc) {
     try {
       doc = await Skill.create({
-        names: { [lang ?? 'und']: trimmed },
+        names: { [lang ?? 'en']: trimmed },
+        aliases: [],
         searchTerms: [term],
         status: 'pending',
-        suggestedBy: [partnerId],
+        suggestedBy: partnerId,
       });
     } catch (err: any) {
       if (err?.code !== 11000) throw err;
       doc = await Skill.findOne({ searchTerms: term });
     }
-  } else if (doc.status === 'pending') {
-    doc = await Skill.findByIdAndUpdate(
-      doc._id,
-      { $addToSet: { suggestedBy: partnerId } },
-      { new: true },
-    );
   }
 
   return resolveSkill(doc);
@@ -114,6 +112,17 @@ export async function searchSkills(q: string, limit = 10) {
   }).limit(limit);
 }
 
+export async function searchJobs(q: string, limit = 20) {
+  const term = normalize(q);
+  if (!term) {
+    return Job.find({ status: 'accepted' }).sort({ 'names.en': 1 }).limit(limit);
+  }
+  return Job.find({
+    status: 'accepted',
+    searchTerms: { $regex: `^${escapeRegex(term)}` },
+  }).limit(limit);
+}
+
 export async function searchCompanies(q: string, limit = 10) {
   const term = normalize(q);
   if (!term) return [];
@@ -123,7 +132,10 @@ export async function searchCompanies(q: string, limit = 10) {
   }).limit(limit);
 }
 
-export function skillDisplayName(skill: { names?: Map<string, string> | Record<string, string> }, lang?: string): string {
+export function skillDisplayName(
+  skill: { names?: Map<string, string> | Record<string, string> },
+  lang?: string,
+): string {
   const names = skill.names;
   if (!names) return '';
   const get = (k: string) =>
@@ -141,3 +153,21 @@ export function skillDisplayName(skill: { names?: Map<string, string> | Record<s
   const vals = Object.values(names as Record<string, string>);
   return vals[0] ?? '';
 }
+
+export function jobView(job: any, lang?: string) {
+  const l = parseLang(lang);
+  const base = catalogView(job, l, false);
+  return {
+    ...base,
+    skillIds: Array.isArray(job.skills)
+      ? job.skills.map((s: any) => (s?._id ? String(s._id) : String(s)))
+      : [],
+  };
+}
+
+export function levelsForLang(lang?: string) {
+  const l = parseLang(lang);
+  return LEVEL_KEYS.map((key) => levelView(key, l));
+}
+
+export type { Lang };

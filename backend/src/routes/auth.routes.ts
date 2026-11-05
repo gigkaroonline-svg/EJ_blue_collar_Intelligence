@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { SourcingPartner } from '../models';
 import { asyncHandler, AppError } from '../middleware/asyncHandler';
@@ -9,6 +10,23 @@ import { env } from '../config/env';
 export const authRouter = Router();
 
 const ROLES = ['csc', 'cmc', 'anganwadi', 'gov_ngo'] as const;
+
+function partnerAuthResponse(partner: { id: string; role: string; fullName: string; status: string }) {
+  const token = jwt.sign(
+    { sub: partner.id, role: partner.role },
+    env.jwtSecret,
+    { expiresIn: '7d' },
+  );
+  return {
+    token,
+    partner: {
+      id: partner.id,
+      role: partner.role,
+      fullName: partner.fullName,
+      status: partner.status,
+    },
+  };
+}
 
 const PROFILE_REQUIRED: Record<(typeof ROLES)[number], string[]> = {
   csc: ['vleId', 'kioskName'],
@@ -103,13 +121,14 @@ authRouter.post(
 authRouter.post(
   '/request-otp',
   asyncHandler(async (req, res) => {
-    const { phoneNumber } = req.body ?? {};
+    const { phoneNumber, purpose } = req.body ?? {};
+    const otpPurpose = purpose === 'signup' ? 'signup' : 'login';
     // Same response whether or not the phone exists (and if createOtp rate-limits).
     if (isTenDigitPhone(phoneNumber)) {
       const partner = await SourcingPartner.findOne({ phoneNumber });
       if (partner) {
         try {
-          await createOtp(phoneNumber, 'login');
+          await createOtp(phoneNumber, otpPurpose);
         } catch {
           /* keep response generic */
         }
@@ -139,21 +158,35 @@ authRouter.post(
     // Do not reveal whether the phone is registered.
     if (!partner) throw new AppError(400, 'Invalid or expired OTP', 'otp_invalid');
 
-    const token = jwt.sign(
-      { sub: partner.id, role: partner.role },
-      env.jwtSecret,
-      { expiresIn: '7d' },
-    );
+    res.json(partnerAuthResponse(partner));
+  }),
+);
 
-    res.json({
-      token,
-      partner: {
-        id: partner.id,
-        role: partner.role,
-        fullName: partner.fullName,
-        status: partner.status,
-      },
-    });
+authRouter.post(
+  '/login',
+  asyncHandler(async (req, res) => {
+    const { phoneNumber, password } = req.body ?? {};
+    if (!isTenDigitPhone(phoneNumber)) {
+      throw new AppError(400, 'phoneNumber must be 10 digits', 'validation_error', {
+        phoneNumber: 'invalid_phone',
+      });
+    }
+    if (typeof password !== 'string' || !password) {
+      throw new AppError(400, 'password is required', 'validation_error', { password: 'missing_field' });
+    }
+
+    const partner = await SourcingPartner.findOne({ phoneNumber }).select('+passwordHash');
+    // Same generic failure whether phone/password is wrong or password is unset.
+    if (!partner?.passwordHash) {
+      throw new AppError(401, 'Invalid phone number or password', 'invalid_credentials');
+    }
+
+    const ok = await bcrypt.compare(password, partner.passwordHash);
+    if (!ok) {
+      throw new AppError(401, 'Invalid phone number or password', 'invalid_credentials');
+    }
+
+    res.json(partnerAuthResponse(partner));
   }),
 );
 
