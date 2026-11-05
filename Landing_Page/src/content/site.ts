@@ -6,7 +6,7 @@
 export const site = {
   name: "RojMitra",
   tagline: "Mapping India’s Workforce.",
-  positioning: "Mapping India’s workforce, one district at a time.",
+  positioning: "Making India’s Workforce Visible. Connecting Its Potential.",
   brandRelationship: "An EarlyJobs initiative",
   trustLine: "Built by EarlyJobs · Community-led · Consent-first",
   contact: {
@@ -34,8 +34,8 @@ export const navLinks = [
 ] as const;
 
 export const hero = {
-  headline: "Mapping India’s workforce,",
-  headlineAccent: "one district at a time.",
+  headline: "Making India’s Workforce Visible.",
+  headlineAccent: "Connecting Its Potential.",
   subhead:
     "RojMitra maps, verifies and connects workers across districts, skills and industries, so employers can plan better, workers can be seen, and institutions can act on real labour intelligence.",
   primaryCta: { label: "Partner With Us", href: "#partner" },
@@ -481,6 +481,37 @@ export const finalCta = {
 } as const;
 
 export const footer = {
+  blurb:
+    "RojMitra is India’s workforce intelligence and labour mapping infrastructure. We map, verify and connect workers across districts, skills and industries.",
+  getInTouch: [
+    {
+      label: "Employers",
+      href: `mailto:${site.contact.employerEmail}?subject=Employer%20enquiry`,
+      detail: site.contact.employerEmail,
+    },
+    {
+      label: "Institutions",
+      href: `mailto:${site.contact.institutionEmail}?subject=Institution%20partnership`,
+      detail: site.contact.institutionEmail,
+    },
+    {
+      label: "Partners",
+      href: `mailto:${site.contact.partnerEmail}?subject=Partner%20with%20RojMitra`,
+      detail: site.contact.partnerEmail,
+    },
+    {
+      label: "Investors",
+      href: `mailto:${site.contact.investorEmail}?subject=Investor%20Brief%20Request`,
+      detail: site.contact.investorEmail,
+    },
+  ],
+  explore: [
+    { label: "How It Works", href: "#how-it-works" },
+    { label: "What We Map", href: "#what-we-map" },
+    { label: "Vision & Mission", href: "#vision" },
+    { label: "FAQ", href: "#faq" },
+    { label: "Partner With Us", href: "#partner" },
+  ],
   legal: [
     { label: "Privacy", href: "#privacy" },
     { label: "Terms", href: "#terms" },
