@@ -121,7 +121,7 @@ abstract class AppLocalizations {
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
+  /// **'Account'**
   String get profile;
 
   /// No description provided for @signOut.
@@ -253,13 +253,13 @@ abstract class AppLocalizations {
   /// No description provided for @aadhaar.
   ///
   /// In en, this message translates to:
-  /// **'Aadhaar'**
+  /// **'Aadhaar Card'**
   String get aadhaar;
 
   /// No description provided for @pan.
   ///
   /// In en, this message translates to:
-  /// **'PAN card'**
+  /// **'PAN Card'**
   String get pan;
 
   /// No description provided for @bankPassbook.
@@ -304,11 +304,107 @@ abstract class AppLocalizations {
   /// **'Gender'**
   String get gender;
 
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @selectGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select gender'**
+  String get selectGender;
+
+  /// No description provided for @selectIdType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select ID type'**
+  String get selectIdType;
+
   /// No description provided for @dateOfBirth.
   ///
   /// In en, this message translates to:
   /// **'Date of birth'**
   String get dateOfBirth;
+
+  /// No description provided for @idType.
+  ///
+  /// In en, this message translates to:
+  /// **'ID type'**
+  String get idType;
+
+  /// No description provided for @idNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'ID number'**
+  String get idNumber;
+
+  /// No description provided for @documentFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get documentFront;
+
+  /// No description provided for @documentBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get documentBack;
+
+  /// No description provided for @addFrontImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add front image'**
+  String get addFrontImage;
+
+  /// No description provided for @addBackImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add back image'**
+  String get addBackImage;
+
+  /// No description provided for @idFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get idFront;
+
+  /// No description provided for @idBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get idBack;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get chooseGallery;
+
+  /// No description provided for @idImagesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Add front and back images of the ID.'**
+  String get idImagesRequired;
 
   /// No description provided for @idLabel.
   ///
@@ -532,6 +628,18 @@ abstract class AppLocalizations {
   /// **'Forgot password?'**
   String get forgotPassword;
 
+  /// No description provided for @loginWithPasswordInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with password instead'**
+  String get loginWithPasswordInstead;
+
+  /// No description provided for @loginWithOtpInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with OTP instead'**
+  String get loginWithOtpInstead;
+
   /// No description provided for @newHere.
   ///
   /// In en, this message translates to:
@@ -571,20 +679,80 @@ abstract class AppLocalizations {
   /// No description provided for @pendingApproval.
   ///
   /// In en, this message translates to:
-  /// **'Waiting for okay'**
+  /// **'Pending approval'**
   String get pendingApproval;
 
   /// No description provided for @pendingApprovalBody.
   ///
   /// In en, this message translates to:
-  /// **'Your account is waiting. Someone must give okay before you can continue.'**
+  /// **'Your signup is in. An admin must approve your partner account before you can use the app.'**
   String get pendingApprovalBody;
 
   /// No description provided for @myProfile.
   ///
   /// In en, this message translates to:
-  /// **'My profile'**
+  /// **'My account'**
   String get myProfile;
+
+  /// No description provided for @authenticationDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication'**
+  String get authenticationDetails;
+
+  /// No description provided for @personalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal details'**
+  String get personalDetails;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get contactSupport;
+
+  /// No description provided for @contactSupportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help with your partner account? Email us and we’ll get back to you.'**
+  String get contactSupportBody;
+
+  /// No description provided for @copyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy email'**
+  String get copyEmail;
+
+  /// No description provided for @emailCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Support email copied'**
+  String get emailCopied;
+
+  /// No description provided for @legal.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get legal;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsAndConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and conditions'**
+  String get termsAndConditions;
 
   /// No description provided for @requiredField.
   ///
@@ -595,7 +763,7 @@ abstract class AppLocalizations {
   /// No description provided for @systemDefault.
   ///
   /// In en, this message translates to:
-  /// **'Phone language'**
+  /// **'Phone language (Default)'**
   String get systemDefault;
 
   /// No description provided for @language.
@@ -613,13 +781,13 @@ abstract class AppLocalizations {
   /// No description provided for @submitForApproval.
   ///
   /// In en, this message translates to:
-  /// **'Send for okay'**
+  /// **'Submit for Review'**
   String get submitForApproval;
 
   /// No description provided for @signupBody.
   ///
   /// In en, this message translates to:
-  /// **'Next steps come here. After you send, wait until someone gives okay.'**
+  /// **'Register as a sourcing partner. After OTP check, an admin will review your account.'**
   String get signupBody;
 
   /// No description provided for @enterOtpForPhone.

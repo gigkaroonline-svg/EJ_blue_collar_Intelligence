@@ -1,64 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/brand.dart';
 import '../core/errors/api_error.dart';
 import '../core/network/api_client.dart';
-import '../features/auth/models/partner.dart';
+import '../core/ui/app_shimmer.dart';
 import '../features/auth/presentation/partner_profile_provider.dart';
-import '../l10n/language_picker.dart';
-import '../l10n/locale_provider.dart';
+import '../theme/app_colors.dart';
 import '../theme/app_styles.dart';
+import 'profile_helpers.dart';
 
 class ProfileTab extends ConsumerWidget {
   const ProfileTab({super.key});
-
-  String _roleLabel(String role) {
-    switch (role) {
-      case 'csc':
-        return 'CSC';
-      case 'cmc':
-        return 'CMC';
-      case 'anganwadi':
-        return 'Anganwadi';
-      case 'gov_ngo':
-        return 'Gov / NGO';
-      default:
-        return role;
-    }
-  }
-
-  String _profileLabel(String key) {
-    final spaced = key.replaceAllMapped(
-      RegExp(r'([a-z])([A-Z])'),
-      (m) => '${m[1]} ${m[2]}',
-    );
-    if (spaced.isEmpty) return key;
-    return spaced[0].toUpperCase() + spaced.substring(1);
-  }
-
-  Color _statusColor(AccountStatus status, ColorScheme colors) {
-    switch (status) {
-      case AccountStatus.pending:
-        return Colors.amber.shade800;
-      case AccountStatus.accepted:
-        return Colors.green.shade700;
-      case AccountStatus.rejected:
-        return colors.error;
-    }
-  }
-
-  String _statusLabel(AccountStatus status) {
-    switch (status) {
-      case AccountStatus.pending:
-        return 'Under Review';
-      case AccountStatus.accepted:
-        return 'Accepted';
-      case AccountStatus.rejected:
-        return 'Rejected';
-    }
-  }
 
   Future<void> _refresh(WidgetRef ref) async {
     ref.invalidate(partnerProfileProvider);
@@ -70,20 +27,83 @@ class ProfileTab extends ConsumerWidget {
     if (context.mounted) context.go('/login');
   }
 
+  Future<void> _openSupport(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(l10n.contactSupport, style: Theme.of(context).textTheme.titleLarge),
+                SizedBox(height: 8.h),
+                Text(
+                  l10n.contactSupportBody,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                SizedBox(height: 16.h),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.scaffold,
+                    borderRadius: BorderRadius.circular(AppStyles.radius),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.mail_outline, color: AppColors.brand, size: 22.r),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Text(
+                          AppBrand.supportEmail,
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                color: AppColors.ink,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                FilledButton.icon(
+                  onPressed: () async {
+                    await Clipboard.setData(
+                      const ClipboardData(text: AppBrand.supportEmail),
+                    );
+                    if (!sheetContext.mounted) return;
+                    Navigator.of(sheetContext).pop();
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l10n.emailCopied)),
+                    );
+                  },
+                  icon: const Icon(Icons.copy_rounded),
+                  label: Text(l10n.copyEmail),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final asyncPartner = ref.watch(partnerProfileProvider);
-    final localeState = ref.watch(localeProvider);
     final textTheme = Theme.of(context).textTheme;
-    final colors = Theme.of(context).colorScheme;
-
-    final currentLanguage = localeState.hasSavedLanguage && localeState.locale != null
-        ? nativeLanguageName(localeState.locale!)
-        : l10n.systemDefault;
 
     return asyncPartner.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const ProfileSkeleton(),
       error: (error, _) {
         final apiError = error is ApiError
             ? error
@@ -94,12 +114,12 @@ class ProfileTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(apiError.error, textAlign: TextAlign.center),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               FilledButton(
                 onPressed: () => ref.invalidate(partnerProfileProvider),
                 child: const Text('Retry'),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               TextButton(
                 onPressed: () => _logout(context, ref),
                 child: Text(l10n.signOut),
@@ -109,126 +129,66 @@ class ProfileTab extends ConsumerWidget {
         );
       },
       data: (partner) {
-        final statusColor = _statusColor(partner.status, colors);
-        final profileEntries = partner.profile.entries
-            .where((e) => e.value != null && '${e.value}'.trim().isNotEmpty)
-            .toList();
-
         return RefreshIndicator(
           onRefresh: () => _refresh(ref),
           child: ListView(
             padding: AppStyles.pagePadding,
             children: [
-              Text(l10n.myProfile, style: textTheme.headlineSmall),
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: AppStyles.cardPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(partner.fullName, style: textTheme.headlineSmall),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          Chip(label: Text(_roleLabel(partner.role))),
-                          Chip(
-                            label: Text(_statusLabel(partner.status)),
-                            backgroundColor: statusColor.withValues(alpha: 0.15),
-                            labelStyle: TextStyle(
-                              color: statusColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            side: BorderSide(color: statusColor.withValues(alpha: 0.4)),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(l10n.mobileNumber, style: textTheme.labelLarge),
-                      const SizedBox(height: 4),
-                      Text('+91 ${partner.phoneNumber}', style: textTheme.titleMedium),
-                      if (partner.status == AccountStatus.rejected &&
-                          (partner.rejectionReason?.trim().isNotEmpty ?? false)) ...[
-                        const SizedBox(height: 12),
-                        Text(
-                          partner.rejectionReason!,
-                          style: textTheme.bodyMedium?.copyWith(color: colors.error),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
+              Text(partner.fullName, style: textTheme.headlineSmall),
+              SizedBox(height: 8.h),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Chip(label: Text(partnerRoleLabel(partner.role))),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 24.h),
               Card(
-                child: Padding(
-                  padding: AppStyles.cardPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Contact & location', style: textTheme.titleMedium),
-                      const SizedBox(height: 12),
-                      _InfoRow(label: l10n.mobileNumber, value: '+91 ${partner.phoneNumber}'),
-                      _InfoRow(
-                        label: 'Email',
-                        value: (partner.email?.trim().isNotEmpty ?? false)
-                            ? partner.email!
-                            : '—',
-                      ),
-                      _InfoRow(
-                        label: l10n.state,
-                        value: partner.state.isEmpty ? '—' : partner.state,
-                      ),
-                      _InfoRow(
-                        label: l10n.district,
-                        value: partner.district.isEmpty ? '—' : partner.district,
-                      ),
-                      _InfoRow(
-                        label: l10n.pincode,
-                        value: partner.pincode.isEmpty ? '—' : partner.pincode,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (profileEntries.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Card(
-                  child: Padding(
-                    padding: AppStyles.cardPadding,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Role details', style: textTheme.titleMedium),
-                        const SizedBox(height: 12),
-                        for (final entry in profileEntries)
-                          _InfoRow(
-                            label: _profileLabel(entry.key),
-                            value: '${entry.value}',
-                          ),
-                      ],
+                child: Column(
+                  children: [
+                    _ProfileNavRow(
+                      icon: Icons.lock_outline,
+                      title: l10n.authenticationDetails,
+                      onTap: () => context.push('/profile/authentication'),
                     ),
-                  ),
-                ),
-              ],
-              const SizedBox(height: 16),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.language),
-                  title: Text(l10n.language),
-                  subtitle: Text(currentLanguage),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => showLanguagePicker(context, ref),
+                    const Divider(height: 1),
+                    _ProfileNavRow(
+                      icon: Icons.badge_outlined,
+                      title: l10n.personalDetails,
+                      onTap: () => context.push('/profile/personal'),
+                    ),
+                    const Divider(height: 1),
+                    _ProfileNavRow(
+                      icon: Icons.tune,
+                      title: l10n.preferences,
+                      onTap: () => context.push('/profile/preferences'),
+                    ),
+                    const Divider(height: 1),
+                    _ProfileNavRow(
+                      icon: Icons.support_agent_outlined,
+                      title: l10n.contactSupport,
+                      onTap: () => _openSupport(context),
+                    ),
+                    const Divider(height: 1),
+                    _ProfileNavRow(
+                      icon: Icons.privacy_tip_outlined,
+                      title: l10n.privacyPolicy,
+                      onTap: () => context.push('/privacy'),
+                    ),
+                    const Divider(height: 1),
+                    _ProfileNavRow(
+                      icon: Icons.description_outlined,
+                      title: l10n.termsAndConditions,
+                      onTap: () => context.push('/terms'),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 28.h),
               OutlinedButton(
                 onPressed: () => _logout(context, ref),
                 style: AppStyles.outlinedTall,
                 child: Text(l10n.signOut),
               ),
+              SizedBox(height: 12.h),
             ],
           ),
         );
@@ -237,32 +197,24 @@ class ProfileTab extends ConsumerWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+class _ProfileNavRow extends StatelessWidget {
+  const _ProfileNavRow({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
 
-  final String label;
-  final String value;
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 110,
-            child: Text(
-              label,
-              style: textTheme.labelLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          Expanded(child: Text(value, style: textTheme.bodyLarge)),
-        ],
-      ),
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
     );
   }
 }

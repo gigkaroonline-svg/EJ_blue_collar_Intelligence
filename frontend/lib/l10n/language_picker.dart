@@ -30,11 +30,19 @@ Future<void> showLanguagePicker(BuildContext context, WidgetRef ref) {
     context: context,
     showDragHandle: true,
     builder: (sheetContext) {
+      final textTheme = Theme.of(sheetContext).textTheme;
+
       return SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(title: Text(l10n.language)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(l10n.language, style: textTheme.titleMedium),
+              ),
+            ),
             ListTile(
               title: Text(l10n.systemDefault),
               trailing: usingSystemDefault ? const Icon(Icons.check) : null,

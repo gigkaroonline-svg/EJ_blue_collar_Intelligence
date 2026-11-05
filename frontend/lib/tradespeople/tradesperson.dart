@@ -81,11 +81,15 @@ class TradespersonDocument {
   const TradespersonDocument({
     required this.type,
     this.imagePath,
+    this.side,
   });
 
   final DocumentType type;
   final String? imagePath;
+  final DocumentSide? side;
 }
+
+enum DocumentSide { front, back }
 
 enum DocumentType {
   aadhaar,
@@ -310,23 +314,40 @@ class Tradesperson {
 
     final docs = <TradespersonDocument>[];
     final documents = json['documents'];
+    final idType = json['idType']?.toString();
+    final primaryType =
+        idType == 'pan' ? DocumentType.pan : DocumentType.aadhaar;
     if (documents is Map) {
-      if (documents['primaryIdFrontUrl'] != null || documents['primaryIdBackUrl'] != null) {
+      final front = documents['primaryIdFrontUrl']?.toString();
+      final back = documents['primaryIdBackUrl']?.toString();
+      final pan = documents['panCardUrl']?.toString();
+      final photo = documents['photoUrl']?.toString();
+
+      if (front != null && front.isNotEmpty) {
         docs.add(TradespersonDocument(
-          type: DocumentType.aadhaar,
-          imagePath: documents['primaryIdFrontUrl']?.toString(),
+          type: primaryType,
+          imagePath: front,
+          side: DocumentSide.front,
         ));
       }
-      if (documents['panCardUrl'] != null) {
+      if (back != null && back.isNotEmpty) {
+        docs.add(TradespersonDocument(
+          type: primaryType,
+          imagePath: back,
+          side: DocumentSide.back,
+        ));
+      }
+      // Avoid a duplicate row when panCardUrl is the same object as the front ID.
+      if (pan != null && pan.isNotEmpty && pan != front) {
         docs.add(TradespersonDocument(
           type: DocumentType.pan,
-          imagePath: documents['panCardUrl']?.toString(),
+          imagePath: pan,
         ));
       }
-      if (documents['photoUrl'] != null) {
+      if (photo != null && photo.isNotEmpty) {
         docs.add(TradespersonDocument(
           type: DocumentType.photo,
-          imagePath: documents['photoUrl']?.toString(),
+          imagePath: photo,
         ));
       }
     }

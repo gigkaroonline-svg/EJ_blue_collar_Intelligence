@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../errors/api_error.dart';
 import '../storage/token_storage.dart';
 
-const apiBaseUrl = 'http://127.0.0.1:4000/api';
+/// Change this host when the tunnel / server URL changes.
+const apiHost = 'https://wanted-unworried-prize.ngrok-free.dev';
+const apiBaseUrl = '$apiHost/api';
 
 final tokenStorageProvider = Provider<TokenStorage>((ref) => TokenStorage());
 
@@ -14,9 +16,13 @@ final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
       baseUrl: apiBaseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      headers: {'Content-Type': 'application/json'},
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      headers: {
+        'Content-Type': 'application/json',
+        // Avoid ngrok free-tier browser interstitial for API clients.
+        'ngrok-skip-browser-warning': 'true',
+      },
     ),
   );
 

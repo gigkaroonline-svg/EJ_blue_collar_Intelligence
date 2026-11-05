@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,10 +20,10 @@ class TradespersonTile extends ConsumerWidget {
     final current = personal.currentAddress;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12.h),
       child: ListTile(
         onTap: () => context.push('/tradesperson/${tradesperson.id}'),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         title: Text(personal.fullName, style: textTheme.titleMedium),
         subtitle: Text(
           '${experience.primaryTrade} · ${experience.yearsOfExperience} yrs\n'

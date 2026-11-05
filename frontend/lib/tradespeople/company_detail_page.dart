@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/errors/api_error.dart';
+import '../core/ui/app_shimmer.dart';
 import '../theme/app_styles.dart';
 import 'availability_chip.dart';
 import 'tradesperson.dart';
@@ -22,7 +24,7 @@ class CompanyDetailPage extends ConsumerWidget {
     return asyncList.when(
       loading: () => Scaffold(
         appBar: AppBar(title: Text(l10n.company)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const TradespeopleListSkeleton(showHeader: false, itemCount: 4),
       ),
       error: (error, _) {
         final message = error is ApiError ? error.error : 'Something went wrong';
@@ -42,7 +44,7 @@ class CompanyDetailPage extends ConsumerWidget {
               : ListView.separated(
                   padding: AppStyles.detailPadding,
                   itemCount: links.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => SizedBox(height: 8.h),
                   itemBuilder: (context, index) {
                     final link = links[index];
                     final personal = link.tradesperson.personal;

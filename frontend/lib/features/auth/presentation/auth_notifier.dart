@@ -78,6 +78,17 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  Future<void> signup(Map<String, dynamic> body) async {
+    state = const Loading();
+    try {
+      await _repo.signup(body);
+      state = const Unauthenticated();
+    } catch (_) {
+      state = const Unauthenticated();
+      rethrow;
+    }
+  }
+
   Future<void> sendOtp(String phoneNumber, String purpose) async {
     state = const Loading();
     try {
@@ -101,13 +112,34 @@ class AuthNotifier extends Notifier<AuthState> {
         otp: otp,
         purpose: purpose,
       );
-      await _tokens.saveToken(token);
-      final partner = await _repo.fetchMe();
-      state = authStateForPartner(partner);
+      await _completeLogin(token);
     } catch (_) {
       state = const Unauthenticated();
       rethrow;
     }
+  }
+
+  Future<void> loginWithPassword({
+    required String phoneNumber,
+    required String password,
+  }) async {
+    state = const Loading();
+    try {
+      final token = await _repo.loginWithPassword(
+        phoneNumber: phoneNumber,
+        password: password,
+      );
+      await _completeLogin(token);
+    } catch (_) {
+      state = const Unauthenticated();
+      rethrow;
+    }
+  }
+
+  Future<void> _completeLogin(String token) async {
+    await _tokens.saveToken(token);
+    final partner = await _repo.fetchMe();
+    state = authStateForPartner(partner);
   }
 
   Future<void> logout() async {

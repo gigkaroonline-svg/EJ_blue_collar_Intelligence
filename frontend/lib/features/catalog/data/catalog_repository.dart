@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/errors/api_error.dart';
 import '../../../core/network/api_client.dart';
 import '../models/catalog_company.dart';
+import '../models/catalog_job.dart';
 import '../models/catalog_skill.dart';
 
 class CatalogRepository {
@@ -65,6 +66,25 @@ class CatalogRepository {
       return [
         for (final item in raw)
           if (item is Map<String, dynamic>) CatalogSkill.fromJson(item),
+      ];
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
+
+  Future<List<CatalogJob>> searchJobs(String query) async {
+    try {
+      final response = await _dio.get<List<dynamic>>(
+        '/jobs',
+        queryParameters: {
+          'q': query.trim(),
+          'limit': 20,
+        },
+      );
+      final raw = response.data ?? const [];
+      return [
+        for (final item in raw)
+          if (item is Map<String, dynamic>) CatalogJob.fromJson(item),
       ];
     } on DioException catch (e) {
       _throwApiError(e);

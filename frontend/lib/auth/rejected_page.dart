@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/ui/app_logo.dart';
 import '../features/auth/presentation/auth_notifier.dart';
 import 'auth_fields.dart';
 
@@ -26,13 +27,7 @@ class RejectedPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Center(
-              child: Image(
-                image: AssetImage('assets/images/earlyjobs-logo.webp'),
-                width: 200,
-                fit: BoxFit.contain,
-              ),
-            ),
+            const Center(child: AppLogo.hero(width: 180)),
             const SizedBox(height: 28),
             Icon(Icons.block_outlined, size: 48, color: colorScheme.error),
             const SizedBox(height: 16),

@@ -98,7 +98,7 @@ void main() {
     await tester.tap(find.text('Sign up'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('phone-field')), '9876543210');
-    await tester.tap(find.widgetWithText(FilledButton, 'Send for okay'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Submit for Review'));
     await tester.pumpAndSettle();
 
     expect(find.text('Waiting for okay'), findsOneWidget);
@@ -118,7 +118,7 @@ void main() {
   testWidgets('otp sign in asks for a code', (WidgetTester tester) async {
     await openLogin(tester);
 
-    await tester.tap(find.text('OTP'));
+    await tester.tap(find.text('Login with OTP instead'));
     await tester.pump();
     await tester.enterText(find.byKey(const Key('phone-field')), '9876543210');
     await tester.tap(find.widgetWithText(FilledButton, 'Send OTP'));

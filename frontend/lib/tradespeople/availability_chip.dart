@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 
 class AvailabilityChip extends StatelessWidget {
@@ -33,20 +34,20 @@ class AvailabilityChip extends StatelessWidget {
 
     if (onTap == null) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 8,
-              height: 8,
+              width: 8.r,
+              height: 8.r,
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6.w),
             labelText,
           ],
         ),
@@ -57,7 +58,7 @@ class AvailabilityChip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         labelText,
-        const SizedBox(width: 4),
+        SizedBox(width: 4.w),
         Switch.adaptive(
           value: isAvailable,
           activeThumbColor: _availableColor,

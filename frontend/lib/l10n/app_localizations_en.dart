@@ -19,7 +19,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tradespeople => 'Tradespeople';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'Account';
 
   @override
   String get signOut => 'Sign out';
@@ -87,10 +87,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDocuments => 'No documents yet.';
 
   @override
-  String get aadhaar => 'Aadhaar';
+  String get aadhaar => 'Aadhaar Card';
 
   @override
-  String get pan => 'PAN card';
+  String get pan => 'PAN Card';
 
   @override
   String get bankPassbook => 'Bank passbook';
@@ -114,7 +114,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gender => 'Gender';
 
   @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get selectGender => 'Select gender';
+
+  @override
+  String get selectIdType => 'Select ID type';
+
+  @override
   String get dateOfBirth => 'Date of birth';
+
+  @override
+  String get idType => 'ID type';
+
+  @override
+  String get idNumber => 'ID number';
+
+  @override
+  String get documentFront => 'Front';
+
+  @override
+  String get documentBack => 'Back';
+
+  @override
+  String get addFrontImage => 'Add front image';
+
+  @override
+  String get addBackImage => 'Add back image';
+
+  @override
+  String get idFront => 'Front';
+
+  @override
+  String get idBack => 'Back';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseGallery => 'Choose from gallery';
+
+  @override
+  String get idImagesRequired => 'Add front and back images of the ID.';
 
   @override
   String get idLabel => 'ID';
@@ -230,6 +278,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot password?';
 
   @override
+  String get loginWithPasswordInstead => 'Login with password instead';
+
+  @override
+  String get loginWithOtpInstead => 'Login with OTP instead';
+
+  @override
   String get newHere => 'New here?';
 
   @override
@@ -248,20 +302,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create an account';
 
   @override
-  String get pendingApproval => 'Waiting for okay';
+  String get pendingApproval => 'Pending approval';
 
   @override
   String get pendingApprovalBody =>
-      'Your account is waiting. Someone must give okay before you can continue.';
+      'Your signup is in. An admin must approve your partner account before you can use the app.';
 
   @override
-  String get myProfile => 'My profile';
+  String get myProfile => 'My account';
+
+  @override
+  String get authenticationDetails => 'Authentication';
+
+  @override
+  String get personalDetails => 'Personal details';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get contactSupport => 'Contact support';
+
+  @override
+  String get contactSupportBody =>
+      'Need help with your partner account? Email us and we’ll get back to you.';
+
+  @override
+  String get copyEmail => 'Copy email';
+
+  @override
+  String get emailCopied => 'Support email copied';
+
+  @override
+  String get legal => 'Legal';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get termsAndConditions => 'Terms and conditions';
 
   @override
   String get requiredField => 'Please fill this';
 
   @override
-  String get systemDefault => 'Phone language';
+  String get systemDefault => 'Phone language (Default)';
 
   @override
   String get language => 'Language';
@@ -270,11 +355,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseLanguage => 'Choose language';
 
   @override
-  String get submitForApproval => 'Send for okay';
+  String get submitForApproval => 'Submit for Review';
 
   @override
   String get signupBody =>
-      'Next steps come here. After you send, wait until someone gives okay.';
+      'Register as a sourcing partner. After OTP check, an admin will review your account.';
 
   @override
   String enterOtpForPhone(String phone) {

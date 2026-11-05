@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/errors/api_error.dart';
+import '../core/ui/app_shimmer.dart';
+import '../features/uploads/data/uploads_repository.dart';
 import '../theme/app_styles.dart';
 import 'availability_actions.dart';
 import 'availability_chip.dart';
@@ -26,7 +29,7 @@ class TradespersonDetailPage extends ConsumerWidget {
     return asyncList.when(
       loading: () => Scaffold(
         appBar: AppBar(title: Text(l10n.tradesperson)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const TradespersonDetailSkeleton(),
       ),
       error: (error, _) {
         final message = error is ApiError ? error.error : 'Something went wrong';
@@ -60,9 +63,19 @@ class TradespersonDetailPage extends ConsumerWidget {
             appBar: AppBar(
               title: Text(personal.fullName),
               actions: [
-                TextButton(
-                  onPressed: () => context.push('/tradesperson/$tradespersonId/edit'),
-                  child: Text(l10n.editTradesperson),
+                Builder(
+                  builder: (buttonContext) {
+                    return TextButton(
+                      onPressed: () {
+                        final tab =
+                            DefaultTabController.of(buttonContext).index;
+                        buttonContext.push(
+                          '/tradesperson/$tradespersonId/edit?tab=$tab',
+                        );
+                      },
+                      child: Text(l10n.editTradesperson),
+                    );
+                  },
                 ),
               ],
             ),
@@ -70,7 +83,7 @@ class TradespersonDetailPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                  padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
                   child: Card(
                     child: Padding(
                       padding: AppStyles.cardPadding,
@@ -231,20 +244,40 @@ class _DocumentsTab extends StatelessWidget {
   }
 }
 
-class _DocumentTile extends StatelessWidget {
+class _DocumentTile extends ConsumerWidget {
   const _DocumentTile({required this.document});
 
   final TradespersonDocument document;
 
+  bool get _isGcsKey {
+    final path = document.imagePath;
+    return path != null && path.startsWith('partners/');
+  }
+
+  void _openPreview(BuildContext context) {
+    final key = document.imagePath;
+    if (key == null || !_isGcsKey) return;
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => _DocumentImagePreviewPage(
+          objectKey: key,
+          title: documentLabel(AppLocalizations.of(context)!, document),
+        ),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
 
     return Card(
       child: ListTile(
         leading: Icon(documentTypeIcon(document.type)),
-        title: Text(documentTypeLabel(l10n, document.type)),
+        title: Text(documentLabel(l10n, document)),
         trailing: document.imagePath == null
             ? null
             : Container(
@@ -256,6 +289,100 @@ class _DocumentTile extends StatelessWidget {
                 ),
                 child: Icon(Icons.image_outlined, color: muted),
               ),
+        onTap: _isGcsKey ? () => _openPreview(context) : null,
+      ),
+    );
+  }
+}
+
+/// Full-screen preview: keeps a stable loader until signed URL + image pixels are ready.
+class _DocumentImagePreviewPage extends ConsumerStatefulWidget {
+  const _DocumentImagePreviewPage({
+    required this.objectKey,
+    required this.title,
+  });
+
+  final String objectKey;
+  final String title;
+
+  @override
+  ConsumerState<_DocumentImagePreviewPage> createState() =>
+      _DocumentImagePreviewPageState();
+}
+
+class _DocumentImagePreviewPageState
+    extends ConsumerState<_DocumentImagePreviewPage> {
+  late final Future<String> _signedUrlFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _signedUrlFuture =
+        ref.read(uploadsRepositoryProvider).signedReadUrl(widget.objectKey);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        title: Text(widget.title),
+      ),
+      body: FutureBuilder<String>(
+        future: _signedUrlFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            );
+          }
+          if (snapshot.hasError || snapshot.data == null) {
+            final message = snapshot.error is ApiError
+                ? (snapshot.error! as ApiError).error
+                : 'Could not open image';
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          }
+
+          return InteractiveViewer(
+            minScale: 1,
+            maxScale: 4,
+            child: Center(
+              child: Image.network(
+                snapshot.data!,
+                fit: BoxFit.contain,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.5,
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text(
+                      'Could not load image',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -273,7 +400,7 @@ class _InfoCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+        padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 8.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

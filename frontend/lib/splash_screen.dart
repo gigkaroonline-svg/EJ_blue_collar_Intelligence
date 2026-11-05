@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'core/ui/app_logo.dart';
 import 'l10n/locale_provider.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -18,7 +19,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(seconds: 2), () {
+    // Short brand beat; don't hold people for a full 2s after the native splash.
+    Future<void>.delayed(const Duration(milliseconds: 900), () {
       _delayDone = true;
       _goNext();
     });
@@ -47,11 +49,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return const Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Image(
-          image: AssetImage('assets/images/earlyjobs-logo.webp'),
-          width: 240,
-          fit: BoxFit.contain,
-        ),
+        child: AppLogo.hero(width: 280),
       ),
     );
   }

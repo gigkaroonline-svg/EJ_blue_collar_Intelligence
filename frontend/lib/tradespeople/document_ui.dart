@@ -32,3 +32,15 @@ String documentTypeLabel(AppLocalizations l10n, DocumentType type) {
       return l10n.photo;
   }
 }
+
+String documentLabel(AppLocalizations l10n, TradespersonDocument document) {
+  final base = documentTypeLabel(l10n, document.type);
+  switch (document.side) {
+    case DocumentSide.front:
+      return '$base (${l10n.idFront})';
+    case DocumentSide.back:
+      return '$base (${l10n.idBack})';
+    case null:
+      return base;
+  }
+}

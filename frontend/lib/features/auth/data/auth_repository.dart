@@ -16,6 +16,14 @@ class AuthRepository {
     throw ApiError.fromDioException(e);
   }
 
+  Future<void> signup(Map<String, dynamic> body) async {
+    try {
+      await _dio.post<Map<String, dynamic>>('/auth/signup', data: body);
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
+
   Future<void> requestOtp({
     required String phoneNumber,
     required String purpose,
@@ -44,14 +52,36 @@ class AuthRepository {
           'purpose': purpose,
         },
       );
-      final token = response.data?['token'];
-      if (token is! String || token.isEmpty) {
-        throw const ApiError(code: 'server_error', error: 'Something went wrong');
-      }
-      return token;
+      return _tokenFrom(response.data);
     } on DioException catch (e) {
       _throwApiError(e);
     }
+  }
+
+  Future<String> loginWithPassword({
+    required String phoneNumber,
+    required String password,
+  }) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/auth/login',
+        data: {
+          'phoneNumber': phoneNumber,
+          'password': password,
+        },
+      );
+      return _tokenFrom(response.data);
+    } on DioException catch (e) {
+      _throwApiError(e);
+    }
+  }
+
+  String _tokenFrom(Map<String, dynamic>? data) {
+    final token = data?['token'];
+    if (token is! String || token.isEmpty) {
+      throw const ApiError(code: 'server_error', error: 'Something went wrong');
+    }
+    return token;
   }
 
   Future<Partner> fetchMe() async {
