@@ -14,7 +14,6 @@ export function Logo({
   size = "sm",
 }: {
   className?: string;
-  /** Kept for call-site compatibility; official mark is always brand blue. */
   tone?: "dark" | "light";
   href?: string;
   size?: keyof typeof sizes;
@@ -25,14 +24,14 @@ export function Logo({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-blue focus-visible:ring-offset-2",
+        "inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-green focus-visible:ring-offset-2",
         className,
       )}
       aria-label="RojMitra home"
     >
       <Image
         src="/images/rojmitra-logo.png"
-        alt="RojMitra, Mapping India’s Workforce"
+        alt="RojMitra by EarlyJobs"
         width={dims.width}
         height={dims.height}
         className={dims.className}
