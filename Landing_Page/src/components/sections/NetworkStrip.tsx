@@ -7,7 +7,7 @@ export function NetworkStrip() {
       className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"
     >
       <p className="mono-label mb-4 text-center text-rm-muted">
-        Powered by a grassroots network
+        Potential channels
       </p>
       <ul className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
         {networkStrip.map((item) => (

@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RojMitra | Mapping India’s Workforce",
+  title: "RojMitra by EarlyJobs | Village-Level Workforce Intelligence for India",
   description:
-    "RojMitra is India’s workforce intelligence and labour mapping infrastructure. We map, verify and connect workers across districts, skills and industries, so employers can plan better and workers can be seen.",
+    "RojMitra maps, verifies and connects India's workforce at the grassroots. Village-level labour mapping, worker experience, availability and migration intelligence, so employers can finally see and reach nearby talent.",
   openGraph: {
-    title: "RojMitra | Mapping India’s Workforce",
+    title: "RojMitra by EarlyJobs | Village-Level Workforce Intelligence for India",
     description:
-      "Workforce intelligence and labour mapping infrastructure from EarlyJobs, mapping India’s workforce, one district at a time.",
+      "RojMitra maps, verifies and connects India's workforce at the grassroots. Village-level labour mapping, worker experience, availability and migration intelligence, so employers can finally see and reach nearby talent.",
     type: "website",
   },
 };

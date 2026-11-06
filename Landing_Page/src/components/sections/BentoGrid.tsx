@@ -6,16 +6,17 @@ import { bento } from "@/content/site";
 export function BentoGrid() {
   return (
     <section
+      id="architecture"
       aria-labelledby="bento-heading"
       className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8"
     >
       <div className="mb-8 max-w-2xl">
-        <SectionLabel>At a glance</SectionLabel>
+        <SectionLabel>Architecture</SectionLabel>
         <h2
           id="bento-heading"
           className="text-3xl font-semibold tracking-tight text-rm-ink sm:text-4xl"
         >
-          Infrastructure you can see taking shape.
+          The village is the unit. Everything else is a view.
         </h2>
       </div>
 

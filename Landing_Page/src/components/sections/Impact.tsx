@@ -26,9 +26,9 @@ export function Impact() {
             as="article"
             className={
               index === 0
-                ? "bg-rm-blue border-transparent text-white"
+                ? "!border-transparent !bg-rm-blue !text-white"
                 : index === 2
-                  ? "bg-rm-sky-pale border-transparent"
+                  ? "!border-transparent !bg-rm-sky-pale"
                   : undefined
             }
           >

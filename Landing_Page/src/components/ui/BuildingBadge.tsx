@@ -8,7 +8,7 @@ export function BuildingBadge({ className }: { className?: string }) {
         className,
       )}
     >
-      Building
+      In build
     </span>
   );
 }

@@ -15,9 +15,11 @@ export function Legal() {
             Privacy
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-rm-muted">
-            RojMitra collects and processes workforce information with consent
-            through community partners. A full privacy policy will be published
-            here. For privacy questions, contact{" "}
+            Worker information is collected with the worker&apos;s consent. We
+            design our data practices around the principle that data should open
+            doors for the worker, not just be sold on. We are building
+            responsible practices into the platform from the start. For privacy
+            questions, contact{" "}
             <a
               className="text-rm-blue underline-offset-2 hover:underline"
               href={`mailto:${site.contact.partnerEmail}?subject=Privacy%20enquiry`}

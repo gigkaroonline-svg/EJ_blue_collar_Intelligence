@@ -32,7 +32,7 @@ export function AboutStatement() {
       <h2
         id="about-heading"
         className="text-balance text-3xl font-semibold tracking-tight text-rm-ink sm:text-4xl lg:text-5xl"
-        aria-label="We make workers visible, employers informed, and work accessible."
+        aria-label="Every village worker seen, every skill recorded, every employer connected."
       >
         {aboutStatement.lead}{" "}
         <IconChip tone="blue">
