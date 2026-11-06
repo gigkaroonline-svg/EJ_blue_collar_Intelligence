@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-type Variant = "lime" | "ghost" | "outline" | "dark" | "blue";
+type Variant = "primary" | "secondary" | "ghost" | "outline" | "lime" | "blue" | "dark";
 
 const variants: Record<Variant, string> = {
-  /** @deprecated Use "blue", kept as alias so call sites stay brand-safe */
-  lime: "bg-rm-blue text-white hover:bg-rm-blue-deep shadow-sm",
+  primary: "bg-rm-green text-white hover:bg-rm-green-accent shadow-sm",
+  secondary:
+    "bg-white text-rm-navy border border-rm-border hover:border-rm-green/40 hover:bg-rm-green-soft/50",
   ghost:
-    "bg-white/15 text-white border border-white/35 backdrop-blur-md hover:bg-white/25",
+    "bg-white/10 text-white border border-white/30 backdrop-blur-md hover:bg-white/20",
   outline:
-    "bg-white text-rm-ink border border-rm-border hover:border-rm-blue/40 hover:bg-rm-sky-pale/40",
-  dark: "bg-rm-ink text-white hover:bg-black",
-  blue: "bg-rm-blue text-white hover:bg-rm-blue-deep shadow-sm",
+    "bg-transparent text-rm-navy border border-rm-border hover:border-rm-green/40 hover:bg-rm-green-soft/40",
+  dark: "bg-rm-navy-deep text-white hover:bg-rm-navy",
+  lime: "bg-rm-green text-white hover:bg-rm-green-accent shadow-sm",
+  blue: "bg-rm-green text-white hover:bg-rm-green-accent shadow-sm",
 };
 
 type Common = {
@@ -29,12 +31,12 @@ type ButtonAsLink = Common & { href: string; onClick?: () => void };
 export function Button({
   children,
   className,
-  variant = "blue",
+  variant = "primary",
   arrow = false,
   ...props
 }: ButtonAsButton | ButtonAsLink) {
   const classes = cn(
-    "group inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-blue focus-visible:ring-offset-2",
+    "group inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.08em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-green focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
     variants[variant],
     className,
   );
@@ -45,7 +47,7 @@ export function Button({
       {arrow ? (
         <span
           aria-hidden
-          className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-rm-blue transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-rm-green transition-transform group-hover:translate-x-0.5"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path

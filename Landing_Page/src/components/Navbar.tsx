@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/Button";
 import { navLinks, site } from "@/content/site";
@@ -10,7 +10,6 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuId = useId();
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -40,11 +39,11 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
         scrolled
-          ? "border-b border-rm-border/80 bg-white/80 shadow-sm backdrop-blur-xl"
-          : "bg-transparent",
+          ? "border-b border-rm-border/80 bg-white/90 shadow-sm backdrop-blur-xl"
+          : "border-b border-transparent bg-white/70 backdrop-blur-md",
       )}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="container-rm flex items-center justify-between gap-4 py-3">
         <Logo />
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
@@ -52,7 +51,7 @@ export function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-full px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.08em] text-rm-muted transition hover:bg-rm-surface hover:text-rm-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-blue focus-visible:ring-offset-2"
+              className="rounded-full px-3 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-rm-muted transition hover:bg-rm-surface hover:text-rm-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-green focus-visible:ring-offset-2"
             >
               {link.label}
             </a>
@@ -60,19 +59,13 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button
-            href="#partner"
-            variant="blue"
-            arrow
-            className="!hidden sm:!inline-flex"
-          >
+          <Button href="#partner" variant="primary" arrow className="!hidden sm:!inline-flex">
             Partner With Us
           </Button>
 
           <button
-            ref={closeButtonRef}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-rm-border bg-white text-rm-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-blue focus-visible:ring-offset-2 lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-rm-border bg-white text-rm-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-green focus-visible:ring-offset-2 lg:hidden"
             aria-expanded={open}
             aria-controls={open ? menuId : undefined}
             aria-label={open ? "Close menu" : "Open menu"}
@@ -99,19 +92,13 @@ export function Navbar() {
       </div>
 
       {open ? (
-        <div
-          id={menuId}
-          className="border-t border-rm-border bg-white lg:hidden"
-        >
-          <nav
-            aria-label="Mobile"
-            className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4"
-          >
+        <div id={menuId} className="border-t border-rm-border bg-white lg:hidden">
+          <nav aria-label="Mobile" className="container-rm flex flex-col gap-1 py-4">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="rounded-xl px-3 py-3 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-rm-ink hover:bg-rm-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rm-blue focus-visible:ring-offset-2"
+                className="rounded-xl px-3 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-rm-navy hover:bg-rm-surface"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
@@ -119,16 +106,14 @@ export function Navbar() {
             ))}
             <Button
               href="#partner"
-              variant="blue"
+              variant="primary"
               arrow
               className="mt-2 w-full"
               onClick={() => setOpen(false)}
             >
               Partner With Us
             </Button>
-            <p className="mt-3 px-3 text-xs text-rm-muted">
-              {site.brandRelationship}
-            </p>
+            <p className="mt-3 px-3 text-xs text-rm-muted">{site.brandRelationship}</p>
           </nav>
         </div>
       ) : null}

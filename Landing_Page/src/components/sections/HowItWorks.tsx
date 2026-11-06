@@ -1,47 +1,31 @@
-import { BuildingBadge } from "@/components/ui/BuildingBadge";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { Section } from "@/components/ui/Section";
 import { howItWorks } from "@/content/site";
 
 export function HowItWorks() {
   return (
-    <section
-      id="how-it-works"
-      aria-labelledby="how-heading"
-      className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"
+    <Section
+      id={howItWorks.id}
+      label={howItWorks.eyebrow}
+      headline={howItWorks.headline}
+      body={howItWorks.intro}
+      tone="surface"
     >
-      <div className="mx-auto max-w-3xl text-center">
-        <SectionLabel>{howItWorks.label}</SectionLabel>
-        <h2
-          id="how-heading"
-          className="text-3xl font-semibold tracking-tight text-rm-ink sm:text-4xl"
-        >
-          {howItWorks.headline}
-        </h2>
-      </div>
-
-      <ol className="relative mt-12 grid gap-4 lg:grid-cols-4">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-0 right-0 top-10 hidden h-px bg-gradient-to-r from-transparent via-rm-border to-transparent lg:block"
-        />
-        {howItWorks.layers.map((layer) => (
+      <ol className="relative mt-12 space-y-4 before:absolute before:left-[1.15rem] before:top-3 before:bottom-3 before:w-px before:bg-rm-border sm:before:left-6">
+        {howItWorks.steps.map((step) => (
           <li
-            key={layer.step}
-            className="relative rounded-[1.75rem] border border-rm-border bg-white p-6"
+            key={step.step}
+            className="relative grid gap-3 rounded-2xl border border-rm-border bg-white p-5 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-5 sm:p-6"
           >
-            <div className="flex items-center justify-between gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rm-sky-pale font-mono text-xs text-rm-blue">
-                {layer.step}
-              </span>
-              {layer.status === "building" ? <BuildingBadge /> : null}
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rm-green text-sm font-semibold text-white sm:h-12 sm:w-12">
+              {step.step}
             </div>
-            <h3 className="mt-5 text-xl font-semibold tracking-tight text-rm-ink">
-              {layer.title}
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-rm-muted">{layer.body}</p>
+            <div>
+              <h3 className="text-lg font-semibold text-rm-navy">{step.title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-rm-muted sm:text-base">{step.body}</p>
+            </div>
           </li>
         ))}
       </ol>
-    </section>
+    </Section>
   );
 }

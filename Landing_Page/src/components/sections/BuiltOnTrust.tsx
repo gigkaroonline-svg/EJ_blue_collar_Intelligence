@@ -1,39 +1,25 @@
 import { Card } from "@/components/ui/Card";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { Section } from "@/components/ui/Section";
 import { trust } from "@/content/site";
 
 export function BuiltOnTrust() {
   return (
-    <section
-      id="trust"
-      aria-labelledby="trust-heading"
-      className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"
+    <Section
+      id={trust.id}
+      label={trust.eyebrow}
+      headline={trust.headline}
+      body={trust.intro}
+      tone="surface"
     >
-      <div className="mx-auto max-w-3xl text-center">
-        <SectionLabel>{trust.label}</SectionLabel>
-        <h2
-          id="trust-heading"
-          className="text-3xl font-semibold tracking-tight text-rm-ink sm:text-4xl"
-        >
-          {trust.headline}
-        </h2>
-        <p className="mt-4 text-base leading-relaxed text-rm-muted sm:text-lg">
-          {trust.body}
-        </p>
-      </div>
-
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {trust.pillars.map((pillar) => (
-          <Card key={pillar.title} as="article">
-            <h3 className="text-xl font-semibold tracking-tight text-rm-ink">
-              {pillar.title}
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-rm-muted sm:text-base">
-              {pillar.body}
-            </p>
+      <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {trust.principles.map((item, index) => (
+          <Card key={item.title} as="article">
+            <p className="mono-label text-rm-green">0{index + 1}</p>
+            <h3 className="mt-3 text-lg font-semibold text-rm-navy">{item.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-rm-muted">{item.body}</p>
           </Card>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }
