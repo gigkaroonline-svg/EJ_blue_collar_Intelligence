@@ -1,40 +1,29 @@
-# RojMitra Landing Page
+# Welcome to your Lovable project
 
-Next.js (App Router) + TypeScript + Tailwind CSS landing page for **RojMitra**, an EarlyJobs initiative for workforce intelligence and labour mapping in India.
+This project was built with [Lovable](https://lovable.dev).
 
-## Quick start
+## Build with Lovable
 
-```bash
-cd EJ_blue_collar_Intelligence/Landing_Page
-npm install
+Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
+- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```sh
+git clone <this-repository-url>
+cd <repository-name>
+npm i
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+## Built with
 
-## Edit content
-
-All marketing copy, `[X]` statistics, contact emails, FAQs, and CTAs live in:
-
-```
-src/content/site.ts
-```
-
-Replace placeholder stats once verified. Capabilities marked **Building** are controlled in the same file.
-
-## Brand assets
-
-| Asset | Path |
-| --- | --- |
-| RojMitra logo | `public/images/rojmitra-logo.png` |
-| Sky / clouds treatment | `public/images/sky-clouds.svg` |
-| EarlyJobs logo (reference) | `public/earlyjobs-logo.webp` |
-
-Hero worker imagery uses clearly labelled placeholders, drop real field photography into `public/images/` and wire them via `next/image`.
-
-## Scripts
-
-- `npm run dev`, local development
-- `npm run build`, production build
-- `npm run start`, serve production build
-- `npm run lint`, ESLint
+- TanStack Start
+- TypeScript
+- React
+- Tailwind CSS
