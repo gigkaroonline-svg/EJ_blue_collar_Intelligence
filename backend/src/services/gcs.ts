@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Storage } from '@google-cloud/storage';
 import { env } from '../config/env';
 import { AppError } from '../middleware/asyncHandler';
@@ -33,7 +34,7 @@ function getStorage(): Storage {
       },
     });
   } else {
-    // Uses GOOGLE_APPLICATION_CREDENTIALS (from .env via dotenv) or ADC.
+    // Uses GOOGLE_APPLICATION_CREDENTIALS (from --env-file) or ADC.
     storage = new Storage(env.gcsProjectId ? { projectId: env.gcsProjectId } : undefined);
   }
   return storage;
@@ -62,9 +63,17 @@ export function extensionForContentType(contentType: string): string {
   }
 }
 
+/** Prefixed object key: `{gcsPathPrefix}/partners/...` */
+export function buildPartnerObjectKey(partnerId: string, kind: string, ext: string): string {
+  return `${env.gcsPathPrefix}/partners/${partnerId}/${kind}/${crypto.randomUUID()}.${ext}`;
+}
+
 export function isOurObjectKey(objectKey: string): boolean {
   if (!objectKey || objectKey.includes('..') || objectKey.startsWith('/')) return false;
-  return objectKey.startsWith('partners/');
+  if (objectKey.startsWith(`${env.gcsPathPrefix}/partners/`)) return true;
+  // Legacy keys written before env path prefixes existed.
+  if (objectKey.startsWith('partners/')) return true;
+  return false;
 }
 
 export async function createUploadSignedUrl(input: {
