@@ -19,6 +19,7 @@ export type AuthPartner = {
   phoneNumber: string;
   email?: string;
   status: string;
+  isBlocked?: boolean;
   avatarUrl?: string;
   permanentAddress?: PartnerAddress;
   presentAddress?: PartnerAddress;
@@ -57,6 +58,7 @@ export function toAuthPartner(partner: InstanceType<typeof SourcingPartner>): Au
     phoneNumber: partner.phoneNumber,
     email: partner.email ?? undefined,
     status: partner.status,
+    isBlocked: Boolean((partner as { isBlocked?: boolean }).isBlocked),
     avatarUrl: partner.avatarUrl ?? undefined,
     permanentAddress: addressFrom(partner.permanentAddress),
     presentAddress: addressFrom(partner.presentAddress),
@@ -118,6 +120,10 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
 export const requireAccepted: RequestHandler = (req, _res, next) => {
   if (req.partner?.status !== 'accepted') {
     next(new AppError(403, 'Partner account is not accepted', 'not_accepted'));
+    return;
+  }
+  if (req.partner?.isBlocked) {
+    next(new AppError(403, 'Partner account is blocked', 'blocked'));
     return;
   }
   next();

@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 function required(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
@@ -12,7 +10,7 @@ function optional(name: string): string | undefined {
   return value;
 }
 
-/** Service-account private keys in .env often use literal \n sequences. */
+/** Service-account private keys in env often use literal \n sequences. */
 function normalizePrivateKey(value: string | undefined): string | undefined {
   if (!value) return undefined;
   return value.replace(/\\n/g, '\n');
@@ -21,7 +19,7 @@ function normalizePrivateKey(value: string | undefined): string | undefined {
 export const env = {
   port: Number(process.env.PORT ?? 4000),
   mongoUri: required('MONGODB_URI'),
-  mongoDbName: process.env.MONGODB_DB_NAME ?? 'workers_registry',
+  mongoDbName: required('MONGODB_DB_NAME'),
   jwtSecret: required('JWT_SECRET'),
   otpSecret: required('OTP_SECRET'),
   identityHashSecret: required('IDENTITY_HASH_SECRET'),
@@ -29,4 +27,6 @@ export const env = {
   gcsProjectId: optional('GCS_PROJECT_ID'),
   gcsClientEmail: optional('GCS_CLIENT_EMAIL'),
   gcsPrivateKey: normalizePrivateKey(optional('GCS_PRIVATE_KEY')),
+  /** Object-key folder in the shared bucket: qa | prod */
+  gcsPathPrefix: optional('GCS_PATH_PREFIX') ?? 'qa',
 };
