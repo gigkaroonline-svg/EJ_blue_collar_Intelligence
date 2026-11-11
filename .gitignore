@@ -14,5 +14,7 @@
 # Backend / Environment files
 **/node_modules/
 **/.env
+**/.env.*
+!**/.env.example
 **/gcs-service-account.json
 **/*-service-account.json
