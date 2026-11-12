@@ -10,7 +10,7 @@ export const site = {
   brandRelationship: "RojMitra by EarlyJobs · Village-Level Workforce Intelligence",
   trustLine: "Consent-based · Village-first · Built by EarlyJobs",
   contact: {
-    partnerEmail: "partners@earlyjobs.ai",
+    partnerEmail: "info@earlyjobs.ai",
     investorEmail: "investors@earlyjobs.ai",
     employerEmail: "employers@earlyjobs.ai",
     institutionEmail: "institutions@earlyjobs.ai",
@@ -25,13 +25,14 @@ export const site = {
 } as const;
 
 export const navLinks = [
-  { label: "Problem", href: "#problem" },
-  { label: "Intelligence", href: "#what-we-map" },
-  { label: "Architecture", href: "#architecture" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Migration", href: "#impact" },
-  { label: "For Employers", href: "#business" },
-  { label: "For Partners", href: "#partners" },
+  { label: "About", href: "/about" },
+  { label: "Our Story", href: "/our-story" },
+  { label: "The Problem", href: "/the-problem" },
+  { label: "Workforce Intelligence", href: "/workforce-intelligence" },
+  { label: "How It Works", href: "/how-it-works" },
+  { label: "For Employers", href: "/for-employers" },
+  { label: "Government Initiatives", href: "/government-initiatives" },
+  { label: "Blog", href: "/blog" },
 ] as const;
 
 export const hero = {
@@ -40,8 +41,8 @@ export const hero = {
   subhead:
     "RojMitra is building a village-level workforce intelligence infrastructure that helps make every worker's skills, experience, availability and work history visible.",
   trustLine: "Village-first · Consent-based · Built by EarlyJobs",
-  primaryCta: { label: "Explore Workforce Intelligence", href: "#what-we-map" },
-  secondaryCta: { label: "Partner With RojMitra", href: "#partner" },
+  primaryCta: { label: "Explore Workforce Intelligence", href: "/workforce-intelligence" },
+  secondaryCta: { label: "Partner With RojMitra", href: "/become-a-sourcing-partner" },
   cards: {
     profile: {
       label: "Illustrative worker profile",
@@ -329,7 +330,7 @@ export const audiences = {
         "Experience checked, not just claimed",
         "A verified work history that travels with them",
       ],
-      cta: { label: "Partner With Us", href: "#partner" },
+      cta: { label: "Join as a Sourcing Partner", href: "/become-a-sourcing-partner" },
     },
     {
       id: "employers",
@@ -368,7 +369,7 @@ export const audiences = {
         "Record past experience and where they have worked",
         "Connect workers with suitable opportunities",
       ],
-      cta: { label: "Become a Village Workforce Mitra", href: "#partner" },
+      cta: { label: "Become a Village Workforce Mitra", href: "/become-a-sourcing-partner" },
     },
   ],
 } as const;
@@ -553,8 +554,8 @@ export const finalCta = {
       href: `mailto:${site.contact.employerEmail}?subject=Employer%20enquiry`,
     },
     {
-      label: "Partner With Us",
-      href: `mailto:${site.contact.partnerEmail}?subject=Partner%20with%20RojMitra`,
+      label: "Join as a Sourcing Partner",
+      href: "/become-a-sourcing-partner",
     },
     {
       label: "Get in Touch",
@@ -566,7 +567,7 @@ export const finalCta = {
 export const footer = {
   partnerCta: {
     label: "Join as Sourcing Partner",
-    href: `mailto:${site.contact.partnerEmail}?subject=Sourcing%20partner%20enquiry`,
+    href: "/become-a-sourcing-partner",
   },
   app: {
     title: "Get the app",
@@ -578,21 +579,25 @@ export const footer = {
         label: "Google Play",
         href: "https://play.google.com/store/apps/details?id=com.earlyjobs.rojmitra&hl=en_IN" as string | null,
       },
-      { id: "apple", label: "App Store", href: null as string | null },
+      {
+        id: "app-store",
+        label: "App Store",
+        href: null as string | null,
+      },
     ],
   },
   blurb:
     "RojMitra maps, verifies and connects India's workforce at the grassroots, so employers can finally see and reach nearby talent.",
   explore: [
-    { label: "What We Do", href: "#what-we-map" },
-    { label: "Architecture", href: "#architecture" },
-    { label: "How It Works", href: "#how-it-works" },
+    { label: "What We Do", href: "/workforce-intelligence" },
+    { label: "Architecture", href: "/workforce-intelligence" },
+    { label: "How It Works", href: "/how-it-works" },
     { label: "FAQ", href: "#faq" },
-    { label: "Partner With Us", href: "#partner" },
+    { label: "Join as a Sourcing Partner", href: "/become-a-sourcing-partner" },
   ],
   legal: [
-    { label: "Privacy", href: "#privacy" },
-    { label: "Terms", href: "#terms" },
+    { label: "Privacy", href: "/#privacy" },
+    { label: "Terms", href: "/#terms" },
     { label: "Contact", href: `mailto:${site.contact.partnerEmail}` },
   ],
   copyright: "©Victa EarlyJobs technologies Pvt. Ltd.",

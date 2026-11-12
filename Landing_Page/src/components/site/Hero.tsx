@@ -1,5 +1,6 @@
 "use client";
 
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Building2, Globe2, House, MapPin, Network } from "lucide-react";
 import { useRef } from "react";
@@ -25,7 +26,7 @@ function HeroCards() {
         transition={{ duration: 1, delay: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
         className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-6 pt-2 text-left sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:tilt-plane lg:grid-cols-12"
       >
-        <article className="hero-float w-[min(88vw,380px)] min-w-0 shrink-0 snap-center self-start overflow-hidden rounded-[1.75rem] bg-card text-foreground shadow-float ring-1 ring-on-dark/50 sm:col-span-2 sm:w-auto lg:col-span-5 lg:translate-y-2">
+        <article className="hero-float w-[min(88vw,380px)] min-w-0 shrink-0 snap-center self-start overflow-hidden rounded-xl bg-card text-foreground shadow-float ring-1 ring-on-dark/50 sm:col-span-2 sm:w-auto lg:col-span-5 lg:translate-y-2">
           <div className="bg-gradient-navy px-5 py-3.5 text-on-dark">
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em]">{profile.label}</p>
           </div>
@@ -49,7 +50,7 @@ function HeroCards() {
         </article>
 
         <div className="flex w-[260px] shrink-0 snap-center flex-col gap-3 sm:col-span-2 sm:w-auto sm:grid sm:grid-cols-2 lg:col-span-7 lg:gap-4">
-          <article className="hero-float-slow glass-card w-[250px] min-w-0 shrink-0 snap-center self-start rounded-3xl p-5 sm:w-auto">
+          <article className="hero-float-slow glass-card w-[250px] min-w-0 shrink-0 snap-center self-start rounded-xl p-5 sm:w-auto">
             <div className="flex items-center justify-between">
               <p className="mono-label inline-flex items-center gap-2 text-muted-foreground">
                 <House className="h-4 w-4 text-brand" strokeWidth={1.8} aria-hidden />
@@ -79,7 +80,7 @@ function HeroCards() {
             </ul>
           </article>
 
-          <article className="hero-float w-[260px] min-w-0 shrink-0 snap-center self-start rounded-3xl bg-gradient-brand p-5 text-on-dark shadow-glow sm:w-auto">
+          <article className="hero-float flex w-[260px] min-w-0 shrink-0 snap-center flex-col justify-center rounded-xl bg-gradient-brand p-5 text-on-dark shadow-soft sm:w-auto">
             <p className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-on-dark/70">
               {intelligence.label}
             </p>
@@ -99,7 +100,7 @@ function HeroCards() {
             </ul>
           </article>
 
-          <article className="hero-float-slow relative w-[250px] min-w-0 shrink-0 snap-center self-start overflow-hidden rounded-3xl bg-gradient-navy p-5 text-on-dark shadow-glow sm:w-auto">
+          <article className="hero-float-slow relative w-[250px] min-w-0 shrink-0 snap-center self-start overflow-hidden rounded-xl bg-gradient-navy p-5 text-on-dark shadow-soft sm:w-auto">
             <p className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-on-dark/65">
               {network.label}
             </p>
@@ -107,7 +108,7 @@ function HeroCards() {
             <p className="mt-2 text-xs leading-relaxed text-on-dark/80">{network.body}</p>
           </article>
 
-          <article className="hero-float glass-card w-[250px] min-w-0 shrink-0 snap-center self-start rounded-3xl p-5 sm:w-auto">
+          <article className="hero-float glass-card w-[250px] min-w-0 shrink-0 snap-center self-start rounded-xl p-5 sm:w-auto">
             <p className="mono-label text-muted-foreground">{sectors.label}</p>
             <h3 className="mt-1.5 text-sm font-semibold text-foreground">{sectors.title}</h3>
             <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -139,7 +140,7 @@ export function Hero() {
 
   return (
     <section ref={sectionRef} id="home" aria-labelledby="hero-heading" className="px-2 pt-2 sm:px-3 sm:pt-3">
-      <div className="relative mx-auto max-w-[1440px] overflow-hidden rounded-3xl bg-sky px-5 pb-32 pt-32 text-center sm:px-10 sm:pb-44 sm:pt-40 lg:px-16">
+      <div className="relative mx-auto max-w-[1440px] overflow-hidden rounded-2xl bg-sky px-5 pb-28 pt-24 text-center sm:px-10 sm:pb-40 sm:pt-32 lg:px-16">
         <img
           src={assetUrl(heroLandscape)}
           alt="Indian village homes, green fields and a textile factory connected by a village road"

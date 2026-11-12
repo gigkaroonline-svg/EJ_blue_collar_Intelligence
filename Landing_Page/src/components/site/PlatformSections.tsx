@@ -1,5 +1,6 @@
 "use client";
 
+
 import {
   BadgeIndianRupee,
   BriefcaseBusiness,
@@ -36,33 +37,26 @@ export function HowItWorks() {
     <section id="how-it-works" aria-labelledby="how-heading" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <SectionHeader label={howItWorks.label} headline={howItWorks.headline} id="how-heading" />
 
-      <ol className="relative mt-14 lg:grid lg:grid-cols-6 lg:gap-4">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-3 left-[1.3rem] top-3 w-px bg-brand/30 lg:bottom-auto lg:left-[8%] lg:right-[8%] lg:top-[1.3rem] lg:h-px lg:w-auto"
-        />
+      <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {howItWorks.layers.map((layer, i) => (
           <Reveal
             key={layer.step}
             as="li"
             delay={i * 0.06}
-            className="relative flex gap-4 pb-8 last:pb-0 lg:block lg:pb-0 lg:text-center"
+            className="card-surface p-6"
           >
-            <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy font-mono text-xs text-on-dark ring-4 ring-background lg:mx-auto">
-              {layer.step}
-            </span>
-            <div className="min-w-0 pt-1.5 lg:pt-5">
-              <h3 className="text-base font-semibold tracking-tight text-foreground lg:text-sm">
+            <div className="min-w-0">
+              <h3 className="text-base font-semibold tracking-tight text-foreground">
                 {layer.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground lg:text-xs">{layer.body}</p>
-              <div className="mt-3 lg:flex lg:justify-center">
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground ">{layer.body}</p>
+              <div className="mt-3">
                 {layer.status === "building" ? <BuildingBadge /> : <LiveBadge />}
               </div>
             </div>
           </Reveal>
         ))}
-      </ol>
+      </ul>
     </section>
   );
 }
@@ -86,7 +80,7 @@ export function WhatWeMap() {
               className={cn(
                 "group card-lift flex flex-col p-2",
                 featured
-                  ? "rounded-[1.25rem] bg-gradient-brand text-on-dark shadow-glow sm:col-span-2 lg:row-span-2"
+                  ? "rounded-xl bg-gradient-brand text-on-dark shadow-soft sm:col-span-2 lg:row-span-2"
                   : "card-surface",
               )}
             >
@@ -144,7 +138,7 @@ const trustIcons = [FileCheck2, DoorOpen, ShieldCheck];
 export function BuiltOnTrust() {
   return (
     <section id="trust" aria-labelledby="trust-heading" className="px-2 py-10 sm:px-3">
-      <div className="mx-auto max-w-[1440px] rounded-3xl bg-gradient-navy px-5 py-16 text-on-dark sm:px-10 sm:py-20 lg:px-16">
+      <div className="mx-auto max-w-[1440px] rounded-2xl bg-gradient-navy px-5 py-16 text-on-dark sm:px-10 sm:py-20 lg:px-16">
         <Reveal className="mx-auto max-w-3xl text-center">
           <p className="mono-label mb-4 inline-flex items-center gap-2 text-on-dark/70">
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-signal" />
@@ -162,7 +156,7 @@ export function BuiltOnTrust() {
               key={pillar.title}
               as="article"
               delay={i * 0.08}
-              className="rounded-[1.25rem] border border-on-dark/12 bg-on-dark/5 p-7 transition duration-300 hover:-translate-y-1 hover:bg-on-dark/10"
+              className="rounded-xl border border-on-dark/12 bg-on-dark/5 p-7 transition duration-300 hover:-translate-y-1 hover:bg-on-dark/10"
             >
               <span
                 aria-hidden
@@ -201,18 +195,16 @@ export function Impact() {
               className={cn(
                 "group card-lift flex flex-col p-2",
                 dark
-                  ? "rounded-[1.25rem] bg-gradient-navy text-on-dark shadow-glow"
+                  ? "rounded-xl bg-gradient-navy text-on-dark shadow-soft"
                   : tinted
-                    ? "rounded-[1.25rem] border border-sky-soft bg-sky-pale"
+                    ? "rounded-xl border border-sky-soft bg-sky-pale"
                     : "card-surface",
               )}
             >
               {image ? (
                 <StoryPhoto image={image} className="aspect-[4/3]">
                   <div className="absolute inset-x-3 top-3 flex items-center justify-between">
-                    <span className="glass-dark rounded-full px-2.5 py-1 font-mono text-[0.6rem] text-on-dark">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                    <span />
                     {index < 3 ? (
                       <span className="glass-dark rounded-full px-2.5 py-1 font-mono text-[0.58rem] uppercase tracking-[0.12em] text-on-dark">
                         Illustrative

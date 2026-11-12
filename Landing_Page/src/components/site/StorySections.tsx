@@ -1,6 +1,7 @@
 "use client";
 
-import { BadgeCheck, Building2, Check, Compass, HardHat, House, Minus } from "lucide-react";
+
+import { BadgeCheck, Building2, Check, Compass, Globe2, HardHat, House, Map, MapPin, Minus, Users } from "lucide-react";
 import {
   BuildingBadge,
   Headline,
@@ -76,27 +77,33 @@ export function BentoGrid() {
         <Reveal
           as="article"
           delay={0.1}
-          className="flex h-full flex-col rounded-[1.25rem] bg-gradient-navy p-7 text-on-dark shadow-glow sm:p-8"
+          className="flex h-full flex-col rounded-xl bg-gradient-navy p-7 text-on-dark shadow-soft sm:p-8"
         >
           <SectionLabel tone="on-dark">{bento.systemLayers.label}</SectionLabel>
-          <h3 className="display-type text-2xl sm:text-3xl">{bento.systemLayers.title}</h3>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-on-dark/75 sm:text-base">
+          <h3 className="display-type text-3xl sm:text-4xl">{bento.systemLayers.title}</h3>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-on-dark/90 sm:text-lg">
             {bento.systemLayers.body}
           </p>
-          <ol className="mt-7 grid flex-1 grid-cols-2 gap-3 sm:grid-cols-3">
-            {bento.systemLayers.points.map((point) => (
-              <li
-                key={point.step}
-                className="flex flex-col justify-between rounded-2xl border border-on-dark/15 bg-on-dark/5 p-4 transition hover:bg-on-dark/10"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <span className="font-mono text-[0.7rem] text-sky-soft">{point.step}</span>
-                  {point.status === "building" ? <BuildingBadge /> : null}
-                </div>
-                <p className="mt-4 text-sm font-semibold">{point.title}</p>
-              </li>
-            ))}
-          </ol>
+          <ul className="mt-7 grid flex-1 grid-cols-2 gap-3 sm:grid-cols-3">
+            {bento.systemLayers.points.map((point, index) => {
+              const LayerIcon = systemLayerIcons[index] ?? House;
+              return (
+                <li
+                  key={point.step}
+                  className="flex flex-col justify-between rounded-2xl border border-on-dark/15 bg-on-dark/5 p-4 transition hover:bg-on-dark/10"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="font-mono text-sm uppercase tracking-[0.12em] text-on-dark/80">
+                      {point.step}
+                    </span>
+                    {point.status === "building" ? <BuildingBadge /> : null}
+                  </div>
+                  <LayerIcon aria-hidden className="mt-6 h-6 w-6 text-sky-soft" strokeWidth={1.6} />
+                  <p className="mt-3 text-base font-semibold">{point.title}</p>
+                </li>
+              );
+            })}
+          </ul>
         </Reveal>
       </div>
     </section>
@@ -117,7 +124,7 @@ export function OurStory() {
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <Reveal>
           <div className="group relative mb-6">
-            <StoryPhoto image={storyImage} className="aspect-[4/3] rounded-[1.25rem] shadow-float [&_img]:object-top lg:aspect-[5/4]" />
+            <StoryPhoto image={storyImage} className="aspect-[4/3] rounded-xl shadow-float [&_img]:object-top lg:aspect-[5/4]" />
             <div className="card-surface shadow-float absolute -bottom-6 right-4 w-[min(17rem,80%)] rounded-2xl p-4">
               <div className="flex items-center justify-between">
                 <p className="mono-label text-muted-foreground">{bento.workerProfiles.label}</p>
@@ -157,6 +164,7 @@ export function OurStory() {
 }
 
 const problemIcons = [Building2, HardHat, Compass];
+const systemLayerIcons = [House, Users, MapPin, Map, Building2, Globe2];
 
 export function TheProblem() {
   return (
@@ -183,7 +191,7 @@ export function TheProblem() {
       </div>
 
       <Reveal className="mt-6">
-        <div className="rounded-[1.25rem] bg-gradient-navy px-6 py-8 text-on-dark shadow-glow sm:px-10">
+        <div className="rounded-xl bg-gradient-navy px-6 py-8 text-on-dark shadow-soft sm:px-10">
           <p className="mono-label text-center text-on-dark/70">{problem.statsLabel}</p>
           <dl className="mt-6 grid gap-6 sm:grid-cols-3 sm:gap-4">
             {problem.stats.map((stat) => (
@@ -223,7 +231,7 @@ export function WhatItIs() {
       </div>
 
       <div className="mt-12 grid gap-4 md:grid-cols-2">
-        <Reveal as="article" className="rounded-[1.25rem] border border-border bg-muted p-7 sm:p-8">
+        <Reveal as="article" className="rounded-xl border border-border bg-muted p-7 sm:p-8">
           <p className="mono-label text-muted-foreground">{portal.title}</p>
           <ul className="mt-6 space-y-4">
             {portal.points.map((point) => (
@@ -240,7 +248,7 @@ export function WhatItIs() {
           </ul>
         </Reveal>
 
-        <Reveal as="article" delay={0.1} className="rounded-[1.25rem] bg-gradient-navy p-7 text-on-dark shadow-glow sm:p-8">
+        <Reveal as="article" delay={0.1} className="rounded-xl bg-gradient-navy p-7 text-on-dark shadow-soft sm:p-8">
           <div className="flex items-center justify-between gap-3">
             <p className="mono-label text-on-dark/70">{rojmitra.title}</p>
             <LiveBadge className="border-signal/40 bg-signal/15">Verified</LiveBadge>

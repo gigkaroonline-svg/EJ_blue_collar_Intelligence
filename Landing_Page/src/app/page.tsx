@@ -1,9 +1,5 @@
 import { AboutStatement } from "@/components/site/AboutStatement";
-import {
-  Ecosystem,
-  FAQSection,
-  FinalCTA,
-} from "@/components/site/ClosingSections";
+import { Ecosystem, FAQSection, FinalCTA, Legal } from "@/components/site/ClosingSections";
 import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
 import { Navbar } from "@/components/site/Navbar";
@@ -50,6 +46,7 @@ export default function HomePage() {
         <Ecosystem />
         <FAQSection />
         <FinalCTA />
+        <Legal />
       </main>
       <Footer />
     </>

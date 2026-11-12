@@ -1,5 +1,6 @@
 "use client";
 
+
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { BarChart3, MapPin, Star } from "lucide-react";
 import { useRef, type ReactNode } from "react";

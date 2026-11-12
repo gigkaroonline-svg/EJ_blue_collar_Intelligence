@@ -1,5 +1,6 @@
 "use client";
 
+
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -9,20 +10,20 @@ import { cn } from "@/lib/utils";
 /* ---------- Button ---------- */
 
 const pillVariants = cva(
-  "group inline-flex items-center justify-center gap-2 rounded-full font-mono text-[0.7rem] uppercase tracking-[0.1em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "group inline-flex items-center justify-center gap-2 rounded-full font-mono text-[0.7rem] uppercase leading-none tracking-[0.08em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         primary: "bg-brand text-primary-foreground shadow-soft hover:bg-brand-deep",
         navy: "bg-navy text-on-dark shadow-soft hover:bg-navy-soft",
-        ghost: "glass-dark text-on-dark hover:bg-on-dark/25",
+        ghost: "border border-on-dark/35 bg-on-dark/10 text-on-dark hover:bg-on-dark/20",
         light: "bg-card text-foreground shadow-soft hover:bg-sky-pale",
         outline:
           "border border-border bg-card text-foreground hover:border-brand/40 hover:bg-sky-pale/60",
       },
       size: {
-        default: "py-2.5 pl-5 pr-5",
-        arrow: "py-1.5 pl-5 pr-1.5",
+        default: "min-h-10 px-5 py-2.5",
+        arrow: "h-10 py-0 pl-5 pr-1.5",
       },
     },
     defaultVariants: { variant: "primary", size: "default" },
@@ -41,12 +42,12 @@ export function Pill({ children, href, arrow, variant, className, onClick }: Pil
   const classes = cn(pillVariants({ variant, size: arrow ? "arrow" : "default" }), className);
   const content = (
     <>
-      <span>{children}</span>
+      <span className="inline-flex items-center leading-none">{children}</span>
       {arrow ? (
         <span
           aria-hidden
           className={cn(
-            "inline-flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
+            "inline-flex h-7 w-7 shrink-0 items-center justify-center self-center rounded-full transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
             variant === "light" || variant === "outline"
               ? "bg-brand text-primary-foreground"
               : "bg-card text-brand",
@@ -217,7 +218,7 @@ export function StoryPhoto({
   priority?: boolean;
 }) {
   return (
-    <div className={cn("relative overflow-hidden rounded-[0.95rem] bg-muted", className)}>
+    <div className={cn("relative overflow-hidden rounded-lg bg-muted", className)}>
       <img
         src={image.src}
         alt={image.alt}

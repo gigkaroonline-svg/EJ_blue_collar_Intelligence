@@ -1,5 +1,6 @@
 "use client";
 
+
 import { Plus } from "lucide-react";
 import sharedEcosystem from "@/assets/india-shared-ecosystem.jpg";
 import { Pill, Reveal, SectionHeader } from "@/components/site/primitives";
@@ -21,7 +22,7 @@ export function Ecosystem() {
             className={cn(
               "card-lift flex min-h-[220px] flex-col p-6",
               product.highlight
-                ? "rounded-[1.25rem] bg-gradient-navy text-on-dark shadow-glow"
+                ? "rounded-xl bg-gradient-navy text-on-dark shadow-soft"
                 : "card-surface",
             )}
           >
@@ -91,7 +92,7 @@ export function FAQSection() {
 export function FinalCTA() {
   return (
     <section id="partner" aria-labelledby="final-cta-heading" className="px-2 pb-10 pt-4 sm:px-3">
-      <div className="relative mx-auto max-w-[1440px] overflow-hidden rounded-3xl bg-sky px-5 pb-56 pt-20 text-center sm:px-12 sm:pb-72 sm:pt-28">
+      <div className="relative mx-auto max-w-[1440px] overflow-hidden rounded-2xl bg-sky px-5 pb-52 pt-16 text-center sm:px-12 sm:pb-64 sm:pt-24">
         <img
           src={assetUrl(sharedEcosystem)}
           alt="Indian villagers walking and cycling between village homes, green fields and a nearby textile factory"

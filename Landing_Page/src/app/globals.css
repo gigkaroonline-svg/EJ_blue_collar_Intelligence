@@ -73,7 +73,7 @@
 }
 
 :root {
-  --radius: 1.25rem;
+  --radius: 0.75rem;
 
   --navy: oklch(0.29 0.09 262);
   --navy-soft: oklch(0.36 0.1 262);
@@ -100,7 +100,7 @@
   --secondary: var(--navy);
   --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.96 0.006 250);
-  --muted-foreground: oklch(0.5 0.025 260);
+  --muted-foreground: oklch(0.38 0.028 260);
   --accent: var(--sky-pale);
   --accent-foreground: var(--brand);
   --destructive: oklch(0.577 0.245 27.325);
@@ -151,7 +151,7 @@
 
   section[id],
   article[id] {
-    scroll-margin-top: 5rem;
+    scroll-margin-top: 5.5rem;
   }
 
   ::selection {
@@ -167,7 +167,7 @@
 
 @utility mono-label {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -181,7 +181,7 @@
 @utility card-surface {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
 }
 
@@ -330,4 +330,56 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Inner pages inherit Home's palette and imagery without changing Home. */
+.page-hero-scrim {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--navy) 88%, transparent) 0%, color-mix(in oklab, var(--navy) 52%, transparent) 42%, transparent 75%);
+}
+.page-hero-scrim-right {
+  background: linear-gradient(270deg, color-mix(in oklab, var(--navy) 88%, transparent) 0%, color-mix(in oklab, var(--navy) 52%, transparent) 42%, transparent 75%);
+}
+.page-copy {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: oklch(0.34 0.03 262);
+  max-width: 68ch;
+}
+.page-list-item {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.sector-tile-scrim {
+  background: linear-gradient(180deg, transparent 55%, color-mix(in oklab, var(--navy) 78%, transparent));
+}
+.page-cta-band > div > div > div > div > .page-copy,
+.page-cta-band .page-copy:not(.page-content-card .page-copy) {
+  color: color-mix(in oklab, var(--on-dark) 82%, transparent);
+}
+.page-cta-band .page-content-card .page-copy {
+  color: var(--muted-foreground);
+}
+.page-inner-hero h1,
+.page-content-card h3 {
+  letter-spacing: 0;
+}
+
+@utility shadow-lift {
+  box-shadow: 0 24px 60px -24px color-mix(in oklab, var(--navy) 35%, transparent);
+}
+
+/* Decorative rings for the closing CTA banner */
+.cta-rings::before,
+.cta-rings::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  border: 2.5rem solid color-mix(in oklab, var(--on-dark) 9%, transparent);
+  pointer-events: none;
+}
+.cta-rings::before { width: 18rem; height: 18rem; left: -7rem; top: -7rem; }
+.cta-rings::after { width: 22rem; height: 22rem; right: -8rem; bottom: -11rem; }
+
+.employer-hero-fade {
+  background: linear-gradient(180deg, var(--card) 0%, transparent 28%, transparent 70%, color-mix(in oklab, var(--navy) 35%, transparent) 100%);
 }

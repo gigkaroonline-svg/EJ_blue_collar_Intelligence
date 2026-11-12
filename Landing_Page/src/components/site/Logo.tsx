@@ -1,18 +1,17 @@
-"use client";
 
 import logo from "@/assets/rojmitra-logo.png";
 import { assetUrl } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
 const sizes = {
-  sm: "h-8 w-auto sm:h-9",
-  md: "h-11 w-auto sm:h-12",
-  lg: "h-14 w-auto",
+  sm: "h-7 w-auto sm:h-8",
+  md: "h-9 w-auto sm:h-10",
+  lg: "h-12 w-auto",
 } as const;
 
 export function Logo({
   className,
-  href = "#home",
+  href = "/",
   size = "sm",
 }: {
   className?: string;
