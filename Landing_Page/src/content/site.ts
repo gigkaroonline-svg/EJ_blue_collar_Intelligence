@@ -573,7 +573,11 @@ export const footer = {
     audience: "For Sourcing Partners",
     status: "Coming soon",
     stores: [
-      { id: "google-play", label: "Google Play", href: null as string | null },
+      {
+        id: "google-play",
+        label: "Google Play",
+        href: "https://play.google.com/store/apps/details?id=com.earlyjobs.rojmitra&hl=en_IN" as string | null,
+      },
       { id: "apple", label: "App Store", href: null as string | null },
     ],
   },

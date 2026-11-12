@@ -60,7 +60,13 @@ export function Footer() {
                   </span>
                 </>;
                 const classes = "flex min-h-14 items-center gap-3 rounded-lg border border-border bg-card px-3 py-2";
-                return store.href ? <a key={store.id} href={store.href} className={classes}>{content}</a> : <div key={store.id} className={classes}>{content}</div>;
+                return store.href ? (
+                  <a key={store.id} href={store.href} target="_blank" rel="noopener noreferrer" className={classes}>
+                    {content}
+                  </a>
+                ) : (
+                  <div key={store.id} className={classes}>{content}</div>
+                );
               })}
             </div>
           </div>
