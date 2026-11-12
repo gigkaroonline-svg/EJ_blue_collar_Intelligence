@@ -1,529 +1,595 @@
 /**
- * RojMitra by EarlyJobs — official website content.
- * Do not invent partnerships, metrics, or government affiliations.
+ * RojMitra site content, edit this file to update copy, placeholders, and CTAs.
+ * Keep [X] figures as editable placeholders until verified. Do not invent metrics.
  */
 
 export const site = {
   name: "RojMitra",
-  brandLine: "RojMitra by EarlyJobs",
-  tagline: "India's Village-Level Workforce Intelligence Infrastructure.",
-  positioning: "Making India's Workforce Visible. Village by Village.",
-  brandRelationship: "An EarlyJobs initiative",
-  trustLine: "Built by EarlyJobs · Community-led · Consent-first",
-  url: "https://ej-blue-collar-intelligence.vercel.app",
+  tagline: "India's Village-Level Workforce Intelligence Infrastructure",
+  positioning: "RojMitra by EarlyJobs · India's Village-Level Workforce Intelligence Infrastructure",
+  brandRelationship: "RojMitra by EarlyJobs · Village-Level Workforce Intelligence",
+  trustLine: "Consent-based · Village-first · Built by EarlyJobs",
   contact: {
     partnerEmail: "partners@earlyjobs.ai",
     investorEmail: "investors@earlyjobs.ai",
     employerEmail: "employers@earlyjobs.ai",
     institutionEmail: "institutions@earlyjobs.ai",
   },
+  /** Replace [X] values once verified. Keep them clearly editable. */
+  stats: {
+    districtsMapped: "[X]",
+    workerProfiles: "[X]",
+    communityPartners: "[X]",
+    skillsCatalogued: "[X]",
+  },
 } as const;
 
 export const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Intelligence", href: "#intelligence" },
+  { label: "Problem", href: "#problem" },
+  { label: "Intelligence", href: "#what-we-map" },
+  { label: "Architecture", href: "#architecture" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Network", href: "#network" },
-  { label: "Employers", href: "#employers" },
+  { label: "Migration", href: "#impact" },
+  { label: "For Employers", href: "#business" },
+  { label: "For Partners", href: "#partners" },
 ] as const;
 
 export const hero = {
-  eyebrow: "An EarlyJobs initiative",
-  headline: "Making India's Workforce Visible.",
-  headlineAccent: "Village by Village.",
+  headline: "A worker spends ten years building a skill. The next employer never knows.",
+  headlineAccent: "",
+  subhead:
+    "RojMitra is building a village-level workforce intelligence infrastructure that helps make every worker's skills, experience, availability and work history visible.",
+  trustLine: "Village-first · Consent-based · Built by EarlyJobs",
+  primaryCta: { label: "Explore Workforce Intelligence", href: "#what-we-map" },
+  secondaryCta: { label: "Partner With RojMitra", href: "#partner" },
+  cards: {
+    profile: {
+      label: "Illustrative worker profile",
+      disclaimer: "Illustrative profile – not a real worker record",
+      fields: [
+        { label: "Name", value: "Ramesh Kumar" },
+        { label: "Home village", value: "Gaya, Bihar" },
+        { label: "Industry experience", value: "Knitwear manufacturing" },
+        { label: "Work location", value: "Tiruppur, Tamil Nadu" },
+        { label: "Experience", value: "10 years" },
+        { label: "Current status", value: "Returned home" },
+        { label: "Availability", value: "Demonstration status" },
+      ],
+    },
+    map: {
+      label: "Village",
+      title: "Village-first Intelligence",
+      body: "Workforce information organised from the village level upward to Gram Panchayat, block, district, state and India.",
+      layers: ["Village", "Block", "District", "India"],
+    },
+    intelligence: {
+      label: "Experience",
+      title: "Experience Intelligence",
+      body: "Past roles, industries, work locations, experience and skills – captured in a record designed to travel with the worker.",
+      tags: ["Roles", "Industries", "Tenure", "Skills"],
+    },
+    sectors: {
+      label: "Industries",
+      title: "Where the work is",
+      items: ["Manufacturing", "Garments", "Textile", "Construction", "Logistics", "Retail"],
+    },
+    network: {
+      label: "Partner network",
+      title: "Village Workforce Mitra",
+      body: "A trusted local partner who helps workers create and maintain their experience records with their consent.",
+    },
+  },
+} as const;
+
+export const networkStrip = [
+  "Common Services Centres",
+  "Community institutions",
+  "Self-help groups",
+  "Community mobilisers",
+  "Village-level entrepreneurs",
+  "Local employment coordinators",
+  "Training institutions",
+  "Grassroots organisations",
+] as const;
+
+export const aboutStatement = {
+  lead: "Every village worker",
+  visible: "seen",
+  middle: ", every skill",
+  informed: "recorded",
+  and: ", every employer",
+  accessible: "connected",
+  period: ".",
+  support: "The talent is already nearby. It just isn't visible.",
+} as const;
+
+export const bento = {
+  districtCoverage: {
+    label: "Where we start",
+    title: "Where workers actually live",
+    body: [
+      "Most workforce information is presented at the state or district level. RojMitra is designed to start at the village, where workers live and communities understand local employment patterns.",
+      "Workforce information can then be organised upward, creating connected views at Gram Panchayat, block, district, state and national levels.",
+    ],
+    points: [
+      { title: "Village", detail: "The unit. Everything else is a view." },
+      { title: "Gram Panchayat", detail: "The next view up from the village." },
+      { title: "Block", detail: "Then district, state and India." },
+    ],
+  },
+  systemLayers: {
+    label: "One record",
+    title: "Six levels of insight",
+    body: "Village → Gram Panchayat → Block → District → State → India. The same data, whether you are hiring for a plant or planning for a district.",
+    points: [
+      { step: "01", title: "Village", status: "live" as "live" | "building" },
+      { step: "02", title: "Gram Panchayat", status: "live" as "live" | "building" },
+      { step: "03", title: "Block", status: "live" as "live" | "building" },
+      { step: "04", title: "District", status: "live" as "live" | "building" },
+      { step: "05", title: "State", status: "live" as "live" | "building" },
+      { step: "06", title: "India", status: "live" as "live" | "building" },
+    ],
+  },
+  workerProfiles: {
+    label: "Worker profile",
+    title: "Ramesh Kumar · Gaya, Bihar",
+    body: "10 yrs experience. Knitwear manufacturing, Tiruppur, Tamil Nadu. Returned home. Available.",
+    points: ["10 yrs experience", "Knitwear manufacturing, Tiruppur", "Returned home · Available"],
+  },
+  consentFirst: {
+    label: "Trust",
+    title: "Workforce intelligence with consent",
+    body: "Worker information is collected with the worker's consent. Data should open doors for the worker, not just be sold on.",
+    pillars: ["Consent", "Open doors", "Responsible practice"],
+  },
+} as const;
+
+export const story = {
+  label: "The problem",
+  headline: "India's workforce is everywhere. The intelligence about it is not.",
   body: [
-    "RojMitra maps, verifies and connects India's workforce at the grassroots. We transform fragmented information about workers, skills, occupations, employment availability and migration into actionable workforce intelligence.",
-    "From workers in remote villages to manufacturers seeking skilled talent, RojMitra creates a connected intelligence layer that makes India's distributed workforce more visible and accessible.",
+    "Millions of skilled workers live in villages across India. They travel to different cities and states for employment, learn new skills, work across industries and return home with years of valuable experience.",
+    "Yet much of this experience remains unrecorded and difficult for employers to discover.",
+    "Employers struggle to identify suitable nearby workers. Workers struggle to make their experience visible beyond their immediate networks. Institutions and planners often lack granular, continuously updated workforce information.",
+    "India's workforce is distributed. Its intelligence remains fragmented.",
+    "RojMitra is being built to bridge this gap.",
   ],
-  ctas: [
-    { label: "Explore Workforce Intelligence", href: "#intelligence", variant: "primary" as const },
-    { label: "Become a Village Partner", href: "#partner", variant: "secondary" as const },
-    { label: "Connect as an Employer", href: "#employers", variant: "ghost" as const },
-  ],
-  capabilities: [
-    "Village-Level Intelligence",
-    "Worker Verification",
-    "Labour Mobility Intelligence",
-    "Employer Workforce Discovery",
-  ],
+  /** Omit or replace attribution only when confirmed. */
+  pullQuote: null as null | { quote: string; attribution: string },
 } as const;
 
 export const problem = {
-  id: "about",
-  eyebrow: "The workforce visibility gap",
-  headline: "India's Workforce Is Everywhere. Its Intelligence Is Fragmented.",
+  label: "The problem",
+  headline: "Employers guess. Workers go unseen.",
+  cards: [
+    {
+      audience: "Employers",
+      title: "No visibility, no way to reach them",
+      body: "Keep hunting for fresh, nearby talent with no visibility into who is around and no way to reach them.",
+    },
+    {
+      audience: "Workers",
+      title: "Years of skill stay invisible",
+      body: "Years of skill and experience stay invisible beyond the village or the contractor they know.",
+    },
+    {
+      audience: "Planners",
+      title: "Averages, not village evidence",
+      body: "Decide on district averages, not village-level evidence.",
+    },
+  ],
+  statsLabel: "What public data already shows",
+  stats: [
+    {
+      value: "45 crore+",
+      label: "Indians are internal migrants, most moving for work",
+      source: "Census of India, 2011",
+    },
+    {
+      value: "~90%",
+      label: "of India's workforce is in informal employment, largely unrecorded",
+      source: "PLFS, MoSPI",
+    },
+    {
+      value: "2 in 3",
+      label: "Indians live in rural areas, far from where hiring data is gathered",
+      source: "Census of India, 2011",
+    },
+  ],
+  closer: "The talent is already nearby. It just isn't visible.",
+} as const;
+
+export const whatItIs = {
+  label: "Experience",
+  headline: "Years of experience shouldn't end at the village boundary.",
   body: [
-    "India's workforce is distributed across villages, towns, cities and migration corridors. Millions of people possess valuable skills, practical experience and the willingness to work across industries and geographies.",
-    "Yet information about where these workers live, what they can do, when they are available and where they are willing to work remains fragmented across informal networks, disconnected databases and local communities.",
-    "This creates a significant visibility gap between workforce supply and employer demand.",
+    "A worker's professional journey does not end when they leave a factory, change cities or return to their village.",
+    "A stitching operator in Surat. A tiling mason on a Bengaluru construction site. A machine operator in a Kerala manufacturing unit.",
+    "Each workplace adds experience, skills and knowledge.",
+    "But when workers move, their employment history often remains scattered across contractors, employers and locations.",
+    "RojMitra aims to create a connected workforce experience record that captures what workers have done, where they have worked, how long they have worked and what skills they have acquired.",
   ],
-  cards: [
-    {
-      step: "01",
-      title: "Invisible Workforce",
-      body: "Employers often struggle to discover suitable workers beyond their immediate recruitment networks.",
-    },
-    {
-      step: "02",
-      title: "Fragmented Skills Information",
-      body: "Information about occupational skills, industrial experience and worker capabilities is not organised into a connected local intelligence system.",
-    },
-    {
-      step: "03",
-      title: "Changing Workforce Availability",
-      body: "Migration, seasonal employment and changing job preferences make workforce availability difficult to understand.",
-    },
-    {
-      step: "04",
-      title: "Disconnected Employment Opportunities",
-      body: "Workers may not know about suitable employment opportunities beyond their immediate communities.",
-    },
-  ],
-  closer:
-    "RojMitra brings these disconnected information layers together, starting at the village level.",
-} as const;
-
-export const intelligence = {
-  id: "intelligence",
-  eyebrow: "Our intelligence framework",
-  headline: "Understanding the Workforce Beyond Job Listings.",
-  intro:
-    "RojMitra goes beyond conventional recruitment databases. We organise workforce intelligence around people, their skills, their locations, their employment preferences and their movement across industries and geographies.",
-  cards: [
-    {
-      step: "01",
-      title: "Worker Intelligence",
-      body: "Understand who workers are, where they come from, what work they have done and what employment opportunities they prefer.",
-      tags: ["Occupation", "Experience", "Education", "Skills", "Certifications"],
-    },
-    {
-      step: "02",
-      title: "Skills Intelligence",
-      body: "Build a structured understanding of skills available across villages and communities.",
-      tags: ["Manufacturing", "Construction", "Technical", "Logistics", "Frontline"],
-    },
-    {
-      step: "03",
-      title: "Availability Intelligence",
-      body: "Understand when workers are available and what employment opportunities they are looking for.",
-      tags: ["Employment status", "Joining timelines", "Relocation preferences"],
-    },
-    {
-      step: "04",
-      title: "Migration Intelligence",
-      body: "Understand how workers move between villages, cities, states and industries.",
-      tags: ["Native location", "Seasonal migration", "Return migration", "Industry movement"],
-    },
-    {
-      step: "05",
-      title: "Wage Intelligence",
-      body: "Understand compensation expectations and location-based wage patterns.",
-      tags: ["Current wages", "Expected wages", "Industry-wise wages"],
-      building: true,
-    },
-    {
-      step: "06",
-      title: "Employer Demand Intelligence",
-      body: "Connect workforce information with actual employer requirements.",
-      tags: [
-        "Required skills",
-        "Occupations",
-        "Locations",
-        "Workforce quantity",
-        "Hiring timelines",
+  comparison: {
+    portal: {
+      title: "When the record stops",
+      points: [
+        "Experience goes unrecorded once a worker goes home",
+        "The next employer starts from zero",
+        "A skill learned over years never leaves the last workplace",
+        "Hiring searches for new talent a few kilometres away",
       ],
-      building: true,
     },
-  ],
-  closer:
-    "From understanding individual worker capabilities to identifying regional workforce supply, RojMitra creates a structured view of India's workforce.",
-} as const;
-
-export const architecture = {
-  id: "architecture",
-  eyebrow: "Built from the grassroots",
-  headline: "Every Village Is a Workforce Intelligence Point.",
-  body: "The foundation of RojMitra is the village. We place the village at the centre of workforce discovery, registration, verification and intelligence. Information can then be organised and aggregated across larger administrative geographies to build a connected understanding of workforce availability.",
-  hierarchy: [
-    { level: "Village", detail: "Worker discovery, registration, skills and availability", dominant: true },
-    { level: "Gram Panchayat", detail: "Local workforce consolidation", dominant: false },
-    { level: "Block", detail: "Regional workforce aggregation", dominant: false },
-    { level: "District", detail: "District-wide workforce intelligence", dominant: false },
-    { level: "State", detail: "Regional workforce distribution", dominant: false },
-    { level: "India", detail: "National workforce intelligence", dominant: false },
-  ],
-  closer:
-    "One village may have hundreds of workers with different occupations, skills and employment preferences. Connecting this information across villages can create a clearer picture of India's workforce.",
-} as const;
-
-export const dashboard = {
-  id: "dashboard",
-  eyebrow: "See the workforce differently",
-  headline: "From Village-Level Information to Actionable Intelligence.",
-  body: "RojMitra organises workforce information geographically, occupationally and by employment availability. Explore how a village-level workforce profile can help employers and institutions understand local workforce supply.",
-  demoNotice:
-    "Demonstration data only. All figures below are illustrative and must not be read as live RojMitra results.",
-  tabs: ["Geography", "Occupations", "Skills", "Availability", "Migration", "Employer Demand"],
-  path: ["India", "Bihar", "Gaya", "Sample Block", "Sample Village"],
-  profile: {
-    title: "Village Workforce Profile",
-    rows: [
-      { label: "Registered workers", value: "450" },
-      { label: "Profile-verified workers", value: "320" },
-      { label: "Manufacturing workers", value: "85" },
-      { label: "Construction workers", value: "110" },
-      { label: "Logistics workers", value: "45" },
-      { label: "Currently available", value: "120" },
-      { label: "Open to relocation", value: "75" },
-    ],
+    rojmitra: {
+      title: "A record that travels",
+      points: [
+        "Past roles, industries, places and years, in the worker's own words",
+        "Experience checked, not just claimed",
+        "Match returning and local workers to roles that fit what they have already done",
+        "A verified work history that travels with them",
+      ],
+    },
   },
-  charts: [
-    {
-      title: "Occupation-wise distribution",
-      bars: [
-        { label: "Construction", value: 34 },
-        { label: "Manufacturing", value: 26 },
-        { label: "Logistics", value: 18 },
-        { label: "Retail", value: 12 },
-        { label: "Other", value: 10 },
-      ],
-    },
-    {
-      title: "Skills distribution",
-      bars: [
-        { label: "Technical", value: 28 },
-        { label: "Frontline", value: 32 },
-        { label: "Machine ops", value: 22 },
-        { label: "Driving", value: 18 },
-      ],
-    },
-    {
-      title: "Employment availability",
-      bars: [
-        { label: "Available now", value: 38 },
-        { label: "30 days", value: 27 },
-        { label: "Seasonal", value: 20 },
-        { label: "Not seeking", value: 15 },
-      ],
-    },
-  ],
 } as const;
 
 export const howItWorks = {
-  id: "how-it-works",
-  eyebrow: "The operating framework",
-  headline: "From Local Workforce Discovery to Employment Opportunities.",
-  intro:
-    "RojMitra brings together community-level workforce discovery, structured information, verification and employer connections through an integrated operating framework.",
-  steps: [
+  label: "How it works",
+  headline: "From discovery to a worker at work.",
+  layers: [
     {
       step: "01",
-      title: "Discover",
-      body: "Identify workers across villages through local community networks and institutional channels.",
+      title: "Discovery",
+      body: "Identify workers and workforce clusters at the village level.",
+      status: "live" as "live" | "building",
     },
     {
       step: "02",
-      title: "Register",
-      body: "Facilitate consent-based worker registration and create structured profiles.",
+      title: "Registration",
+      body: "Create consent-based worker profiles and capture past employment history.",
+      status: "live" as "live" | "building",
     },
     {
       step: "03",
-      title: "Verify",
-      body: "Establish worker identity, occupational information, skills and experience verification status.",
+      title: "Verification",
+      body: "Check relevant experience, skills and employment information using appropriate verification methods.",
+      status: "live" as "live" | "building",
     },
     {
       step: "04",
-      title: "Map",
-      body: "Organise workforce information by village, occupation, skill, availability and geography.",
+      title: "Intelligence mapping",
+      body: "Organise workforce information by occupation, skill, experience and geography.",
+      status: "live" as "live" | "building",
     },
     {
       step: "05",
-      title: "Update",
-      body: "Maintain workforce information as employment status, mobility and preferences change.",
+      title: "Employer discovery",
+      body: "Enable employers to identify suitable local and returning workers using relevant workforce information.",
+      status: "live" as "live" | "building",
     },
     {
       step: "06",
-      title: "Connect",
-      body: "Help employers discover relevant workforce supply based on their requirements.",
-    },
-    {
-      step: "07",
-      title: "Execute",
-      body: "Connect workforce intelligence with recruitment and hiring execution through EarlyJobs.",
+      title: "Hiring execution",
+      body: "Connect suitable workers to employment opportunities through the EarlyJobs recruitment network.",
+      status: "live" as "live" | "building",
     },
   ],
 } as const;
 
-export const mobility = {
-  id: "mobility",
-  eyebrow: "Understanding India's migrating workforce",
-  headline: "Workers Move. Workforce Intelligence Should Move With Them.",
-  intro:
-    "India's workforce is constantly moving between villages, cities, states and industries. A worker's employment journey does not always follow a straight line.",
-  story: {
-    title: "A real-world workforce journey",
-    body: [
-      "Consider a worker from Bihar who works in the rubber manufacturing industry in Kerala.",
-      "During Diwali or Holi, the worker returns to their native village to spend time with family.",
-      "Sometimes the worker does not return to the same employer. They may join another factory, move into another industry or explore employment closer to home.",
-      "Without updated workforce information, employers may struggle to understand worker availability and plan their recruitment requirements.",
-    ],
-    route: ["Bihar", "Kerala", "Bihar", "New opportunity"],
+export const whatWeMap = {
+  label: "What we do",
+  headline: "Seven layers of workforce intelligence, starting with what workers already know.",
+  items: [
+    {
+      title: "Experience intelligence",
+      body: "What a worker has done, where they have worked, for how long and what they have learned. A connected employment history designed to travel with them.",
+      building: false,
+    },
+    {
+      title: "Worker intelligence",
+      body: "Consent-based worker profiles organised by location, occupation and employment history.",
+      building: false,
+    },
+    {
+      title: "Skills intelligence",
+      body: "Understand the skills workers possess, their experience levels and the occupations they can perform.",
+      building: false,
+    },
+    {
+      title: "Availability intelligence",
+      body: "Understand who may be available, from when and for how long, based on updated worker information.",
+      building: false,
+    },
+    {
+      title: "Migration intelligence",
+      body: "Understand where workers move for employment, which industries they work in and when they return.",
+      building: false,
+    },
+    {
+      title: "Wage intelligence",
+      body: "Understand wage expectations, prevailing compensation patterns and differences across locations and occupations.",
+      building: true,
+    },
+    {
+      title: "Employer demand intelligence",
+      body: "Map employer requirements by geography, industry, occupation and workforce demand.",
+      building: true,
+    },
+  ],
+} as const;
+
+export const audiences = {
+  label: "Partner network",
+  headline: "Every village needs a trusted local face.",
+  tabs: [
+    {
+      id: "workers",
+      title: "Workers",
+      body: "RojMitra gives every village worker a verified record of what they can do. Worker information is collected with the worker's consent.",
+      points: [
+        "Past roles, industries, places and years",
+        "Experience checked, not just claimed",
+        "A verified work history that travels with them",
+      ],
+      cta: { label: "Partner With Us", href: "#partner" },
+    },
+    {
+      id: "employers",
+      title: "Employers",
+      body: "Hiring for a plant, a site, a mill or a store? The talent you need is probably within a few kilometres. You just can't see it, and you can't reach it.",
+      points: [
+        "Who is nearby, with what skills and experience",
+        "Workers who are available and open to the role",
+        "Hiring around real local supply, season by season",
+      ],
+      cta: {
+        label: "Talk to Us",
+        href: `mailto:${site.contact.employerEmail}?subject=Employer%20enquiry`,
+      },
+    },
+    {
+      id: "institutions",
+      title: "Institutions",
+      body: "Collaborate with us. Planning works from village-level evidence, not district averages that are months or years old.",
+      points: [
+        "One village record, read at district and state level",
+        "Consent-based workforce intelligence",
+        "Community and institutional collaboration",
+      ],
+      cta: {
+        label: "Get in Touch",
+        href: `mailto:${site.contact.institutionEmail}?subject=Institution%20collaboration`,
+      },
+    },
+    {
+      id: "partners",
+      title: "Village Workforce Mitras",
+      body: "A Village Workforce Mitra is a local partner who helps workers become visible, on the worker's terms.",
+      points: [
+        "Identify workers in the village",
+        "Record past experience and where they have worked",
+        "Connect workers with suitable opportunities",
+      ],
+      cta: { label: "Become a Village Workforce Mitra", href: "#partner" },
+    },
+  ],
+} as const;
+
+export const trust = {
+  label: "Trust",
+  headline: "Workforce intelligence with consent.",
+  body: "Worker information is collected with the worker's consent. We design our data practices around the principle that data should open doors for the worker, not just be sold on. We are building responsible practices into the platform from the start.",
+  pillars: [
+    {
+      title: "Consent",
+      body: "Worker information is collected with the worker's consent, through local partners called Village Workforce Mitras.",
+    },
+    {
+      title: "Open doors",
+      body: "Data should open doors for the worker, not just be sold on.",
+    },
+    {
+      title: "Responsible practice",
+      body: "Responsible practices are being built into the platform from the start. Read Privacy and Terms for details.",
+    },
+  ],
+} as const;
+
+export const impact = {
+  label: "Migration",
+  headline: "Workers move. Their experience moves with them, and the data should too.",
+  tiles: [
+    {
+      title: "Bihar → Tamil Nadu",
+      body: "Example, A worker spends months stitching in a knitwear unit in Tiruppur, then travels home for Diwali or Chhath. Then he goes back again.",
+    },
+    {
+      title: "Odisha → Gujarat",
+      body: "Example, A worker joins a stitching or finishing unit, learns a trade over several years, and returns to a village with no record of that skill.",
+    },
+    {
+      title: "Uttar Pradesh → NCR or Bengaluru",
+      body: "Example, A mason or finishing worker moves between real estate and construction sites, building experience that no single employer ever sees.",
+    },
+    {
+      title: "What we map",
+      body: "Corridors, from source village to destination cluster. Seasonality, from festivals to harvests. Skills gained on the road. Return and redeploy, closer to home.",
+    },
+  ],
+} as const;
+
+export const businessModel = {
+  label: "For employers",
+  headline: "Find the right workforce. Starting at the village level.",
+  body: [
+    "Manufacturing plants, construction sites, textile units, warehouses and businesses often struggle to understand the workforce available around their operating locations.",
+    "RojMitra is being built to provide structured workforce intelligence by geography, occupation, skill, experience and availability.",
+    "Through the EarlyJobs recruitment network, relevant workforce intelligence can translate into actual hiring execution.",
+  ],
+  cards: [
+    {
+      title: "See",
+      body: "Understand who is in the surrounding workforce, what skills they possess and where they have worked.",
+    },
+    {
+      title: "Reach",
+      body: "Connect with suitable workers who are interested and available for relevant opportunities.",
+    },
+    {
+      title: "Plan",
+      body: "Understand local workforce supply and plan hiring around industry and seasonal requirements.",
+    },
+    {
+      title: "Industries",
+      body: "Manufacturing, automotive, rubber, textile and apparel, real estate, construction, warehousing, logistics, retail, healthcare, hospitality and agriculture.",
+    },
+  ],
+  cta: {
+    label: "Talk to Us",
+    href: `mailto:${site.contact.employerEmail}?subject=Employer%20enquiry`,
   },
-  helps: [
-    {
-      title: "Native Location Intelligence",
-      body: "Understand the worker's home village and preferred employment geography.",
-    },
-    {
-      title: "Migration Intelligence",
-      body: "Understand workforce movement between locations and industries.",
-    },
-    {
-      title: "Availability Intelligence",
-      body: "Capture updated employment preferences and potential availability.",
-    },
-    {
-      title: "Workforce Continuity",
-      body: "Help employers understand changing workforce patterns and plan hiring requirements.",
-    },
-    {
-      title: "Employment Discovery",
-      body: "Make suitable employment opportunities more accessible when workers return to their communities.",
-    },
-  ],
-  closer:
-    "RojMitra looks beyond where a worker is employed today. It helps create a broader understanding of where the workforce comes from, where it moves and where employment opportunities may exist.",
-} as const;
-
-export const network = {
-  id: "network",
-  eyebrow: "Connecting India at the grassroots",
-  headline: "Taking Workforce Intelligence Closer to Every Village.",
-  intro:
-    "India already has a wide network of digital service points, community institutions and local mobilisation ecosystems. RojMitra's distribution architecture is designed to connect with these existing grassroots ecosystems to make workforce discovery and intelligence more accessible.",
-  disclaimer:
-    "These categories describe the kinds of local ecosystems RojMitra seeks to work with. They do not imply signed partnerships, government endorsement, or authorised database access.",
-  categories: [
-    {
-      step: "01",
-      title: "Digital Service Centres",
-      body: "Common Service Centre (CSC) ecosystem. Village-level digital access and assisted worker registration.",
-    },
-    {
-      step: "02",
-      title: "Community Institutions",
-      body: "Anganwadi and other community institutions. Community-level connections and local outreach, subject to institutional mandates and permissions.",
-    },
-    {
-      step: "03",
-      title: "Self-Help Groups",
-      body: "Local women-led community networks that can support awareness and community engagement.",
-    },
-    {
-      step: "04",
-      title: "Community Mobilisers",
-      body: "Grassroots individuals and organisations who understand local communities and can facilitate workforce discovery.",
-    },
-    {
-      step: "05",
-      title: "Village-Level Entrepreneurs",
-      body: "Local entrepreneurs who can support workforce registration, information updates and community coordination.",
-    },
-    {
-      step: "06",
-      title: "Training and Skill Institutions",
-      body: "Institutions that can contribute to understanding worker skills, certifications and training requirements.",
-    },
-  ],
-  closer:
-    "Our approach is to build a connected village-level workforce intelligence ecosystem by working with relevant local, community and institutional stakeholders.",
-} as const;
-
-export const partner = {
-  id: "partner",
-  eyebrow: "Join the grassroots network",
-  headline: "Become a Village Workforce Mitra.",
-  intro:
-    "India's workforce is distributed across thousands of communities. Local knowledge and community connections are essential to understanding this workforce. RojMitra welcomes individuals, local entrepreneurs, community organisations and institutions interested in contributing to village-level workforce intelligence.",
-  who: [
-    "CSC operators",
-    "Village-level entrepreneurs",
-    "Self-help group members",
-    "Community organisations",
-    "Local employment coordinators",
-    "Training institutions",
-    "Grassroots mobilisers",
-    "Local institutions",
-  ],
-  what: [
-    "Identify workers in local communities",
-    "Facilitate worker registration",
-    "Help capture occupational information",
-    "Support skills and experience verification",
-    "Update employment availability",
-    "Capture workforce mobility information",
-    "Connect workers with suitable opportunities",
-  ],
-  ctaHeadline: "Be Part of India's Village Workforce Intelligence Network.",
-  ctaBody: "Help make local workforce information more visible and accessible.",
-  ctaLabel: "Become a Village Partner",
-  consent:
-    "By submitting this form, you agree to be contacted by the RojMitra team regarding your partnership enquiry. Your information will be handled in accordance with the applicable privacy policy. This enquiry does not guarantee income or employment.",
-} as const;
-
-export const employers = {
-  id: "employers",
-  eyebrow: "For employers and industries",
-  headline: "Discover Workforce Beyond Conventional Recruitment Networks.",
-  intro: [
-    "Finding the right workforce often requires more than posting a job or searching an existing database.",
-    "Employers need to understand where suitable workers are located, what skills they possess and when they may be available.",
-    "RojMitra connects village-level workforce intelligence with employer demand.",
-  ],
-  capabilities: [
-    {
-      title: "Geographical Workforce Discovery",
-      body: "Understand workforce availability across villages, blocks, districts and states.",
-    },
-    {
-      title: "Occupation-Based Discovery",
-      body: "Identify workforce supply by job role and occupation.",
-    },
-    {
-      title: "Skills-Based Discovery",
-      body: "Understand relevant skills, industrial experience and certifications.",
-    },
-    {
-      title: "Availability Intelligence",
-      body: "Explore workforce availability and joining preferences.",
-    },
-    {
-      title: "Migration Intelligence",
-      body: "Understand workforce mobility and regional employment patterns.",
-    },
-    {
-      title: "Hiring Execution",
-      body: "Connect workforce intelligence with recruitment and hiring execution through EarlyJobs.",
-    },
-  ],
-  industries: [
-    "Manufacturing",
-    "Automotive",
-    "Rubber and industrial manufacturing",
-    "Construction",
-    "Warehousing",
-    "Logistics",
-    "Retail",
-    "Healthcare",
-    "Hospitality",
-    "Agriculture and allied sectors",
-  ],
-  ctaHeadline: "Tell Us Your Workforce Requirements.",
-  ctaLabel: "Connect With RojMitra",
 } as const;
 
 export const ecosystem = {
-  id: "ecosystem",
-  eyebrow: "Connecting intelligence with execution",
-  headline: "Workforce Intelligence Meets Hiring Infrastructure.",
-  intro:
-    "RojMitra is part of the broader EarlyJobs workforce technology ecosystem. Three complementary capabilities work together.",
+  label: "Ecosystem",
+  headline: "Intelligence, recruitment, AI and gig hiring, in one system.",
   products: [
     {
       name: "RojMitra",
-      role: "Village-Level Workforce Intelligence",
-      body: "Maps and organises workforce information at the grassroots, including skills, occupations, availability and migration.",
+      role: "Village-level workforce intelligence and community mobilisation.",
       highlight: true,
     },
     {
       name: "EarlyJobs",
-      role: "Distributed Recruitment and Hiring Execution",
-      body: "Connects employers with a distributed network of recruiters and workforce mobilisation capabilities.",
+      role: "Distributed recruitment network and hiring execution.",
       highlight: false,
     },
     {
       name: "Huntlo",
-      role: "AI-Powered Hiring Infrastructure",
-      body: "Supports intelligent sourcing, candidate screening, outreach, scheduling and hiring workflows.",
+      role: "AI-powered hiring infrastructure.",
+      highlight: false,
+    },
+    {
+      name: "GigKaro",
+      role: "Pincode-level gig and frontline hiring network.",
       highlight: false,
     },
   ],
-  closer:
-    "Together, RojMitra, EarlyJobs and Huntlo connect workforce discovery, intelligence and employment execution through a unified ecosystem.",
+  closing:
+    "Together, these platforms connect workforce intelligence, talent discovery, recruitment execution and employment outcomes.",
 } as const;
 
-export const trust = {
-  id: "trust",
-  eyebrow: "Trust by design",
-  headline: "Workforce Intelligence Must Begin With Trust.",
-  intro:
-    "Workers are not just data points. Their information represents their identity, experience, livelihood and employment preferences. RojMitra's approach to workforce intelligence is built around responsible information collection and use.",
-  principles: [
+export const faq = {
+  label: "FAQ",
+  headline: "Questions, answered clearly.",
+  items: [
     {
-      title: "Informed Consent",
-      body: "Worker information should be collected with appropriate consent and transparency.",
+      question: "What is RojMitra?",
+      answer:
+        "RojMitra by EarlyJobs is a village-level workforce intelligence initiative designed to map, document and connect workforce skills, experience, availability and employment journeys across India.",
     },
     {
-      title: "Purpose-Specific Collection",
-      body: "Collect only information relevant to defined workforce intelligence and employment purposes.",
+      question: "Is RojMitra a job portal?",
+      answer:
+        "No. RojMitra is being built as workforce intelligence infrastructure. Recruitment and employment are important outcomes, but its primary focus is understanding India's workforce at the grassroots.",
     },
     {
-      title: "Verification Transparency",
-      body: "Clearly distinguish registered, identity-verified, skill-verified and availability-confirmed profiles.",
+      question: "Why does RojMitra start at the village level?",
+      answer:
+        "Because villages are where many workers live and maintain their community connections. Starting at the village level helps build more granular workforce information that can be organised upward to block, district, state and national levels.",
     },
     {
-      title: "Responsible Access",
-      body: "Information access should follow appropriate authorisation and access controls.",
+      question: "How can employers benefit from RojMitra?",
+      answer:
+        "Employers can use workforce intelligence to understand local talent availability, skills, occupations and work experience. Suitable workers can be connected to hiring opportunities through EarlyJobs.",
     },
     {
-      title: "Worker Dignity",
-      body: "Respect worker privacy, preferences and control over their employment information.",
+      question: "How does RojMitra record past work experience?",
+      answer:
+        "The platform is designed to capture past roles, industries, work locations, employment duration and skills acquired. Verification depends on the available evidence and verification process.",
+    },
+    {
+      question: "Does RojMitra track worker migration?",
+      answer:
+        "RojMitra is designed to document worker migration patterns with appropriate consent. This includes source locations, work destinations, industries, return patterns and experience gained.",
+    },
+    {
+      question: "Which industries does RojMitra cover?",
+      answer:
+        "The intended industry coverage includes manufacturing, automotive, rubber, textile and apparel, construction, real estate, warehousing, logistics, retail, healthcare, hospitality and agriculture.",
+    },
+    {
+      question: "How is worker information collected?",
+      answer:
+        "Worker information is intended to be collected through consent-based registration, supported by local partners and appropriate verification processes.",
+    },
+    {
+      question: "Is the workforce dashboard showing live data?",
+      answer:
+        "No. Any dashboard or worker profile shown on this website as a demonstration uses illustrative data. It does not represent live nationwide workforce coverage.",
+    },
+    {
+      question: "How can I become a Village Workforce Mitra?",
+      answer:
+        "Interested individuals and organisations can submit an enquiry through the Village Workforce Mitra registration section. The team will review the enquiry and contact eligible applicants.",
+    },
+    {
+      question: "Can government institutions collaborate with RojMitra?",
+      answer:
+        "Yes. RojMitra welcomes discussions with government institutions, industry associations, skill development organisations and grassroots networks interested in workforce intelligence and employment infrastructure.",
+    },
+    {
+      question: "How can a company hire through RojMitra?",
+      answer:
+        "Employers can submit their workforce requirements through the employer enquiry form. The team can discuss suitable workforce intelligence and recruitment execution through EarlyJobs.",
     },
   ],
 } as const;
 
 export const finalCta = {
-  id: "final-cta",
-  eyebrow: "Building a connected workforce future",
-  headline: "India's Workforce Is Everywhere. Its Intelligence Can Be Connected.",
-  body: "From a village worker to a national manufacturer, RojMitra is building a more connected way to understand India's workforce. Join the network as a village partner, employer or institutional collaborator.",
+  headline: "One village at a time. One connected workforce intelligence network for India.",
+  body: "Employers, find nearby talent you can finally see. Partners, become a Village Workforce Mitra. Institutions and collaborators, collaborate with us.",
   routes: [
-    { label: "Become a Village Partner", href: "#partner" },
-    { label: "Connect as an Employer", href: "#employers" },
     {
-      label: "Institutional Collaboration",
-      href: `mailto:institutions@earlyjobs.ai?subject=Institutional%20collaboration`,
+      label: "Talk to Us",
+      href: `mailto:${site.contact.employerEmail}?subject=Employer%20enquiry`,
+    },
+    {
+      label: "Partner With Us",
+      href: `mailto:${site.contact.partnerEmail}?subject=Partner%20with%20RojMitra`,
+    },
+    {
+      label: "Get in Touch",
+      href: `mailto:${site.contact.institutionEmail}?subject=Institution%20collaboration`,
     },
   ],
 } as const;
 
 export const footer = {
-  blurb: "India's Village-Level Workforce Intelligence Infrastructure.",
-  positioning: "Making India's Workforce Visible. Village by Village.",
-  nav: [
-    { label: "About", href: "#about" },
-    { label: "Intelligence", href: "#intelligence" },
+  partnerCta: {
+    label: "Join as Sourcing Partner",
+    href: `mailto:${site.contact.partnerEmail}?subject=Sourcing%20partner%20enquiry`,
+  },
+  app: {
+    title: "Get the app",
+    audience: "For Sourcing Partners",
+    status: "Coming soon",
+    stores: [
+      { id: "google-play", label: "Google Play", href: null as string | null },
+      { id: "apple", label: "App Store", href: null as string | null },
+    ],
+  },
+  blurb:
+    "RojMitra maps, verifies and connects India's workforce at the grassroots, so employers can finally see and reach nearby talent.",
+  explore: [
+    { label: "What We Do", href: "#what-we-map" },
+    { label: "Architecture", href: "#architecture" },
     { label: "How It Works", href: "#how-it-works" },
-    { label: "Partner Network", href: "#network" },
-    { label: "Employers", href: "#employers" },
+    { label: "FAQ", href: "#faq" },
+    { label: "Partner With Us", href: "#partner" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "#privacy" },
-    { label: "Terms of Use", href: "#terms" },
-    { label: "Contact", href: "mailto:partners@earlyjobs.ai" },
-    { label: "About EarlyJobs", href: "https://www.earlyjobs.ai", external: true },
+    { label: "Privacy", href: "#privacy" },
+    { label: "Terms", href: "#terms" },
+    { label: "Contact", href: `mailto:${site.contact.partnerEmail}` },
   ],
-  copyright: `© ${new Date().getFullYear()} RojMitra by EarlyJobs. All rights reserved.`,
-} as const;
-
-export const legal = {
-  privacy: {
-    title: "Privacy Policy",
-    body: "RojMitra collects and processes workforce and partnership enquiry information with consent for defined workforce intelligence and employment purposes. A complete privacy policy will be published here after legal review. For privacy questions, contact partners@earlyjobs.ai.",
-  },
-  terms: {
-    title: "Terms of Use",
-    body: "This website describes RojMitra by EarlyJobs. Formal terms of use will be published here after legal review. Enquiry submissions do not create a partnership, employment, or commercial agreement.",
-  },
+  copyright: "©Victa EarlyJobs technologies Pvt. Ltd.",
 } as const;
