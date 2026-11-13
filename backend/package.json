@@ -4,26 +4,35 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch --env-file=.env --env-file=.env.dev src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "tsx --env-file=.env --env-file=.env.dev src/server.ts",
+    "start:prod": "tsx --env-file=.env --env-file=.env.prod src/server.ts",
     "typecheck": "tsc --noEmit",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx --env-file=.env --env-file=.env.dev src/scripts/seed.ts",
+    "seed:prod": "tsx --env-file=.env --env-file=.env.prod src/scripts/seed.ts",
+    "backup:catalog": "tsx --env-file=.env --env-file=.env.dev src/scripts/backup-catalog.ts",
+    "export:catalog-en": "tsx --env-file=.env --env-file=.env.dev src/scripts/export-catalog-en.ts",
+    "translate:catalog": "tsx --env-file=.env --env-file=.env.dev src/scripts/translate-catalog.ts",
+    "apply:catalog-translations": "tsx --env-file=.env --env-file=.env.dev src/scripts/apply-catalog-translations.ts",
+    "verify:catalog": "tsx --env-file=.env --env-file=.env.dev src/scripts/verify-catalog.ts"
   },
   "keywords": [],
   "type": "commonjs",
   "dependencies": {
     "@google-cloud/storage": "^8.4.0",
+    "@google/genai": "^3.3.0",
     "bcryptjs": "^3.0.3",
-    "dotenv": "^18.0.9",
     "express": "^5.3.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.11.4"
+    "mongoose": "^9.11.4",
+    "multer": "^2.5.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.3.0",
     "@types/node": "^26.6.6",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"

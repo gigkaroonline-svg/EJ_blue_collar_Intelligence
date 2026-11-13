@@ -8,4 +8,5 @@ export * from './category.model';
 export * from './skill.model';
 export * from './job.model';
 export * from './legalDocument.model';
+export * from './blog.model';
 export * from './i18n';

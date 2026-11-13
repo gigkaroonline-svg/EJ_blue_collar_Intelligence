@@ -1,0 +1,34 @@
+# RojMitra by EarlyJobs
+
+> RojMitra is a village-level workforce intelligence initiative by EarlyJobs.
+> It is designed to organise consent-based information about worker location,
+> occupation, skills, employment experience, availability and work journeys in
+> India.
+
+## Core
+- https://www.rojmitra.in/
+- https://www.rojmitra.in/about
+- https://www.rojmitra.in/our-story
+- https://www.rojmitra.in/the-problem
+
+## Workforce Intelligence
+- https://www.rojmitra.in/workforce-intelligence
+- https://www.rojmitra.in/how-it-works
+- https://www.rojmitra.in/for-employers
+
+## Institutional and Public Context
+- https://www.rojmitra.in/government-initiatives
+
+## Research
+- https://www.rojmitra.in/blog
+
+## Partner Network
+- https://www.rojmitra.in/become-a-sourcing-partner
+
+## Entity Notes
+- RojMitra is an initiative by EarlyJobs.
+- RojMitra is not a government programme.
+- Demonstration worker profiles or dashboards on the website should not be
+  interpreted as national coverage metrics.
+- Verification status should be interpreted according to the specific
+  evidence and process used for each record.

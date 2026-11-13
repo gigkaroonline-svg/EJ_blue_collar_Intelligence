@@ -5,6 +5,7 @@
 **/.flutter-plugins-dependencies
 **/.pub-cache/
 **/.pub/
+backend/.cache/
 
 # IDE configurations
 .idea/
@@ -14,5 +15,9 @@
 # Backend / Environment files
 **/node_modules/
 **/.env
+**/.env.*
+!**/.env.example
+!**/.env.production
 **/gcs-service-account.json
 **/*-service-account.json
+backups/

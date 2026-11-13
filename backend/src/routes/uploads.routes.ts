@@ -1,9 +1,9 @@
-import crypto from 'crypto';
 import { Router } from 'express';
 import { asyncHandler, AppError } from '../middleware/asyncHandler';
 import { requireAuth, requireAccepted } from '../middleware/auth';
 import {
   assertAllowedContentType,
+  buildPartnerObjectKey,
   createReadSignedUrl,
   createUploadSignedUrl,
   extensionForContentType,
@@ -31,7 +31,7 @@ uploadsRouter.post(
 
     const partnerId = req.partner!.id;
     const ext = extensionForContentType(contentType);
-    const objectKey = `partners/${partnerId}/${kind}/${crypto.randomUUID()}.${ext}`;
+    const objectKey = buildPartnerObjectKey(partnerId, kind, ext);
 
     const signed = await createUploadSignedUrl({ objectKey, contentType });
     res.json({

@@ -1,83 +1,60 @@
-import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { site } from "@/content/site";
+import { organizationJsonLd } from "@/lib/json-ld";
+import { SITE_ORIGIN } from "@/lib/site-url";
 import "./globals.css";
 
 const GTM_ID = "GTM-WFNQMJVF";
 
-const heading = Plus_Jakarta_Sans({
-  variable: "--font-heading",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
-const body = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
-});
+const title = "Village-Level Workforce Intelligence India | RojMitra";
+const description =
+  "RojMitra by EarlyJobs maps village-level workforce skills, experience and availability to support enterprise hiring and institutional workforce planning.";
 
 export const metadata: Metadata = {
-  title: `${site.name} by EarlyJobs | Village-Level Workforce Intelligence`,
-  description:
-    "RojMitra by EarlyJobs is India's village-level workforce intelligence infrastructure. Making India's workforce visible, village by village.",
-  metadataBase: new URL(site.url),
+  title,
+  description,
+  authors: [{ name: "EarlyJobs" }],
+  metadataBase: new URL(SITE_ORIGIN),
+  alternates: {
+    canonical: `${SITE_ORIGIN}/`,
+  },
   openGraph: {
-    title: `${site.name} by EarlyJobs`,
-    description: site.positioning,
+    title,
+    description,
     type: "website",
+    url: `${SITE_ORIGIN}/`,
   },
-  robots: { index: true, follow: true },
-};
-
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: site.brandLine,
-  url: site.url,
-  description: site.tagline,
-  parentOrganization: {
-    "@type": "Organization",
-    name: "EarlyJobs",
-    url: "https://www.earlyjobs.ai",
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is RojMitra?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "RojMitra by EarlyJobs is village-level workforce intelligence infrastructure that maps, verifies and connects India's workforce at the grassroots.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is RojMitra a job listing platform?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "No. RojMitra builds the intelligence layer that helps understand where India's workforce lives, what it can do, how it moves and when it is available.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How can organisations partner with RojMitra?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Village partners, employers and institutional collaborators can submit an enquiry through the website forms. Submissions do not guarantee partnership, income or employment.",
-      },
-    },
-  ],
+export const viewport: Viewport = {
+  themeColor: "#0B2A5B",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+    <html lang="en-IN" className="h-full antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+        />
+      </head>
+      <body className="min-h-full bg-background text-foreground">
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -101,14 +78,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           strategy="afterInteractive"
         />
         <Script
-          id="org-jsonld"
+          id="organization-jsonld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
-        />
-        <Script
-          id="faq-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
 
         {children}
