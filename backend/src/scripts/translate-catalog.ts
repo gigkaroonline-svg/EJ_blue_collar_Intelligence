@@ -43,8 +43,11 @@ type CacheEntry = {
 
 const TARGET_LANGS = LANGS.filter((l): l is TargetLang => l !== 'en');
 
-/** Languages that never call Gemini — copy from Hindi / Urdu after those exist. */
-const FALLBACK_OF: Partial<Record<TargetLang, 'hi' | 'ur'>> = {
+/**
+ * Languages that never call Gemini — copy from Hindi / Urdu after those exist.
+ * Keys may include langs not yet in LANGS; ignored until LANGS grows.
+ */
+const FALLBACK_OF: Partial<Record<string, 'hi' | 'ur'>> = {
   brx: 'hi',
   bgc: 'hi',
   raj: 'hi',
@@ -60,7 +63,8 @@ const CACHE_PATH = path.resolve(__dirname, '../../.cache/catalog-translations.js
 const REVIEW_PATH = path.resolve(__dirname, '../../.cache/translation-review.json');
 const CACHE_VERSION = 'v2';
 
-const DRY_RUN_LANGS: TargetLang[] = ['gu', 'ta', 'kn'];
+/** Must be a subset of current TargetLang (LANGS minus en). */
+const DRY_RUN_LANGS: TargetLang[] = ['gu', 'kn', 'bn'];
 const DRY_RUN_JOB_LIMIT = 10;
 /** Prefer these in the dry-run set so we can verify the "native" branch. */
 const DRY_RUN_MUST_INCLUDE = ['Mason', 'Carpenter', 'Tailor', 'Electrician'] as const;
@@ -69,7 +73,7 @@ const DRY_RUN_NAME_ALIASES: Record<string, string[]> = {
 };
 
 /** Everyday native examples to bias Gemini toward kind="native" when workers use them. */
-const NATIVE_EXAMPLES: Partial<Record<TargetLang, string>> = {
+const NATIVE_EXAMPLES: Partial<Record<string, string>> = {
   gu: 'Mason→કડિયા, Carpenter→સુથાર, Tailor→દરજી, Blacksmith→લુહાર, Potter→કુંભાર',
   hi: 'Mason→राजमिस्त्री / मिस्त्री, Carpenter→बढ़ई, Tailor→दर्जी, Blacksmith→लोहार, Potter→कुम्हार',
   mr: 'Mason→गवंडी / राजमिस्त्री, Carpenter→सुतार, Tailor→शिंपी / दर्जी',
@@ -86,7 +90,7 @@ const NATIVE_EXAMPLES: Partial<Record<TargetLang, string>> = {
 };
 
 /** Unicode script blocks per language (plus shared punctuation / digits). */
-const SCRIPT_RANGES: Record<TargetLang, Array<[number, number]>> = {
+const SCRIPT_RANGES: Record<string, Array<[number, number]>> = {
   hi: [[0x0900, 0x097f]],
   mr: [[0x0900, 0x097f]],
   ne: [[0x0900, 0x097f]],
@@ -189,7 +193,7 @@ function validateScript(text: string, lang: TargetLang): { ok: true } | { ok: fa
   return { ok: true };
 }
 
-function fallbackSourceLang(lang: TargetLang): 'hi' | 'ur' {
+function fallbackSourceLang(lang: string): 'hi' | 'ur' {
   if (lang === 'ks' || lang === 'sd' || FALLBACK_OF[lang] === 'ur') return 'ur';
   return 'hi';
 }
@@ -630,7 +634,7 @@ async function main() {
   const langsToRun: TargetLang[] = dryRun ? DRY_RUN_LANGS : [...GEMINI_LANGS];
   // hi / ur first so fallbacks can copy them.
   langsToRun.sort((a, b) => {
-    const rank = (l: TargetLang) => (l === 'hi' ? 0 : l === 'ur' ? 1 : 2);
+    const rank = (l: string) => (l === 'hi' ? 0 : l === 'ur' ? 1 : 2);
     return rank(a) - rank(b);
   });
 
@@ -681,26 +685,30 @@ async function main() {
       }
     }
 
-    if (lang === 'hi' || lang === 'ur') {
-      hiUrResults[lang] = map;
+    if (lang === 'hi' || (lang as string) === 'ur') {
+      hiUrResults[lang as 'hi' | 'ur'] = map;
     }
   }
 
   if (!dryRun) {
-    for (const [lang, from] of Object.entries(FALLBACK_OF) as Array<[TargetLang, 'hi' | 'ur']>) {
-      const src = byLang.get(from);
+    for (const [lang, from] of Object.entries(FALLBACK_OF) as Array<[string, 'hi' | 'ur']>) {
+      if (!(TARGET_LANGS as readonly string[]).includes(lang)) continue;
+      const targetLang = lang as TargetLang;
+      const src = byLang.get(from as TargetLang);
       if (!src) {
         console.warn(`Skip fallback ${lang} ← ${from}: source not ready`);
         continue;
       }
       const map = new Map<string, ItemResult>();
       for (const item of items) {
-        const existingName = item.existingNames[lang]?.trim() ?? '';
+        const existingName = item.existingNames[targetLang]?.trim() ?? '';
         if (!force && existingName) {
           map.set(item.id, {
             name: existingName,
-            description: item.existingDescriptions[lang]?.trim() || existingName,
-            kind: item.existingNameMeta[lang] ?? (from === 'ur' ? 'fallback-ur' : 'fallback-hi'),
+            description: item.existingDescriptions[targetLang]?.trim() || existingName,
+            kind:
+              item.existingNameMeta[targetLang] ??
+              (from === 'ur' ? 'fallback-ur' : 'fallback-hi'),
           });
           continue;
         }
@@ -712,12 +720,12 @@ async function main() {
           description: srcVal.description,
           kind: meta,
         });
-        stats[lang][meta] += 1;
+        stats[targetLang][meta] += 1;
         fallbackCount += 1;
-        reviewRows.push({ id: item.id, en: item.english, lang, kind: meta });
+        reviewRows.push({ id: item.id, en: item.english, lang: targetLang, kind: meta });
       }
-      byLang.set(lang, map);
-      console.log(`Fallback ${lang} ← ${from}: ${map.size} items`);
+      byLang.set(targetLang, map);
+      console.log(`Fallback ${targetLang} ← ${from}: ${map.size} items`);
     }
   }
 
