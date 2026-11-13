@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // Homepage is not in `pages` — add once, then all content routes.
+  // Homepage + Contact are not always in `pages` — add explicitly.
   return [
     {
       url: `${SITE_ORIGIN}/`,
@@ -30,6 +30,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     ...routes.filter((route) => route.url !== `${SITE_ORIGIN}/`),
+    {
+      url: `${SITE_ORIGIN}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     ...blogEntries,
   ];
 }

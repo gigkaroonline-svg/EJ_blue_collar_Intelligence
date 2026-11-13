@@ -554,7 +554,8 @@ export const footer = {
   legal: [
     { label: "Privacy", href: "/#privacy" },
     { label: "Terms", href: "/#terms" },
-    { label: "Contact", href: `mailto:${site.contact.partnerEmail}` },
+    { label: "Sitemap", href: "/sitemap.xml" },
+    { label: "Contact", href: "/contact" },
   ],
   copyright: "©Victa EarlyJobs technologies Pvt. Ltd.",
 } as const;

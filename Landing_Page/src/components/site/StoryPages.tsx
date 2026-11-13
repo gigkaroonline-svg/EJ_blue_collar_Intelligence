@@ -321,7 +321,7 @@ export function OurStoryPage() {
           </div>
           <div className="relative z-10 -mt-10 grid gap-4 px-2 sm:-mt-14 sm:px-8 md:grid-cols-3">
             {[intro[2], intro[3], intro[5]].map((t, i) => (
-              <Reveal key={t} delay={i * 0.06} className="rounded-2xl border border-border bg-card p-6 shadow-lift">
+              <Reveal key={`story-intro-${i}`} delay={i * 0.06} className="rounded-2xl border border-border bg-card p-6 shadow-lift">
                 <IconBadge icon={[Sprout, Route, Lightbulb][i] ?? Sprout} />
                 <p className={cn("mt-4 leading-relaxed", i === 1 ? "text-lg font-semibold text-foreground" : "page-copy")}>{t}</p>
               </Reveal>

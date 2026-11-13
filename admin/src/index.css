@@ -188,3 +188,16 @@
 .blog-rich-surface blockquote {
   @apply border-muted-foreground/30 text-muted-foreground my-2 border-l-4 pl-3 italic;
 }
+
+.blog-rich-surface table {
+  @apply my-3 w-full border-collapse text-sm;
+}
+
+.blog-rich-surface th,
+.blog-rich-surface td {
+  @apply border border-border px-2.5 py-1.5 text-left align-top;
+}
+
+.blog-rich-surface th {
+  @apply bg-muted/60 font-semibold;
+}
