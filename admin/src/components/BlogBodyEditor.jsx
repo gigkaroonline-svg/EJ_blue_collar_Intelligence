@@ -7,6 +7,7 @@ import {
   Link2,
   List,
   ListOrdered,
+  Table,
   Underline,
 } from 'lucide-react'
 import { blogHtmlTextLength, sanitizeBlogHtml, toEditorHtml } from '@/lib/blog-html.js'
@@ -47,6 +48,26 @@ export function BlogBodyEditor({ id = 'blog-body', value, onChange, resetKey, cl
     format('createLink', url)
   }
 
+  function insertTable() {
+    const rowsRaw = window.prompt('Number of rows (including header)', '3')
+    if (rowsRaw == null) return
+    const colsRaw = window.prompt('Number of columns', '3')
+    if (colsRaw == null) return
+    const rows = Math.min(20, Math.max(2, Number.parseInt(rowsRaw, 10) || 3))
+    const cols = Math.min(10, Math.max(2, Number.parseInt(colsRaw, 10) || 3))
+
+    const headerCells = Array.from({ length: cols }, (_, i) => `<th>Header ${i + 1}</th>`).join('')
+    const bodyRows = Array.from({ length: rows - 1 }, () => {
+      const cells = Array.from({ length: cols }, () => '<td> </td>').join('')
+      return `<tr>${cells}</tr>`
+    }).join('')
+
+    const html = `<table><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table><p><br></p>`
+    ref.current?.focus()
+    run('insertHTML', html)
+    emit()
+  }
+
   const textLength = blogHtmlTextLength(value)
 
   return (
@@ -82,6 +103,9 @@ export function BlogBodyEditor({ id = 'blog-body', value, onChange, resetKey, cl
         <Button type="button" variant="outline" size="icon" className="size-8" onClick={addLink} aria-label="Link">
           <Link2 className="size-4" />
         </Button>
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={insertTable} aria-label="Insert table">
+          <Table className="size-4" />
+        </Button>
       </div>
       <div
         id={id}
@@ -91,7 +115,7 @@ export function BlogBodyEditor({ id = 'blog-body', value, onChange, resetKey, cl
         role="textbox"
         aria-multiline="true"
         aria-label="Story"
-        data-placeholder="Write the story. Use the toolbar for headings, lists and links."
+        data-placeholder="Write the story. Use the toolbar for headings, lists, links and tables."
         onInput={emit}
         onBlur={emit}
         suppressContentEditableWarning
