@@ -9,6 +9,7 @@ import { env } from '../config/env';
 import { normalize, skillDisplayName } from '../services/catalog';
 import { catalogView } from '../models/i18n';
 import { parseLang } from '../config/languages';
+import { adminBlogRouter } from './adminBlog.routes';
 
 export const adminRouter = Router();
 
@@ -122,6 +123,7 @@ adminRouter.get(
 );
 
 adminRouter.use(requireAdmin);
+adminRouter.use('/blogs', adminBlogRouter);
 
 // TODO(admin): create sourcing partners from admin — deferred. Signup stays on the partner app.
 

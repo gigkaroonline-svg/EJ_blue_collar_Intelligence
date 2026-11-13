@@ -37,6 +37,7 @@ import { CtaBanner } from "@/components/site/CtaBanner";
 import { IconBadge, SectionLabel } from "@/components/site/primitives";
 import { IndiaMap } from "@/components/site/IndiaMap";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { InlineCopy } from "@/lib/inline-copy";
 import { FormCTA, SubmissionForm } from "@/components/site/Forms";
 import { footer, hero as homeHero } from "@/content/site";
 import {
@@ -137,7 +138,11 @@ function Paragraph({ text, pullQuotes }: { text: string; pullQuotes?: string[] |
       </ul>
     );
   }
-  return <p className="page-copy">{text}</p>;
+  return (
+    <p className="page-copy">
+      <InlineCopy text={text} />
+    </p>
+  );
 }
 
 const listCardIcons = [Search, MapPin, Factory, Users, Route, Network, Landmark, Zap];
@@ -770,7 +775,10 @@ export function FAQAccordion({ items }: { items: { question: string; answer: str
       {items.map((item, i) => (
         <AccordionItem key={item.question} value={String(i)}>
           <AccordionTrigger className="py-6 text-base sm:text-lg">{item.question}</AccordionTrigger>
-          <AccordionContent className="page-copy max-w-3xl">{item.answer}</AccordionContent>
+          {/* forceMount keeps answers in the DOM for crawlers while collapsed */}
+          <AccordionContent forceMount className="page-copy max-w-3xl">
+            {item.answer}
+          </AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>
@@ -815,7 +823,7 @@ function SectionBody({ slug, section }: { slug: PageKey; section: ContentSection
         </div>
       );
     case "icon-grid": {
-      const icons = section.title === "What We Map" ? whatWeMapIcons : section.title.startsWith("What Does") ? partnerDutyIcons : networkElementIcons;
+      const icons = section.title === "What RojMitra Organises" || section.title === "What We Map" ? whatWeMapIcons : section.title.startsWith("What Does") ? partnerDutyIcons : networkElementIcons;
       return (
         <div className="space-y-8">
           {blocks.map((block, i) => (block.kind === "card" ? null : <Paragraph key={i} text={block.text ?? ""} pullQuotes={pullQuotes} />))}

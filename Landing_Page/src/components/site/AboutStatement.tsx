@@ -1,6 +1,5 @@
 "use client";
 
-
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { BarChart3, MapPin, Star } from "lucide-react";
 import { useRef, type ReactNode } from "react";
@@ -25,15 +24,13 @@ function words(value: string, tone?: "brand" | "flame"): Token[] {
 }
 
 const tokens: Token[] = [
-  ...words(aboutStatement.lead),
+  ...words("Make Local"),
   { kind: "icon", tone: "brand", node: <MapPin className="h-4 w-4" strokeWidth={2} /> },
-  ...words(aboutStatement.visible + aboutStatement.middle.split(" ")[0], "brand"),
-  ...words(aboutStatement.middle.split(" ").slice(1).join(" ")),
+  ...words("Workforce Skills", "brand"),
   { kind: "icon", tone: "flame", node: <BarChart3 className="h-4 w-4" strokeWidth={2} /> },
-  ...words(aboutStatement.informed + aboutStatement.and.split(" ")[0], "flame"),
-  ...words(aboutStatement.and.split(" ").slice(1).join(" ")),
+  ...words("and Experience", "flame"),
   { kind: "icon", tone: "sky", node: <Star className="h-4 w-4" strokeWidth={2} /> },
-  ...words(aboutStatement.accessible + aboutStatement.period, "brand"),
+  ...words("Visible", "brand"),
 ];
 
 function Word({
@@ -77,7 +74,7 @@ function Word({
 export function AboutStatement() {
   const ref = useRef<HTMLHeadingElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 45%"] });
-  const label = `${aboutStatement.lead} ${aboutStatement.visible}${aboutStatement.middle} ${aboutStatement.informed}${aboutStatement.and} ${aboutStatement.accessible}${aboutStatement.period}`;
+  const label = "Make Local Workforce Skills and Experience Visible";
 
   return (
     <section
