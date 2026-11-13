@@ -1,5 +1,16 @@
 const TOKEN_KEY = 'rojmitra_admin_token'
 
+/** Backend origin. Empty in local Vite → relative `/api` (proxied). */
+function apiOrigin() {
+  const fromEnv = String(import.meta.env.VITE_API_URL || '')
+    .trim()
+    .replace(/\/$/, '')
+  if (fromEnv) return fromEnv
+  // Production build default when host doesn't inject VITE_API_URL
+  if (import.meta.env.PROD) return 'https://backendapi.rojmitra.in'
+  return ''
+}
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)
 }
@@ -24,7 +35,7 @@ export async function api(path, { method = 'GET', body, auth = true } = {}) {
     const token = getToken()
     if (token) headers.Authorization = `Bearer ${token}`
   }
-  const res = await fetch(`/api/admin${path}`, {
+  const res = await fetch(`${apiOrigin()}/api/admin${path}`, {
     method,
     headers,
     body: payload,

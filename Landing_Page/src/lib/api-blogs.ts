@@ -16,7 +16,7 @@ export type BlogPost = {
 
 function apiBase() {
   return (
-    process.env.NEXT_PUBLIC_API_URL || "https://qabackendapi.rojmitra.in/api"
+    process.env.NEXT_PUBLIC_API_URL || "https://backendapi.rojmitra.in/api"
   ).replace(/\/$/, "");
 }
 
