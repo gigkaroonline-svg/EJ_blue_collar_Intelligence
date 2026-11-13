@@ -17,6 +17,7 @@ backend/.cache/
 **/.env
 **/.env.*
 !**/.env.example
+!**/.env.production
 **/gcs-service-account.json
 **/*-service-account.json
 backups/

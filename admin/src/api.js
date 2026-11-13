@@ -1,4 +1,12 @@
 const TOKEN_KEY = 'rojmitra_admin_token'
+const DEFAULT_API_URL = 'https://backendapi.rojmitra.in'
+
+/** Backend origin — always absolute (no Vite proxy). */
+function apiOrigin() {
+  return String(import.meta.env.VITE_API_URL || DEFAULT_API_URL)
+    .trim()
+    .replace(/\/$/, '')
+}
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)
@@ -24,7 +32,7 @@ export async function api(path, { method = 'GET', body, auth = true } = {}) {
     const token = getToken()
     if (token) headers.Authorization = `Bearer ${token}`
   }
-  const res = await fetch(`/api/admin${path}`, {
+  const res = await fetch(`${apiOrigin()}/api/admin${path}`, {
     method,
     headers,
     body: payload,
