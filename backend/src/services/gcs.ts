@@ -116,3 +116,37 @@ export async function createReadSignedUrl(input: {
 
   return { readUrl, objectKey: input.objectKey };
 }
+
+function publicObjectUrl(objectKey: string): string {
+  return `https://storage.googleapis.com/${env.gcsBucket}/${objectKey}`;
+}
+
+/** Upload a blog cover buffer; returns a public GCS HTTPS URL. */
+export async function uploadBlogCover(file: {
+  buffer: Buffer;
+  mimetype?: string;
+  originalname?: string;
+}): Promise<string> {
+  requireGcsConfigured();
+  const contentType = assertAllowedContentType(file.mimetype || 'image/png');
+  const ext = extensionForContentType(contentType);
+  const objectKey = `${env.gcsPathPrefix}/blogs/cover/${crypto.randomUUID()}.${ext}`;
+  await getStorage()
+    .bucket(env.gcsBucket!)
+    .file(objectKey)
+    .save(file.buffer, {
+      resumable: false,
+      contentType,
+      metadata: { cacheControl: 'public, max-age=31536000' },
+    });
+  return publicObjectUrl(objectKey);
+}
+
+export async function deleteBlogCoverUrl(url: string): Promise<void> {
+  if (!env.gcsBucket || !url) return;
+  const prefix = `https://storage.googleapis.com/${env.gcsBucket}/`;
+  if (!url.startsWith(prefix)) return;
+  const objectKey = decodeURIComponent(url.slice(prefix.length));
+  if (!objectKey.startsWith(`${env.gcsPathPrefix}/blogs/`)) return;
+  await getStorage().bucket(env.gcsBucket).file(objectKey).delete({ ignoreNotFound: true });
+}

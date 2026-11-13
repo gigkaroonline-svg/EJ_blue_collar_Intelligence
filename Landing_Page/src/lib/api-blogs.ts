@@ -1,0 +1,59 @@
+export type BlogPost = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  coverUrl: string;
+  coverAlt?: string;
+  authorName: string;
+  authorUrl?: string;
+  metaDescription?: string;
+  status: "draft" | "published";
+  publishedAt: string | null;
+  updatedAt: string | null;
+};
+
+function apiBase() {
+  return (
+    process.env.NEXT_PUBLIC_API_URL || "https://qabackendapi.rojmitra.in/api"
+  ).replace(/\/$/, "");
+}
+
+export async function fetchPublishedPosts() {
+  try {
+    const res = await fetch(`${apiBase()}/blogs`, {
+      next: { revalidate: 3600, tags: ["blogs"] },
+    });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { posts?: BlogPost[] };
+    return Array.isArray(data.posts) ? data.posts : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchPublishedPost(slug: string) {
+  try {
+    const res = await fetch(`${apiBase()}/blogs/${encodeURIComponent(slug)}`, {
+      next: { revalidate: 3600, tags: ["blogs", `blog:${slug}`] },
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) return undefined;
+    const data = (await res.json()) as { post?: BlogPost };
+    return data.post ?? null;
+  } catch {
+    return undefined;
+  }
+}
+
+export function formatBlogDate(iso?: string | null) {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
