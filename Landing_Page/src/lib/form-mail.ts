@@ -1,7 +1,8 @@
 export type FormMailAttachment = {
   name: string;
   type?: string;
-  data: string;
+  /** Optional; Contact template is text-only so we usually only send the filename. */
+  data?: string;
 };
 
 export type FormMailPayload = {

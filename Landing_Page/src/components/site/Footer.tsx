@@ -121,7 +121,7 @@ export function Footer() {
 
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-center text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:text-left lg:px-8">
-          <p className="font-mono uppercase tracking-[0.1em]">{site.trustLine}</p>
+          <p>{site.trustLine}</p>
           <p>
             {footer.copyright.split(/(EarlyJobs)/).map((part, index) =>
               part === "EarlyJobs" ? (

@@ -557,5 +557,5 @@ export const footer = {
     { label: "Sitemap", href: "/sitemap.xml" },
     { label: "Contact", href: "/contact" },
   ],
-  copyright: "©Victa EarlyJobs technologies Pvt. Ltd.",
+  copyright: "©Victa EarlyJobs Technologies Pvt. Ltd.",
 } as const;
