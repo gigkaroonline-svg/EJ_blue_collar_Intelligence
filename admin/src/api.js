@@ -1,14 +1,11 @@
 const TOKEN_KEY = 'rojmitra_admin_token'
+const DEFAULT_API_URL = 'https://backendapi.rojmitra.in'
 
-/** Backend origin. Empty in local Vite → relative `/api` (proxied). */
+/** Backend origin — always absolute (no Vite proxy). */
 function apiOrigin() {
-  const fromEnv = String(import.meta.env.VITE_API_URL || '')
+  return String(import.meta.env.VITE_API_URL || DEFAULT_API_URL)
     .trim()
     .replace(/\/$/, '')
-  if (fromEnv) return fromEnv
-  // Production build default when host doesn't inject VITE_API_URL
-  if (import.meta.env.PROD) return 'https://backendapi.rojmitra.in'
-  return ''
 }
 
 export function getToken() {
