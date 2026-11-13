@@ -4,7 +4,7 @@
 import { Plus } from "lucide-react";
 import sharedEcosystem from "@/assets/india-shared-ecosystem.jpg";
 import { Pill, Reveal, SectionHeader } from "@/components/site/primitives";
-import { ecosystem, faq, finalCta, site } from "@/content/site";
+import { aeo, ecosystem, faq, finalCta, site } from "@/content/site";
 import { assetUrl } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
@@ -62,6 +62,10 @@ export function FAQSection() {
   return (
     <section id="faq" aria-labelledby="faq-heading" className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
       <SectionHeader label={faq.label} headline={faq.headline} id="faq-heading" />
+      <div className="mt-10 rounded-xl border border-border bg-sky-pale/40 p-6 sm:p-8">
+        <h3 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{aeo.question}</h3>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">{aeo.answer}</p>
+      </div>
       <div className="mt-12 space-y-3">
         {faq.items.map((item, index) => (
           <details

@@ -1,23 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { faq } from "@/content/site";
+import { organizationJsonLd } from "@/lib/json-ld";
+import { SITE_ORIGIN } from "@/lib/site-url";
 import "./globals.css";
 
 const GTM_ID = "GTM-WFNQMJVF";
 
-const title = "RojMitra by EarlyJobs | Village-Level Workforce Intelligence for India";
+const title = "Village-Level Workforce Intelligence India | RojMitra";
 const description =
-  "RojMitra maps, verifies and connects India's workforce at the grassroots. Village-level labour mapping, worker experience, availability and migration intelligence, so employers can finally see and reach nearby talent.";
+  "RojMitra by EarlyJobs maps village-level workforce skills, experience and availability to support enterprise hiring and institutional workforce planning.";
 
 export const metadata: Metadata = {
   title,
   description,
   authors: [{ name: "EarlyJobs" }],
-  metadataBase: new URL("https://www.rojmitra.in"),
+  metadataBase: new URL(SITE_ORIGIN),
+  alternates: {
+    canonical: `${SITE_ORIGIN}/`,
+  },
   openGraph: {
     title,
     description,
     type: "website",
+    url: `${SITE_ORIGIN}/`,
   },
   twitter: {
     card: "summary_large_image",
@@ -38,19 +43,9 @@ export const viewport: Viewport = {
   themeColor: "#0B2A5B",
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faq.items.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: { "@type": "Answer", text: item.answer },
-  })),
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en-IN" className="h-full antialiased">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -83,9 +78,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
         />
         <Script
-          id="faq-jsonld"
+          id="organization-jsonld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
 
         {children}

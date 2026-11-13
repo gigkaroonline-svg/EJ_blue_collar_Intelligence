@@ -8,7 +8,7 @@ import { SubmissionForm, FormCTA } from "@/components/site/Forms";
 import { IconBadge, Reveal } from "@/components/site/primitives";
 import { SectorTiles } from "@/components/site/ContentPage";
 import { CtaBanner } from "@/components/site/CtaBanner";
-import { Crumb, FaqBlock, Label, Photo, Shell, cards, ctas, list, noNumber, paras, section, wrap } from "@/components/site/StoryPages";
+import { Copy, Crumb, FaqBlock, Label, Photo, Shell, cards, ctas, list, noNumber, paras, section, wrap } from "@/components/site/StoryPages";
 import { pages } from "@/content/pages";
 import { employerPageImages as img } from "@/content/page-design";
 import { cn } from "@/lib/utils";
@@ -21,8 +21,8 @@ export function EmployersPage() {
   const page = pages["for-employers"];
   const intro = paras(page.intro);
   const heroCta = ctas(page.intro)[0] ?? "Submit Your Hiring Requirements";
-  const challenge = section(page, "The Challenge Employers Face");
-  const better = section(page, "A Better Way to Understand Your Workforce");
+  const challenge = section(page, "The Employer Challenge");
+  const better = section(page, "A More Structured View of Workforce Supply");
   const who = section(page, "Who Can Work With RojMitra?");
   const process = section(page, "How the Employer Process Works");
   const submit = section(page, "Submit Your Workforce Requirement");
@@ -41,7 +41,7 @@ export function EmployersPage() {
           <div className="flex justify-center"><Crumb label={page.eyebrow} /></div>
           <Label>{page.eyebrow}</Label>
           <h1 className="display-type mx-auto max-w-4xl text-4xl sm:text-6xl">{page.headline}</h1>
-          <p className="page-copy mx-auto mt-6 max-w-2xl text-lg">{intro[0]}</p>
+          <Copy text={intro[0]} className="page-copy mx-auto mt-6 max-w-2xl text-lg" />
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <FormCTA label={heroCta} />
             <a href="#process" className="text-sm font-medium text-brand underline-offset-4 hover:underline">{process.title}</a>
@@ -60,7 +60,7 @@ export function EmployersPage() {
         <div className={cn(wrap, "grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start")}>
           <Reveal className="lg:sticky lg:top-28">
             <h2 className="display-type text-3xl sm:text-4xl">{intro[1]}</h2>
-            <div className="mt-5 space-y-4">{intro.slice(2, 4).map((t) => <p key={t} className="page-copy">{t}</p>)}</div>
+            <div className="mt-5 space-y-4">{intro.slice(2, 4).map((t) => <Copy key={t} text={t} className="page-copy" />)}</div>
             <div className="mt-8 h-1 w-40 overflow-hidden rounded-full bg-sky-pale"><div className="h-full w-1/2 rounded-full bg-brand" /></div>
           </Reveal>
           <Reveal delay={0.08} className="rounded-2xl border border-border bg-surface p-3 shadow-soft">

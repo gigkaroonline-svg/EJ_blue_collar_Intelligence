@@ -4,7 +4,7 @@ export const formContent: Record<FormType, { title: string; button: string; succ
   employer_requirement: {
     title: "Submit Your Workforce Requirement", button: "Submit Your Hiring Requirements",
     success: "Thank you. We have received your requirement. Our team will review it and get in touch to discuss the next steps.",
-    consent: "I agree to be contacted by the RojMitra team regarding the workforce requirement submitted above.",
+    consent: "By submitting this form, I agree that RojMitra/EarlyJobs may use the information I provide to contact me about this workforce requirement. I can review the website's privacy information or contact info@earlyjobs.in with data-use questions.",
     fields: [
       {name:"company",label:"Company / Organisation Name",group:"Company Information"},
       {name:"contactPerson",label:"Contact Person"},
@@ -17,7 +17,7 @@ export const formContent: Record<FormType, { title: string; button: string; succ
   sourcing_partner_application: {
     title:"Join as a Sourcing Partner",button:"Join as a Sourcing Partner",
     success:"Thank you. We have received your interest. Our team will review your details and get in touch to discuss the next steps.",
-    consent:"I agree to be contacted by the RojMitra team regarding my sourcing partner application.",
+    consent:"I agree that RojMitra/EarlyJobs may use the information in this application to assess my interest in becoming a sourcing partner and contact me about the programme. I can contact info@earlyjobs.in with privacy or data-use questions.",
     fields:[{name:"name",label:"Name"},{name:"mobile",label:"Mobile Number",type:"tel"},{name:"village",label:"Village"},{name:"gramPanchayat",label:"Gram Panchayat"},{name:"block",label:"Block"},{name:"district",label:"District"},{name:"state",label:"State"},{name:"connections",label:"Which communities or industries are you connected with?",type:"textarea"}]
   },
   government_initiative_suggestion: {
