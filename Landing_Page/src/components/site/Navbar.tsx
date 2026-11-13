@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import { navLinks, site } from "@/content/site";
 import { cn } from "@/lib/utils";
 
-/** Primary nav: About is a single link; Our Story and The Problem live in the footer and in-page links. */
+/** Primary nav: About → Our Story → Workforce…; Problem, Government, Blog live in footer / page links. */
 const primaryLinks = navLinks.filter(
   (link) =>
-    link.href !== "/our-story" &&
     link.href !== "/the-problem" &&
-    link.href !== "/government-initiatives",
+    link.href !== "/government-initiatives" &&
+    link.href !== "/blog",
 );
 
 export function Navbar() {

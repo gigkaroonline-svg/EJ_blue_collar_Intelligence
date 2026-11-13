@@ -1,5 +1,18 @@
-export type FormType = "employer_requirement" | "sourcing_partner_application" | "government_initiative_suggestion" | "blog_insight";
-export type Field = { name: string; label: string; type?: "email" | "tel" | "url" | "number" | "textarea"; optional?: boolean; group?: string };
+export type FormType =
+  | "employer_requirement"
+  | "sourcing_partner_application"
+  | "government_initiative_suggestion"
+  | "blog_insight"
+  | "contact";
+export type Field = {
+  name: string;
+  label: string;
+  type?: "email" | "tel" | "url" | "number" | "textarea" | "file" | "phone";
+  optional?: boolean;
+  group?: string;
+  accept?: string;
+  hint?: string;
+};
 export const formContent: Record<FormType, { title: string; button: string; success: string; consent: string; fields: Field[] }> = {
   employer_requirement: {
     title: "Submit Your Workforce Requirement", button: "Submit Your Hiring Requirements",
@@ -29,5 +42,19 @@ export const formContent: Record<FormType, { title: string; button: string; succ
     title:"Share an Insight With RojMitra",button:"Submit Insight",success:"Thank you. We have received your insight for editorial review.",
     consent:"I agree to be contacted by RojMitra about my insight.",
     fields:[{name:"name",label:"Name"},{name:"email",label:"Email",type:"email"},{name:"message",label:"Message",type:"textarea"},{name:"link",label:"Link (optional)",type:"url",optional:true}]
-  }
+  },
+  contact: {
+    title: "Contact RojMitra",
+    button: "Send message",
+    success: "Thank you. We have received your message and will get back to you soon.",
+    consent:
+      "By submitting this form, I agree that RojMitra/EarlyJobs may use the information I provide to respond to my enquiry. I can contact info@earlyjobs.in with privacy or data-use questions.",
+    fields: [
+      { name: "name", label: "Name" },
+      { name: "mobile", label: "Phone Number", type: "phone" },
+      { name: "email", label: "Email", type: "email" },
+      { name: "message", label: "Message", type: "textarea" },
+      // Attachment (optional file) — wire up later once we can deliver files (e.g. GCS + link).
+    ],
+  },
 };

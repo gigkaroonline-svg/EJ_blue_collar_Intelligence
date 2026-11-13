@@ -439,3 +439,37 @@
 .blog-prose a:hover {
   color: var(--brand-deep);
 }
+.blog-prose .blog-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.blog-prose table {
+  width: 100%;
+  min-width: 20rem;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.blog-prose th,
+.blog-prose td {
+  border: 1px solid color-mix(in oklab, var(--border) 90%, transparent);
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+  word-break: break-word;
+}
+.blog-prose th {
+  background: color-mix(in oklab, var(--muted) 70%, transparent);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.blog-prose td {
+  color: oklch(0.34 0.03 262);
+}
+
+/* Flag images from react-international-phone */
+.react-international-phone-flag-emoji {
+  display: inline-block;
+  object-fit: cover;
+}

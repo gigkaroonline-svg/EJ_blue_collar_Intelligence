@@ -1,34 +1,47 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useEffect, useState } from "react";
 import { BlogIndexView } from "@/components/site/BlogViews";
 import { pages } from "@/content/pages";
-import { fetchPublishedPosts } from "@/lib/api-blogs";
-import { blogCollectionJsonLd } from "@/lib/blog-json-ld";
-import { pageMetadata } from "@/lib/page-meta";
+import { fetchPublishedPosts, type BlogPost } from "@/lib/api-blogs";
 
 const page = pages.blog;
 
-export const metadata: Metadata = pageMetadata(page);
+export default function BlogRoute() {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export const revalidate = 3600;
+  useEffect(() => {
+    let alive = true;
+    fetchPublishedPosts()
+      .then((data) => {
+        if (alive) setPosts(data);
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
-export default async function BlogRoute() {
-  const posts = await fetchPublishedPosts();
-  const jsonLd = blogCollectionJsonLd(page, posts);
-  const intro =
-    "Published notes on workforce intelligence, migration, hiring, and public employment initiatives across India.";
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+  if (loading) {
+    return (
       <BlogIndexView
         eyebrow={page.eyebrow}
         title="Stories & research"
-        intro={intro}
-        posts={posts}
+        intro="Loading stories…"
+        posts={[]}
       />
-    </>
+    );
+  }
+
+  return (
+    <BlogIndexView
+      eyebrow={page.eyebrow}
+      title="Stories & research"
+      intro="Published notes on workforce intelligence, migration, hiring, and public employment initiatives across India."
+      posts={posts}
+    />
   );
 }

@@ -22,9 +22,8 @@ function apiBase() {
 
 export async function fetchPublishedPosts() {
   try {
-    const res = await fetch(`${apiBase()}/blogs`, {
-      next: { revalidate: 3600, tags: ["blogs"] },
-    });
+    // Always hit the backend so new publishes show up immediately.
+    const res = await fetch(`${apiBase()}/blogs`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = (await res.json()) as { posts?: BlogPost[] };
     return Array.isArray(data.posts) ? data.posts : [];
@@ -36,7 +35,7 @@ export async function fetchPublishedPosts() {
 export async function fetchPublishedPost(slug: string) {
   try {
     const res = await fetch(`${apiBase()}/blogs/${encodeURIComponent(slug)}`, {
-      next: { revalidate: 3600, tags: ["blogs", `blog:${slug}`] },
+      cache: "no-store",
     });
     if (res.status === 404) return null;
     if (!res.ok) return undefined;

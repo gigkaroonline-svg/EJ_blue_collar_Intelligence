@@ -1,9 +1,16 @@
+export type FormMailAttachment = {
+  name: string;
+  type?: string;
+  data: string;
+};
+
 export type FormMailPayload = {
   formType: string;
   data: Record<string, unknown>;
   consent: boolean;
   pageUrl?: string;
   submittedAt?: string;
+  attachment?: FormMailAttachment;
 };
 
 const titles: Record<string, string> = {
@@ -11,6 +18,7 @@ const titles: Record<string, string> = {
   sourcing_partner_application: "Sourcing partner application",
   government_initiative_suggestion: "Government initiative suggestion",
   blog_insight: "Blog insight submission",
+  contact: "Contact form",
 };
 
 /** All form submissions go to EarlyJobs info inbox. */
@@ -45,6 +53,13 @@ export function templateParams(payload: FormMailPayload): Record<string, string>
     "",
     ...Object.entries(data).map(([key, value]) => `${key}: ${str(value)}`),
   ];
+  if (payload.attachment?.name) {
+    lines.push(
+      "",
+      `attachment: ${payload.attachment.name}`,
+      "(Filename noted only — EmailJS Contact template is text-only and cannot receive binary files.)",
+    );
+  }
 
   return {
     to_email: process.env.FORMS_TO_EMAIL?.trim() || FORMS_TO_EMAIL,
@@ -83,6 +98,8 @@ export async function deliverFormMail(
     return { delivered: false, mode: "log" };
   }
 
+  // Same path as other forms: Contact Us template vars only (no EmailJS attachments —
+  // that API rejects our text template with 400 "parameters are invalid").
   const body: Record<string, unknown> = {
     service_id: process.env.EMAILJS_SERVICE_ID!.trim(),
     template_id: process.env.EMAILJS_TEMPLATE_ID!.trim(),

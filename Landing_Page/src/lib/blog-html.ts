@@ -13,6 +13,12 @@ const ALLOWED_TAGS = new Set([
   "li",
   "a",
   "blockquote",
+  "table",
+  "thead",
+  "tbody",
+  "tr",
+  "th",
+  "td",
 ]);
 
 export function plainTextToBlogHtml(value: string) {
@@ -71,11 +77,30 @@ export function sanitizeBlogHtml(html: string) {
         if (href.startsWith("/")) return `<a href="${href}">`;
         return `<a href="${href}" target="_blank" rel="noopener noreferrer">`;
       }
+      if (tag === "th" || tag === "td") {
+        const spanAttrs = cellSpanAttrs(attrs);
+        return spanAttrs ? `<${tag}${spanAttrs}>` : `<${tag}>`;
+      }
       return `<${tag}>`;
     },
   );
 
   return sanitized.trim() || "<p><br></p>";
+}
+
+function cellSpanAttrs(attrs: string) {
+  let out = "";
+  for (const name of ["colspan", "rowspan"] as const) {
+    const match = new RegExp(`${name}\\s*=\\s*("([^"]*)"|'([^']*)'|([^\\s>]+))`, "i").exec(
+      attrs,
+    );
+    const raw = (match?.[2] || match?.[3] || match?.[4] || "").trim();
+    if (!/^\d+$/.test(raw)) continue;
+    const n = Number(raw);
+    if (n < 1 || n > 50) continue;
+    out += ` ${name}="${n}"`;
+  }
+  return out;
 }
 
 function escapeHtml(value: string) {
@@ -113,5 +138,6 @@ export function renderBlogBody(value: string, title = "") {
       return full;
     });
   }
+  html = html.replace(/<table[\s\S]*?<\/table>/gi, (table) => `<div class="blog-table-wrap">${table}</div>`);
   return html.trim() || "<p><br></p>";
 }
