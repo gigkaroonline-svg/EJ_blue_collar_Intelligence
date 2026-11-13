@@ -138,11 +138,11 @@ export const pageDesign: Record<
       position: "right center",
     },
     layouts: {
-      "Built on Real Recruitment Experience": "image",
+      "Built from Recruitment Experience": "image",
       "What We Are Building": "icon-list",
     },
     images: {
-      "Built on Real Recruitment Experience": {
+      "Built from Recruitment Experience": {
         src: assetUrl(recruitmentOffice),
         alt: "Four people seated around an office table with a laptop and papers during a recruitment discussion",
         position: "center 40%",
@@ -162,8 +162,8 @@ export const pageDesign: Record<
   "the-problem": {
     hero: { kind: "audiences" },
     layouts: {
-      "Three Sides of the Same Problem": "scene-cards",
-      "The Missing Link: Workforce Intelligence": "diagram",
+      "Three Sides of the Same Workforce Information Gap": "scene-cards",
+      "The Missing Link Is Granular Workforce Intelligence": "diagram",
     },
     next: "how-it-works",
   },
@@ -176,12 +176,12 @@ export const pageDesign: Record<
     },
     layouts: {
       "What Is Workforce Intelligence?": "profile",
-      "What We Map": "icon-grid",
-      "From Village Intelligence to National Understanding": "chain",
+      "What RojMitra Organises": "icon-grid",
+      "From Village-Level Records to Wider Workforce Views": "chain",
       "How Workforce Intelligence Creates Value": "tabs",
     },
     images: {
-      "Technology Meets Local Understanding": {
+      "Technology Organises the Data; Local Context Helps Explain It": {
         src: assetUrl(partnerHero),
         alt: "Villagers gathered under a banyan tree looking at a phone held by a local partner",
         position: "center 40%",
@@ -201,7 +201,7 @@ export const pageDesign: Record<
     layouts: {
       "How the RojMitra Network Works": "stepper",
       "Two Ways to Become Part of RojMitra": "entry-cards",
-      "A Network Built From the Ground Up": "icon-grid",
+      "Local Relationships Support Better Workforce Records": "icon-grid",
     },
     next: "become-a-sourcing-partner",
   },

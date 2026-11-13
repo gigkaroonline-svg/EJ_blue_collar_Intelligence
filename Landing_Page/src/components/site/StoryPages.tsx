@@ -28,6 +28,7 @@ import { Footer } from "@/components/site/Footer";
 import { FAQAccordion, GooglePlayButton } from "@/components/site/ContentPage";
 import { FormCTA, SubmissionForm } from "@/components/site/Forms";
 import { IconBadge, Reveal, SectionLabel } from "@/components/site/primitives";
+import { InlineCopy } from "@/lib/inline-copy";
 import { pages, type ContentBlock, type ContentPageData } from "@/content/pages";
 import { storyPageImages as img } from "@/content/page-design";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,16 @@ export const list = (blocks: ContentBlock[] = []) => blocks.find((b) => b.kind =
 export const ctas = (blocks: ContentBlock[] = []) => blocks.filter((b) => b.kind === "cta").map((b) => b.text ?? "");
 export const cards = (blocks: ContentBlock[] = []) => blocks.filter((b) => b.kind === "card");
 export const noNumber = (t = "") => t.replace(/^(?:Step\s+)?\d+[.:]\s*/, "");
+
+/** Paragraph with optional markdown-style internal links from content. */
+export function Copy({ text, className }: { text?: string | null; className?: string }) {
+  if (!text) return null;
+  return (
+    <p className={className}>
+      <InlineCopy text={text} />
+    </p>
+  );
+}
 
 export type Img = { src: string; alt: string; position?: string };
 
@@ -120,8 +131,8 @@ const buildingIcons: LucideIcon[] = [Users, BriefcaseBusiness, Wrench, CalendarC
 export function AboutPage() {
   const page = pages.about as ContentPageData;
   const intro = paras(page.intro);
-  const built = section(page, "Built on Real Recruitment Experience");
-  const why = section(page, "Why We Started RojMitra");
+  const built = section(page, "Built from Recruitment Experience");
+  const why = section(page, "Why RojMitra Was Started");
   const building = section(page, "What We Are Building");
   const village = section(page, "Starting at the Village. Connecting Across India.");
   const vision = paras(section(page, "Our Vision").blocks);
@@ -138,7 +149,7 @@ export function AboutPage() {
             <div className="glass-dark max-w-xl rounded-2xl p-6 text-on-dark sm:p-8">
               <Crumb label={page.eyebrow} dark />
               <h1 className="display-type text-4xl leading-[1.05] sm:text-5xl">{page.headline}</h1>
-              <p className="mt-4 text-base leading-7 text-on-dark/85">{intro[0]}</p>
+              <Copy text={intro[0]} className="mt-4 text-base leading-7 text-on-dark/85" />
               <div className="mt-6"><FormCTA label={ctas(closing.blocks)[0] ?? "Join as a Sourcing Partner"} /></div>
             </div>
           </div>
@@ -153,8 +164,8 @@ export function AboutPage() {
             <h2 className="display-type text-3xl sm:text-4xl">{built.title}</h2>
           </Reveal>
           <Reveal delay={0.08}>
-            <p className="text-xl leading-relaxed text-foreground sm:text-2xl">{intro[1]}</p>
-            <p className="mt-4 text-xl font-semibold text-brand sm:text-2xl">{intro[2]}</p>
+            <Copy text={intro[1]} className="text-xl leading-relaxed text-foreground sm:text-2xl" />
+            <Copy text={intro[2]} className="mt-4 text-xl font-semibold text-brand sm:text-2xl" />
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
               {["Initiative by EarlyJobs", "Started in Bihar", "Consent-based records"].map((fact, i) => (
                 <div key={fact} className="rounded-xl border border-border bg-card p-4 shadow-soft">
@@ -284,7 +295,7 @@ export function OurStoryPage() {
   const intro = paras(page.intro);
   const real = section(page, "The Realisation Behind RojMitra");
   const villageM = section(page, "Why the Village Matters");
-  const recruit = section(page, "From Recruitment Experience to Workforce Intelligence");
+  const recruit = section(page, "From Recruitment to Workforce Intelligence");
   const oneVillage = section(page, "Building It One Village at a Time");
   const beliefs = paras(section(page, "What We Believe").blocks);
   const why = section(page, "This Is Why We Are Building RojMitra.");
@@ -300,7 +311,9 @@ export function OurStoryPage() {
           <div className="flex justify-center"><Crumb label={page.eyebrow} /></div>
           <Label>{page.eyebrow}</Label>
           <h1 className="display-type mx-auto max-w-4xl text-4xl leading-[1.05] text-foreground sm:text-6xl">{page.headline}</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">{intro[0]} {intro[1]}</p>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
+            <InlineCopy text={`${intro[0] ?? ""} ${intro[1] ?? ""}`.trim()} />
+          </p>
         </div>
         <div className={cn(wrap, "mt-10")}>
           <div className="overflow-hidden rounded-2xl shadow-soft">
@@ -471,7 +484,7 @@ function Wave({ className }: { className?: string }) {
 export function PartnerPage() {
   const page = pages["become-a-sourcing-partner"] as ContentPageData;
   const intro = paras(page.intro);
-  const why = section(page, "Why Sourcing Partners Matter");
+  const why = section(page, "Why Local Sourcing Partners Matter");
   const duties = section(page, "What Does a RojMitra Sourcing Partner Do?");
   const who = section(page, "Who Can Become a Sourcing Partner?");
   const where = section(page, "Where Can You Operate?");
@@ -488,9 +501,9 @@ export function PartnerPage() {
         <div className={cn(wrap, "relative grid items-end gap-8 pt-10 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr]")}>
           <div className="pb-12 lg:pb-24">
             <Crumb label="Sourcing Partner" />
-            <p className="text-lg font-medium text-muted-foreground">{intro[0]}</p>
+            <Copy text={intro[0]} className="text-lg font-medium text-muted-foreground" />
             <h1 className="display-type mt-3 text-4xl leading-[1.05] text-foreground sm:text-6xl">{page.headline}</h1>
-            <p className="mt-5 max-w-xl text-lg text-muted-foreground">{intro[4]}</p>
+            <Copy text={intro[4]} className="mt-5 max-w-xl text-lg text-muted-foreground" />
             <div className="mt-8 flex flex-wrap gap-3">
               <FormCTA label="Join as a Sourcing Partner" partnerPage />
             </div>
@@ -511,7 +524,7 @@ export function PartnerPage() {
       <section className="relative z-10 -mt-6 px-4 sm:px-6">
         <Reveal className="mx-auto max-w-4xl rounded-2xl border border-border bg-card p-6 text-center shadow-lift sm:p-12">
           <h2 className="display-type text-3xl sm:text-4xl">{why.title}</h2>
-          <div className="mt-5 space-y-3">{[intro[1], intro[2], intro[3]].map((t) => <p key={t} className="page-copy">{t}</p>)}</div>
+          <div className="mt-5 space-y-3">{[intro[1], intro[2], intro[3]].map((t) => <Copy key={t} text={t} className="page-copy" />)}</div>
         </Reveal>
       </section>
 

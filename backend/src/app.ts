@@ -5,6 +5,7 @@ import { workerRouter } from './routes/worker.routes';
 import { uploadsRouter } from './routes/uploads.routes';
 import { legalRouter } from './routes/legal.routes';
 import { adminRouter } from './routes/admin.routes';
+import { blogRouter } from './routes/blog.routes';
 import { errorHandler } from './middleware/asyncHandler';
 
 export const app = express();
@@ -26,6 +27,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/uploads', uploadsRouter);
 app.use('/api/workers', workerRouter);
 app.use('/api/legal', legalRouter);
+app.use('/api/blogs', blogRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api', catalogRouter);
 

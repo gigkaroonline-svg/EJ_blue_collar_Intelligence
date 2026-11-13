@@ -7,9 +7,10 @@ import {
 import { FormCTA } from "@/components/site/Forms";
 import { IconBadge, Reveal } from "@/components/site/primitives";
 import { CtaBanner } from "@/components/site/CtaBanner";
-import { Crumb, FaqBlock, Label, Photo, Shell, cards, ctas, list, noNumber, paras, section, wrap, type Img } from "@/components/site/StoryPages";
+import { Copy, Crumb, FaqBlock, Label, Photo, Shell, cards, ctas, list, noNumber, paras, section, wrap, type Img } from "@/components/site/StoryPages";
 import { pages, type ContentBlock, type ContentPageData } from "@/content/pages";
 import { insightPageImages as img, pageDesign } from "@/content/page-design";
+import { InlineCopy } from "@/lib/inline-copy";
 import { cn } from "@/lib/utils";
 
 type Slug = "how-it-works" | "workforce-intelligence" | "government-initiatives";
@@ -57,7 +58,7 @@ export function HowItWorksPage() {
   const intro = paras(page.intro);
   const steps = cards(section(page, "How the RojMitra Network Works").blocks);
   const ways = section(page, "Two Ways to Become Part of RojMitra");
-  const ground = section(page, "A Network Built From the Ground Up");
+  const ground = section(page, "Local Relationships Support Better Workforce Records");
   const start = section(page, "Start With Your Workforce Requirement.");
   const gp = paras(ground.blocks);
   return (
@@ -72,7 +73,7 @@ export function HowItWorksPage() {
               <div className="flex justify-center"><Crumb label={page.eyebrow} dark /></div>
               <Label dark>{page.eyebrow}</Label>
               <h1 className="display-type mx-auto max-w-2xl text-4xl leading-tight sm:text-5xl lg:text-6xl">{page.headline}</h1>
-              <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-on-dark/80 sm:text-lg">{intro[0]}</p>
+              <Copy text={intro[0]} className="mx-auto mt-6 max-w-xl text-base leading-7 text-on-dark/80 sm:text-lg" />
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <FormCTA label={ctas(cards(start.blocks)[0]?.blocks)[0] ?? "Submit Your Hiring Requirements"} light />
                 <FormCTA label={ctas(cards(start.blocks)[1]?.blocks)[0] ?? "Join as a Sourcing Partner"} ghost />
@@ -99,7 +100,7 @@ export function HowItWorksPage() {
           <Reveal delay={0.05}>
             <Label>{page.eyebrow}</Label>
             <h2 className="display-type text-3xl sm:text-4xl">{ground.title}</h2>
-            <div className="mt-6 space-y-4">{intro.slice(1).map((t) => <p key={t} className="page-copy">{t}</p>)}</div>
+            <div className="mt-6 space-y-4">{intro.slice(1).map((t) => <Copy key={t} text={t} className="page-copy" />)}</div>
             <p className="mt-6 text-sm font-medium leading-6 text-foreground">{gp[0]}</p>
             <ul className="mt-4 space-y-3">
               {cards(ground.blocks).map((card, i) => {
@@ -218,10 +219,10 @@ export function WorkforceIntelligencePage() {
   const intro = paras(page.intro);
   const heroCtas = ctas(page.intro);
   const what = section(page, "What Is Workforce Intelligence?");
-  const map = section(page, "What We Map");
-  const village = section(page, "From Village Intelligence to National Understanding");
+  const map = section(page, "What RojMitra Organises");
+  const village = section(page, "From Village-Level Records to Wider Workforce Views");
   const value = section(page, "How Workforce Intelligence Creates Value");
-  const tech = section(page, "Technology Meets Local Understanding");
+  const tech = section(page, "Technology Organises the Data; Local Context Helps Explain It");
   const built = section(page, "Built for a More Visible Workforce");
   const last = section(page, "Let's Build a Better Understanding of India's Workforce.");
   const wp = paras(what.blocks);
@@ -237,7 +238,7 @@ export function WorkforceIntelligencePage() {
           <div className="flex justify-center"><Crumb label={page.eyebrow} /></div>
           <Label>{page.eyebrow}</Label>
           <h1 className="display-type mx-auto max-w-4xl text-4xl leading-tight sm:text-5xl lg:text-6xl">{page.headline}</h1>
-          <p className="page-copy mx-auto mt-6 max-w-2xl text-lg">{intro[0]}</p>
+          <Copy text={intro[0]} className="page-copy mx-auto mt-6 max-w-2xl text-lg" />
         </div>
       </section>
 
@@ -250,7 +251,7 @@ export function WorkforceIntelligencePage() {
               <span className="absolute left-4 top-4 rounded-full bg-brand px-3 py-1 font-mono text-xs uppercase tracking-[0.1em] text-primary-foreground">Intelligence</span>
             </div>
             <div className="px-1 pb-2 lg:px-2">
-              <div className="space-y-4">{intro.slice(1).map((t) => <p key={t} className="page-copy">{t}</p>)}</div>
+              <div className="space-y-4">{intro.slice(1).map((t) => <Copy key={t} text={t} className="page-copy" />)}</div>
               <div className="mt-8 flex flex-wrap gap-3">{heroCtas.map((c, i) => <FormCTA key={c} label={c} light={i === 0} outline={i > 0} />)}</div>
             </div>
           </Reveal>
@@ -433,7 +434,7 @@ export function GovernmentPage() {
   const heroCtas = ctas(page.intro);
   const tracking = section(page, "Government Initiatives We Are Tracking");
   const why = section(page, "Why These Initiatives Matter");
-  const fits = section(page, "Where RojMitra Fits In");
+  const fits = section(page, "How RojMitra Relates to Public Workforce Initiatives");
   const follow = section(page, "Follow Developments in India's Workforce Ecosystem");
   const build = section(page, "Build a More Visible Workforce Ecosystem");
   const tc = cards(tracking.blocks);
@@ -452,7 +453,7 @@ export function GovernmentPage() {
             <Crumb label={page.eyebrow} dark />
             <h1 className="display-type max-w-4xl text-4xl leading-tight sm:text-5xl lg:text-6xl">{page.headline}</h1>
             <div className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_auto] lg:items-end">
-              <p className="max-w-2xl text-base leading-7 text-on-dark/90 sm:text-lg">{intro[0]}</p>
+              <Copy text={intro[0]} className="max-w-2xl text-base leading-7 text-on-dark/90 sm:text-lg" />
               <div className="flex flex-wrap gap-3">{heroCtas.map((c, i) => <FormCTA key={c} label={c} light={i === 0} outline={i > 0} />)}</div>
             </div>
           </div>
@@ -462,7 +463,11 @@ export function GovernmentPage() {
       {/* Intro lines as an editorial strip */}
       <section className="border-b border-border py-12">
         <div className={cn(wrap, "grid gap-6 md:grid-cols-3")}>
-          {intro.slice(1).map((t, i) => <Reveal key={t} delay={i * 0.04} className="border-t-2 border-foreground pt-4 text-sm leading-6 text-foreground/80">{t}</Reveal>)}
+          {intro.slice(1).map((t, i) => (
+            <Reveal key={t} delay={i * 0.04} className="border-t-2 border-foreground pt-4 text-sm leading-6 text-foreground/80">
+              <InlineCopy text={t} />
+            </Reveal>
+          ))}
         </div>
       </section>
 

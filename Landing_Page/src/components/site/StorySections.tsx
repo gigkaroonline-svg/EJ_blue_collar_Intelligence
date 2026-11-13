@@ -14,6 +14,7 @@ import {
 } from "@/components/site/primitives";
 import { problemImages, storyImage } from "@/content/imagery";
 import { bento, networkStrip, problem, story, whatItIs } from "@/content/site";
+import { InlineCopy } from "@/lib/inline-copy";
 
 export function NetworkStrip() {
   return (
@@ -44,7 +45,7 @@ export function BentoGrid() {
         <SectionLabel>Architecture</SectionLabel>
         <Headline
           id="bento-heading"
-          text="The village is the unit. Everything else is a view."
+          text="The Village Is the Starting Unit of Workforce Intelligence"
           className="text-3xl text-foreground sm:text-4xl lg:text-[2.85rem]"
         />
       </Reveal>
@@ -58,7 +59,9 @@ export function BentoGrid() {
           </h3>
           <div className="mt-4 max-w-md space-y-3 text-base leading-relaxed text-muted-foreground">
             {bento.districtCoverage.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <p key={paragraph}>
+                <InlineCopy text={paragraph} />
+              </p>
             ))}
           </div>
           <ul className="mt-8 space-y-4 border-t border-border pt-6 lg:mt-auto">
@@ -193,20 +196,26 @@ export function TheProblem() {
       <Reveal className="mt-6">
         <div className="rounded-xl bg-gradient-navy px-6 py-8 text-on-dark shadow-soft sm:px-10">
           <p className="mono-label text-center text-on-dark/70">{problem.statsLabel}</p>
-          <dl className="mt-6 grid gap-6 sm:grid-cols-3 sm:gap-4">
-            {problem.stats.map((stat) => (
-              <div
-                key={stat.value}
-                className="flex flex-col border-t border-on-dark/15 pt-4 text-center sm:border-l sm:border-t-0 sm:pt-0 sm:first:border-l-0"
-              >
-                <dt className="order-2 mt-2 text-sm leading-relaxed text-on-dark/75">{stat.label}</dt>
-                <dd className="display-type order-1 text-3xl text-on-dark sm:text-4xl">{stat.value}</dd>
-                <p className="order-3 mt-2 font-mono text-[0.6rem] uppercase tracking-[0.12em] text-sky-soft">
-                  {stat.source}
-                </p>
-              </div>
-            ))}
-          </dl>
+          {problem.statsNote ? (
+            <p className="mx-auto mt-6 max-w-3xl text-center text-base leading-relaxed text-on-dark/85 sm:text-lg">
+              {problem.statsNote}
+            </p>
+          ) : (
+            <dl className="mt-6 grid gap-6 sm:grid-cols-3 sm:gap-4">
+              {problem.stats.map((stat) => (
+                <div
+                  key={stat.value}
+                  className="flex flex-col border-t border-on-dark/15 pt-4 text-center sm:border-l sm:border-t-0 sm:pt-0 sm:first:border-l-0"
+                >
+                  <dt className="order-2 mt-2 text-sm leading-relaxed text-on-dark/75">{stat.label}</dt>
+                  <dd className="display-type order-1 text-3xl text-on-dark sm:text-4xl">{stat.value}</dd>
+                  <p className="order-3 mt-2 font-mono text-[0.6rem] uppercase tracking-[0.12em] text-sky-soft">
+                    {stat.source}
+                  </p>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
       </Reveal>
 
@@ -251,7 +260,7 @@ export function WhatItIs() {
         <Reveal as="article" delay={0.1} className="rounded-xl bg-gradient-navy p-7 text-on-dark shadow-soft sm:p-8">
           <div className="flex items-center justify-between gap-3">
             <p className="mono-label text-on-dark/70">{rojmitra.title}</p>
-            <LiveBadge className="border-signal/40 bg-signal/15">Verified</LiveBadge>
+            <LiveBadge className="border-signal/40 bg-signal/15">Documented</LiveBadge>
           </div>
           <ul className="mt-6 space-y-4">
             {rojmitra.points.map((point) => (
