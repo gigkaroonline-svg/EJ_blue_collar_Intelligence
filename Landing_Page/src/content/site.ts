@@ -10,7 +10,7 @@ export const site = {
   brandRelationship: "RojMitra by EarlyJobs · Village-Level Workforce Intelligence",
   trustLine: "Consent-based · Village-first · Built by EarlyJobs",
   contact: {
-    partnerEmail: "info@earlyjobs.ai",
+    partnerEmail: "info@earlyjobs.in",
     investorEmail: "investors@earlyjobs.ai",
     employerEmail: "employers@earlyjobs.ai",
     institutionEmail: "institutions@earlyjobs.ai",

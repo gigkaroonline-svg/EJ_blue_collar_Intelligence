@@ -1,5 +1,3 @@
-import { site } from "@/content/site";
-
 export type FormMailPayload = {
   formType: string;
   data: Record<string, unknown>;
@@ -15,79 +13,96 @@ const titles: Record<string, string> = {
   blog_insight: "Blog insight submission",
 };
 
-export function inboxFor(formType: string): string {
-  if (formType === "employer_requirement") return site.contact.employerEmail;
-  if (formType === "sourcing_partner_application") return site.contact.partnerEmail;
-  return site.contact.partnerEmail;
-}
+/** All form submissions go to EarlyJobs info inbox. */
+export const FORMS_TO_EMAIL = "info@earlyjobs.in";
+
+/** EmailJS Gmail account used as the sending identity. */
+export const FORMS_FROM_EMAIL = "rojmitraonline@gmail.com";
 
 export function mailSubject(formType: string): string {
   return `RojMitra form · ${titles[formType] ?? formType}`;
 }
 
-export function mailBodies(payload: FormMailPayload): { text: string; html: string } {
-  const json = JSON.stringify(payload, null, 2);
-  const rows = Object.entries(payload.data)
-    .map(([key, value]) => `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;font-weight:600">${escapeHtml(key)}</td><td style="padding:6px 0;vertical-align:top">${escapeHtml(String(value ?? ""))}</td></tr>`)
-    .join("");
+function str(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+/** Maps form payload → EmailJS "Contact Us" template vars: title, name, email, time, message. */
+export function templateParams(payload: FormMailPayload): Record<string, string> {
+  const data = payload.data;
+  const submittedAt = payload.submittedAt ?? new Date().toISOString();
+  const name =
+    str(data.name) ||
+    str(data.contactPerson) ||
+    str(data.company) ||
+    "RojMitra form";
+  const email = str(data.email) || FORMS_FROM_EMAIL;
+
+  const lines = [
+    `Form: ${mailSubject(payload.formType)}`,
+    `Page: ${payload.pageUrl ?? "—"}`,
+    `Submitted: ${submittedAt}`,
+    "",
+    ...Object.entries(data).map(([key, value]) => `${key}: ${str(value)}`),
+  ];
+
   return {
-    text: `${mailSubject(payload.formType)}\n\n${json}\n`,
-    html: `
-      <div style="font-family:ui-sans-serif,system-ui,sans-serif;line-height:1.5;color:#0f172a">
-        <h2 style="margin:0 0 12px">${escapeHtml(mailSubject(payload.formType))}</h2>
-        <p style="margin:0 0 8px"><strong>Page:</strong> ${escapeHtml(payload.pageUrl ?? "—")}</p>
-        <p style="margin:0 0 16px"><strong>Submitted:</strong> ${escapeHtml(payload.submittedAt ?? new Date().toISOString())}</p>
-        <table style="border-collapse:collapse;margin-bottom:20px">${rows}</table>
-        <p style="margin:0 0 8px;font-weight:600">JSON payload</p>
-        <pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;overflow:auto;font-size:12px">${escapeHtml(json)}</pre>
-      </div>
-    `,
+    to_email: process.env.FORMS_TO_EMAIL?.trim() || FORMS_TO_EMAIL,
+    from_email: process.env.FORMS_FROM_EMAIL?.trim() || FORMS_FROM_EMAIL,
+    title: mailSubject(payload.formType),
+    name,
+    email,
+    time: submittedAt,
+    message: lines.join("\n"),
+    form_type: payload.formType,
+    reply_to: email,
+    subject: mailSubject(payload.formType),
   };
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+function emailJsConfigured(): boolean {
+  return Boolean(
+    process.env.EMAILJS_SERVICE_ID?.trim() &&
+      process.env.EMAILJS_TEMPLATE_ID?.trim() &&
+      process.env.EMAILJS_PUBLIC_KEY?.trim(),
+  );
 }
 
-/** Delivers the submission as an email with a JSON body. Uses Resend when configured. */
-export async function deliverFormMail(payload: FormMailPayload): Promise<{ delivered: boolean; mode: "resend" | "log" }> {
-  const to = process.env.FORMS_TO_EMAIL?.trim() || inboxFor(payload.formType);
-  const from = process.env.FORMS_FROM_EMAIL?.trim() || "RojMitra Forms <onboarding@resend.dev>";
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const { text, html } = mailBodies(payload);
+/** Delivers via EmailJS (rojmitraonline@gmail.com → info@earlyjobs.in). */
+export async function deliverFormMail(
+  payload: FormMailPayload,
+): Promise<{ delivered: boolean; mode: "emailjs" | "log" }> {
+  const params = templateParams(payload);
 
-  if (!apiKey) {
-    console.info("[forms] RESEND_API_KEY missing — logging submission instead of emailing", {
-      to,
-      subject: mailSubject(payload.formType),
+  if (!emailJsConfigured()) {
+    console.info("[forms] EmailJS not configured — logging submission instead of emailing", {
+      to: params.to_email,
+      subject: params.title,
       payload,
     });
     return { delivered: false, mode: "log" };
   }
 
-  const response = await fetch("https://api.resend.com/emails", {
+  const body: Record<string, unknown> = {
+    service_id: process.env.EMAILJS_SERVICE_ID!.trim(),
+    template_id: process.env.EMAILJS_TEMPLATE_ID!.trim(),
+    user_id: process.env.EMAILJS_PUBLIC_KEY!.trim(),
+    template_params: params,
+  };
+
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY?.trim();
+  if (privateKey) body.accessToken = privateKey;
+
+  const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: mailSubject(payload.formType),
-      text,
-      html,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
-    throw new Error(`Resend failed (${response.status}): ${detail || response.statusText}`);
+    throw new Error(`EmailJS failed (${response.status}): ${detail || response.statusText}`);
   }
 
-  return { delivered: true, mode: "resend" };
+  return { delivered: true, mode: "emailjs" };
 }

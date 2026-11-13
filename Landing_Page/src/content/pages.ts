@@ -315,7 +315,7 @@ export const pages = {
         "blocks": [
           {
             "kind": "paragraph",
-            "text": "We are building RojMitra around a village-first approach."
+            "text": "RojMitra operates through a village-first workforce mapping approach, supported by local Village Workforce Mitras."
           },
           {
             "kind": "paragraph",

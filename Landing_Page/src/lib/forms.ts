@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { FORMS_API_URL } from "@/config/forms";
 import { formContent, type FormType } from "@/content/forms";
 
 export class FormSubmissionError extends Error {
@@ -27,7 +26,7 @@ export async function submitForm(formType: FormType, data: Record<string, unknow
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const response = await fetch(FORMS_API_URL, {
+    const response = await fetch("/api/forms", {
       method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
       body: JSON.stringify({ formType, data: fields, consent: true, pageUrl: window.location.href, submittedAt: new Date().toISOString() })
     });
