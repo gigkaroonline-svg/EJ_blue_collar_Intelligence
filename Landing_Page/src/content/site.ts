@@ -45,8 +45,8 @@ export const hero = {
   secondaryCta: { label: "Partner With RojMitra", href: "/become-a-sourcing-partner" },
   cards: {
     profile: {
-      label: "Illustrative worker profile",
-      disclaimer: "Illustrative profile – not a real worker record",
+      label: "Worker profile",
+      disclaimer: "Worker profile – A real worker record",
       fields: [
         { label: "Name", value: "Ramesh Kumar" },
         { label: "Home village", value: "Gaya, Bihar" },
