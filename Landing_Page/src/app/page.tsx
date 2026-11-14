@@ -20,26 +20,19 @@ import {
   WhatItIs,
 } from "@/components/site/StorySections";
 import { faq } from "@/content/site";
-import { webPageJsonLd } from "@/lib/json-ld";
 import { SITE_ORIGIN } from "@/lib/site-url";
 
-const title = "Village-Level Workforce Intelligence India | RojMitra";
-const description =
-  "RojMitra by EarlyJobs maps village-level workforce skills, experience and availability to support enterprise hiring and institutional workforce planning.";
-
-const homeJsonLd = [
-  webPageJsonLd({ path: "/", name: title, description }),
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "@id": `${SITE_ORIGIN}/#faq`,
-    mainEntity: faq.items.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
-    })),
-  },
-];
+/** Homepage FAQ schema only — Organization/Brand/WebPage live in layout site graph. */
+const homeJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${SITE_ORIGIN}/#faq`,
+  mainEntity: faq.items.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
 
 export default function HomePage() {
   return (

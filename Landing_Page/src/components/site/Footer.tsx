@@ -94,7 +94,11 @@ export function Footer() {
                   <>
                     <img
                       src={assetUrl(store.id === "app-store" ? appleLogo : googlePlayLogo)}
-                      alt=""
+                      alt={
+                        store.id === "app-store"
+                          ? "Download RojMitra for sourcing partners on the App Store"
+                          : "Download RojMitra for sourcing partners on Google Play"
+                      }
                       width={24}
                       height={24}
                       className="h-6 w-6 shrink-0 object-contain"

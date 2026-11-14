@@ -48,7 +48,7 @@ function formatBlogDate(iso) {
   }
 }
 
-function CoverPreview({ file, stored, onRemove }) {
+function CoverPreview({ file, stored, onRemove, alt }) {
   const [localUrl, setLocalUrl] = useState('')
   useEffect(() => {
     if (!file) {
@@ -61,9 +61,12 @@ function CoverPreview({ file, stored, onRemove }) {
   }, [file])
   const src = localUrl || (stored ? stored : '')
   if (!src) return null
+  const coverAlt =
+    (typeof alt === 'string' && alt.trim()) ||
+    'Blog cover image preview for RojMitra workforce research article'
   return (
     <div className="relative inline-block">
-      <img src={src} alt="" className="max-h-32 rounded-lg border object-cover" />
+      <img src={src} alt={coverAlt} className="max-h-32 rounded-lg border object-cover" />
       <Button
         type="button"
         variant="destructive"
@@ -283,6 +286,7 @@ export function BlogsPage() {
                   <CoverPreview
                     file={coverFile}
                     stored={removeCover ? '' : form.coverUrl}
+                    alt={form.coverAlt || form.title}
                     onRemove={() => {
                       setCoverFile(null)
                       setRemoveCover(true)
@@ -352,7 +356,10 @@ export function BlogsPage() {
                   {post.coverUrl ? (
                     <img
                       src={post.coverUrl}
-                      alt=""
+                      alt={
+                        post.coverAlt?.trim() ||
+                        `${post.title || 'Blog post'} — RojMitra cover image`
+                      }
                       className="size-12 rounded-md border object-cover"
                     />
                   ) : (
