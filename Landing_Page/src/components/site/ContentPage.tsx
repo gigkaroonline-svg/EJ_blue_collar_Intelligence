@@ -773,10 +773,10 @@ export function FAQAccordion({ items }: { items: { question: string; answer: str
   return (
     <Accordion type="single" collapsible>
       {items.map((item, i) => (
-        <AccordionItem key={item.question} value={String(i)}>
+        <AccordionItem key={item.question} value={String(i)} className="group">
           <AccordionTrigger className="py-6 text-base sm:text-lg">{item.question}</AccordionTrigger>
-          {/* forceMount keeps answers in the DOM for crawlers while collapsed */}
-          <AccordionContent forceMount className="page-copy max-w-3xl">
+          {/* forceMount keeps answers in the DOM for crawlers, so closed answers must be hidden explicitly */}
+          <AccordionContent forceMount className="page-copy max-w-3xl group-data-[state=closed]:hidden">
             {item.answer}
           </AccordionContent>
         </AccordionItem>
