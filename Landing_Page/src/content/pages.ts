@@ -200,6 +200,18 @@ export const pages = {
       },
       {
         "kind": "paragraph",
+        "text": "Through recruitment work at EarlyJobs and time on the ground in Bihar, we kept seeing the same gap: the experience exists, but a usable record of it rarely does."
+      },
+      {
+        "kind": "paragraph",
+        "text": "A worker's experience should travel with them — across employers, across states and back home to their village."
+      },
+      {
+        "kind": "paragraph",
+        "text": "So RojMitra starts at the village, where local Village Workforce Mitras help workers create consent-based records of their skills, work history and availability."
+      },
+      {
+        "kind": "paragraph",
         "text": "See [India's workforce visibility gap](/the-problem) and [village-level workforce intelligence](/workforce-intelligence)."
       }
     ],

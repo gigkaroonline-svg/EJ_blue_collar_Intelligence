@@ -24,9 +24,9 @@ function HeroCards() {
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
-        className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-6 pt-2 text-left sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:tilt-plane lg:grid-cols-12"
+        className="flex flex-col gap-4 pb-6 pt-2 text-left sm:grid sm:grid-cols-2 lg:tilt-plane lg:grid-cols-12"
       >
-        <article className="hero-float w-[min(88vw,380px)] min-w-0 shrink-0 snap-center self-start overflow-hidden rounded-xl bg-card text-foreground shadow-float ring-1 ring-on-dark/50 sm:col-span-2 sm:w-auto lg:col-span-5 lg:translate-y-2">
+        <article className="hero-float w-full min-w-0 self-start overflow-hidden rounded-xl bg-card text-foreground shadow-float ring-1 ring-on-dark/50 sm:col-span-2 sm:w-auto lg:col-span-5 lg:translate-y-2">
           <div className="bg-gradient-navy px-5 py-3.5 text-on-dark">
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em]">{profile.label}</p>
           </div>
@@ -49,8 +49,8 @@ function HeroCards() {
           </div>
         </article>
 
-        <div className="flex w-[260px] shrink-0 snap-center flex-col gap-3 sm:col-span-2 sm:w-auto sm:grid sm:grid-cols-2 lg:col-span-7 lg:gap-4">
-          <article className="hero-float-slow glass-card w-[250px] min-w-0 shrink-0 snap-center self-start rounded-xl p-5 sm:w-auto">
+        <div className="flex w-full flex-col gap-3 sm:col-span-2 sm:w-auto sm:grid sm:grid-cols-2 lg:col-span-7 lg:gap-4">
+          <article className="hero-float-slow glass-card w-full min-w-0 self-start rounded-xl p-5 sm:w-auto">
             <div className="flex items-center justify-between">
               <p className="mono-label inline-flex items-center gap-2 text-muted-foreground">
                 <House className="h-4 w-4 text-brand" strokeWidth={1.8} aria-hidden />
@@ -80,7 +80,7 @@ function HeroCards() {
             </ul>
           </article>
 
-          <article className="hero-float flex w-[260px] min-w-0 shrink-0 snap-center flex-col justify-center rounded-xl bg-gradient-brand p-5 text-on-dark shadow-soft sm:w-auto">
+          <article className="hero-float flex w-full min-w-0 flex-col justify-center rounded-xl bg-gradient-brand p-5 text-on-dark shadow-soft sm:w-auto">
             <p className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-on-dark/70">
               {intelligence.label}
             </p>
@@ -100,7 +100,7 @@ function HeroCards() {
             </ul>
           </article>
 
-          <article className="hero-float-slow relative w-[250px] min-w-0 shrink-0 snap-center self-start overflow-hidden rounded-xl bg-gradient-navy p-5 text-on-dark shadow-soft sm:w-auto">
+          <article className="hero-float-slow relative w-full min-w-0 self-start overflow-hidden rounded-xl bg-gradient-navy p-5 text-on-dark shadow-soft sm:w-auto">
             <p className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-on-dark/65">
               {network.label}
             </p>
@@ -108,7 +108,7 @@ function HeroCards() {
             <p className="mt-2 text-xs leading-relaxed text-on-dark/80">{network.body}</p>
           </article>
 
-          <article className="hero-float glass-card w-[250px] min-w-0 shrink-0 snap-center self-start rounded-xl p-5 sm:w-auto">
+          <article className="hero-float glass-card w-full min-w-0 self-start rounded-xl p-5 sm:w-auto">
             <p className="mono-label text-muted-foreground">{sectors.label}</p>
             <h3 className="mt-1.5 text-sm font-semibold text-foreground">{sectors.title}</h3>
             <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -182,7 +182,7 @@ export function Hero() {
             </Pill>
           </div>
 
-          <p className="mt-7 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-on-dark/80">
+          <p className="mt-7 inline-block rounded-full bg-sky-soft px-3 py-1 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-brand-deep">
             {hero.trustLine}
           </p>
         </motion.div>

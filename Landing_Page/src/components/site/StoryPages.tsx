@@ -320,14 +320,14 @@ export function OurStoryPage() {
             <Photo image={img.storyHero} eager className="aspect-[4/3] rounded-none shadow-none sm:aspect-[16/10]" />
           </div>
           <div className="relative z-10 -mt-10 grid gap-4 px-2 sm:-mt-14 sm:px-8 md:grid-cols-3">
-            {[intro[2], intro[3], intro[5]].map((t, i) => (
+            {[intro[2], intro[3], intro[4]].map((t, i) => (
               <Reveal key={`story-intro-${i}`} delay={i * 0.06} className="rounded-2xl border border-border bg-card p-6 shadow-lift">
                 <IconBadge icon={[Sprout, Route, Lightbulb][i] ?? Sprout} />
                 <p className={cn("mt-4 leading-relaxed", i === 1 ? "text-lg font-semibold text-foreground" : "page-copy")}>{t}</p>
               </Reveal>
             ))}
           </div>
-          <p className="page-copy mx-auto mt-10 max-w-3xl text-center">{intro[4]}</p>
+          <Copy text={intro[5]} className="page-copy mx-auto mt-10 max-w-3xl text-center" />
         </div>
       </section>
 
