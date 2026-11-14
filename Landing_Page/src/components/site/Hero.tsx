@@ -182,7 +182,7 @@ export function Hero() {
             </Pill>
           </div>
 
-          <p className="mt-7 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-on-dark/80">
+          <p className="mt-7 inline-block rounded-full bg-sky-soft px-3 py-1 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-brand-deep">
             {hero.trustLine}
           </p>
         </motion.div>

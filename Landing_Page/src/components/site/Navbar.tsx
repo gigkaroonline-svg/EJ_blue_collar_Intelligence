@@ -58,7 +58,7 @@ export function Navbar() {
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <Pill href="/become-a-sourcing-partner" arrow className="hidden lg:inline-flex">
-            Join as a Sourcing Partner
+            Join as Sourcing Partner
           </Pill>
           <Button
             variant="ghost"
@@ -91,7 +91,7 @@ export function Navbar() {
               </a>
             ))}
             <Pill href="/become-a-sourcing-partner" arrow className="mt-2 w-full justify-between" onClick={() => setOpen(false)}>
-              Join as a Sourcing Partner
+              Join as Sourcing Partner
             </Pill>
             <p className="mt-3 px-3 pb-1 text-xs text-muted-foreground">{site.brandRelationship}</p>
           </nav>
