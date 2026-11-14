@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ContentPageData } from "@/content/pages";
 import type { BlogPost } from "@/lib/api-blogs";
-import { absoluteUrl, SITE_ORIGIN } from "@/lib/site-url";
+import { absoluteUrl, ogImage, SITE_ORIGIN } from "@/lib/site-url";
 
 export function blogCollectionJsonLd(page: ContentPageData, posts: BlogPost[]) {
   const url = absoluteUrl(page.path);
@@ -14,7 +14,7 @@ export function blogCollectionJsonLd(page: ContentPageData, posts: BlogPost[]) {
       name: page.title,
       description: page.description,
       isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
-      about: { "@id": `${SITE_ORIGIN}/#organization` },
+      about: { "@id": `${SITE_ORIGIN}/#brand` },
       inLanguage: "en-IN",
       hasPart: posts.map((post, index) => ({
         "@type": "BlogPosting",
@@ -79,7 +79,13 @@ export function articleJsonLdGraph(post: BlogPost) {
 export function articlePageMetadata(post: BlogPost): Metadata {
   const url = absoluteUrl(`/blog/${post.slug}`);
   const description = post.metaDescription?.trim() || post.excerpt;
-  const image = post.coverUrl?.trim() || undefined;
+  const cover = post.coverUrl?.trim() || undefined;
+  const coverAlt =
+    post.coverAlt?.trim() ||
+    (post.title?.trim()
+      ? `${post.title.trim()} — RojMitra workforce research`
+      : "RojMitra workforce research and labour insights article cover");
+  const image = cover ? { url: cover, alt: coverAlt } : ogImage;
   return {
     title: `${post.title} | RojMitra`,
     description,
@@ -92,13 +98,13 @@ export function articlePageMetadata(post: BlogPost): Metadata {
       publishedTime: post.publishedAt || undefined,
       modifiedTime: post.updatedAt || post.publishedAt || undefined,
       authors: [authorName(post)],
-      images: image ? [{ url: image, alt: post.coverAlt?.trim() || post.title }] : undefined,
+      images: [image],
     },
     twitter: {
-      card: image ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title: post.title,
       description,
-      images: image ? [image] : undefined,
+      images: [image.url],
     },
   };
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ContentPageData } from "@/content/pages";
 import { webPageJsonLd } from "@/lib/json-ld";
-import { absoluteUrl, SITE_ORIGIN } from "@/lib/site-url";
+import { absoluteUrl, ogImage, SITE_ORIGIN } from "@/lib/site-url";
 
 export function pageMetadata(page: ContentPageData): Metadata {
   const url = absoluteUrl(page.path);
@@ -14,11 +14,15 @@ export function pageMetadata(page: ContentPageData): Metadata {
       description: page.description,
       type: "website",
       url,
+      siteName: "RojMitra by EarlyJobs",
+      locale: "en_IN",
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title: page.title,
       description: page.description,
+      images: [ogImage.url],
     },
   };
 }

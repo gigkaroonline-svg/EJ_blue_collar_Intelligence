@@ -1,14 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { organizationJsonLd } from "@/lib/json-ld";
-import { SITE_ORIGIN } from "@/lib/site-url";
+import { ogImage, SITE_ORIGIN } from "@/lib/site-url";
 import "./globals.css";
 
 const GTM_ID = "GTM-WFNQMJVF";
 
-const title = "Village-Level Workforce Intelligence India | RojMitra";
+const title = "RojMitra | Village-Level Workforce Intelligence Mapping System in India";
 const description =
-  "RojMitra by EarlyJobs maps village-level workforce skills, experience and availability to support enterprise hiring and institutional workforce planning.";
+  "RojMitra by EarlyJobs is building India's Labour Intelligence Mapping System, documenting workers' skills, experience, availability and employment journeys at village level.";
+const ogTitle = "RojMitra | India's Labour Intelligence Mapping System";
+const ogDescription =
+  "Building village-level workforce intelligence infrastructure to help employers and institutions understand India's local workforce.";
+const twitterDescription =
+  "Building village-level workforce intelligence infrastructure across India.";
 
 export const metadata: Metadata = {
   title,
@@ -18,16 +23,29 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${SITE_ORIGIN}/`,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  },
   openGraph: {
-    title,
-    description,
     type: "website",
+    title: ogTitle,
+    description: ogDescription,
     url: `${SITE_ORIGIN}/`,
+    siteName: "RojMitra by EarlyJobs",
+    locale: "en_IN",
+    images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
-    title,
-    description,
+    title: ogTitle,
+    description: twitterDescription,
+    images: [ogImage.url],
   },
   icons: {
     icon: [

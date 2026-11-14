@@ -14,7 +14,13 @@ export function CtaBanner({ next, actions = closingCta.actions }: { next?: { lab
       <Reveal className="cta-rings relative mx-auto max-w-6xl overflow-hidden rounded-2xl bg-gradient-brand px-6 py-12 text-center text-on-dark shadow-lift sm:px-12 sm:py-16">
         <div className="relative">
           <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-card shadow-soft">
-            <img src={assetUrl(logo)} alt="" width={40} height={40} className="h-9 w-9 object-contain" />
+            <img
+              src={assetUrl(logo)}
+              alt="RojMitra — Mapping India's Workforce"
+              width={40}
+              height={40}
+              className="h-9 w-9 object-contain"
+            />
           </span>
           <h2 className="display-type mx-auto max-w-2xl text-3xl sm:text-5xl">{closingCta.title}</h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-on-dark/85 sm:text-lg">{closingCta.text}</p>
