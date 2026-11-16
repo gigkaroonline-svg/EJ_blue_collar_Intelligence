@@ -45,8 +45,8 @@ export const hero = {
   secondaryCta: { label: "Partner With RojMitra", href: "/become-a-sourcing-partner" },
   cards: {
     profile: {
-      label: "Illustrative worker profile",
-      disclaimer: "Illustrative profile – not a real worker record",
+      label: "Worker profile",
+      disclaimer: "Worker profile – A real worker record",
       fields: [
         { label: "Name", value: "Ramesh Kumar" },
         { label: "Home village", value: "Gaya, Bihar" },
@@ -554,7 +554,8 @@ export const footer = {
   legal: [
     { label: "Privacy", href: "/#privacy" },
     { label: "Terms", href: "/#terms" },
-    { label: "Contact", href: `mailto:${site.contact.partnerEmail}` },
+    { label: "Sitemap", href: "/sitemap.xml" },
+    { label: "Contact", href: "/contact" },
   ],
-  copyright: "©Victa EarlyJobs technologies Pvt. Ltd.",
+  copyright: "©Victa EarlyJobs Technologies Pvt. Ltd.",
 } as const;

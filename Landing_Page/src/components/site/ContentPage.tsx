@@ -609,7 +609,13 @@ export function GooglePlayButton() {
     <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm font-medium text-muted-foreground">{footer.app.audience}</p>
       <a href={store.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-3 self-start rounded-lg bg-navy px-4 py-2 text-on-dark shadow-soft transition hover:opacity-90">
-        <img src={assetUrl(googlePlayLogo)} alt="" width={22} height={24} className="h-6 w-6 shrink-0 object-contain invert" />
+        <img
+          src={assetUrl(googlePlayLogo)}
+          alt="Get RojMitra for sourcing partners on Google Play"
+          width={22}
+          height={24}
+          className="h-6 w-6 shrink-0 object-contain invert"
+        />
         <span className="leading-tight">
           <span className="block text-[0.6rem] uppercase tracking-[0.1em] opacity-80">Get it on</span>
           <span className="block text-sm font-semibold">{store.label}</span>
@@ -773,10 +779,10 @@ export function FAQAccordion({ items }: { items: { question: string; answer: str
   return (
     <Accordion type="single" collapsible>
       {items.map((item, i) => (
-        <AccordionItem key={item.question} value={String(i)}>
+        <AccordionItem key={item.question} value={String(i)} className="group">
           <AccordionTrigger className="py-6 text-base sm:text-lg">{item.question}</AccordionTrigger>
-          {/* forceMount keeps answers in the DOM for crawlers while collapsed */}
-          <AccordionContent forceMount className="page-copy max-w-3xl">
+          {/* forceMount keeps answers in the DOM for crawlers, so closed answers must be hidden explicitly */}
+          <AccordionContent forceMount className="page-copy max-w-3xl group-data-[state=closed]:hidden">
             {item.answer}
           </AccordionContent>
         </AccordionItem>

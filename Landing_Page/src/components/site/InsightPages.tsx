@@ -312,9 +312,9 @@ export function WorkforceIntelligencePage() {
               <h2 className="display-type text-3xl sm:text-4xl">{village.title}</h2>
               <p className="mt-6 text-lg leading-8 text-on-dark/85">{vp[0]}</p>
             </Reveal>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 self-center sm:grid-cols-2">
               {vp.slice(1).map((t, i) => (
-                <Reveal key={t} delay={i * 0.04} className="glass-dark rounded-2xl p-5 text-sm leading-6 text-on-dark/90">{t}</Reveal>
+                <Reveal key={t} delay={i * 0.04} className="glass-dark rounded-2xl p-5 text-sm leading-6 text-on-dark/90 sm:last:odd:col-span-2">{t}</Reveal>
               ))}
             </div>
           </div>

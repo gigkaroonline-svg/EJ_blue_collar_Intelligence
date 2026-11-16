@@ -6,8 +6,8 @@ export const pages = {
     "path": "/about",
     "eyebrow": "About RojMitra",
     "headline": "About RojMitra: Village-Level Workforce Intelligence by EarlyJobs",
-    "title": "About RojMitra | Village Workforce Intelligence India",
-    "description": "Learn how RojMitra by EarlyJobs is building consent-based, village-level workforce intelligence to make workers' skills, experience and availability visible.",
+    "title": "About RojMitra | Village-Level Workforce Intelligence by EarlyJobs",
+    "description": "Discover why EarlyJobs built RojMitra, India's village-level workforce intelligence initiative, to document workers' skills, experience, availability and employment journeys.",
     "intro": [
       {
         "kind": "paragraph",
@@ -187,8 +187,8 @@ export const pages = {
     "path": "/our-story",
     "eyebrow": "Our Story",
     "headline": "Why We Built RojMitra: A Worker's Experience Should Travel With Them",
-    "title": "Why RojMitra Exists | Village Workforce Story India",
-    "description": "Learn why EarlyJobs built RojMitra to preserve workers' employment experience, improve village-level workforce visibility and connect skills with opportunity.",
+    "title": "Why We Built RojMitra | A Worker's Experience Should Travel With Them",
+    "description": "Discover why EarlyJobs built RojMitra: to make workers' skills, employment experience and work journeys visible through village-level workforce intelligence in India.",
     "intro": [
       {
         "kind": "paragraph",
@@ -197,6 +197,18 @@ export const pages = {
       {
         "kind": "paragraph",
         "text": "RojMitra began with a simple question: how can a worker's employment journey remain visible when they change employers, move between states or return to their village?"
+      },
+      {
+        "kind": "paragraph",
+        "text": "Through recruitment work at EarlyJobs and time on the ground in Bihar, we kept seeing the same gap: the experience exists, but a usable record of it rarely does."
+      },
+      {
+        "kind": "paragraph",
+        "text": "A worker's experience should travel with them — across employers, across states and back home to their village."
+      },
+      {
+        "kind": "paragraph",
+        "text": "So RojMitra starts at the village, where local Village Workforce Mitras help workers create consent-based records of their skills, work history and availability."
       },
       {
         "kind": "paragraph",
@@ -341,8 +353,8 @@ export const pages = {
     "path": "/the-problem",
     "eyebrow": "The Problem",
     "headline": "India's Workforce Is Everywhere. The Intelligence About It Is Not.",
-    "title": "India's Rural Workforce Visibility Problem | RojMitra",
-    "description": "See why rural workers' skills and experience remain hard to discover, and how village-level workforce intelligence can improve hiring and planning in India.",
+    "title": "India's Workforce Visibility Problem | Why RojMitra Exists",
+    "description": "India has millions of skilled workers, but their experience, skills and availability remain difficult to discover. Learn why village-level workforce intelligence matters.",
     "intro": [
       {
         "kind": "paragraph",
@@ -577,8 +589,8 @@ export const pages = {
     "path": "/workforce-intelligence",
     "eyebrow": "Workforce Intelligence",
     "headline": "Village-Level Workforce Intelligence for India",
-    "title": "Workforce Intelligence India | Village-Level RojMitra",
-    "description": "Understand how RojMitra organises workforce data by village, skill, experience, availability and migration to support employers and institutions in India.",
+    "title": "Village-Level Workforce Intelligence in India | RojMitra",
+    "description": "Understand village-level workforce intelligence in India. RojMitra maps worker skills, occupations, employment experience, migration and availability from villages upward.",
     "intro": [
       {
         "kind": "paragraph",
@@ -852,8 +864,8 @@ export const pages = {
     "path": "/how-it-works",
     "eyebrow": "How It Works",
     "headline": "How RojMitra Builds Village-Level Workforce Intelligence",
-    "title": "How RojMitra Works | Village Workforce Mapping India",
-    "description": "See how RojMitra identifies workers, builds consent-based profiles, organises village workforce intelligence and connects relevant people with opportunities.",
+    "title": "How RojMitra Works | Village-Level Workforce Mapping in India",
+    "description": "Discover how RojMitra builds village-level workforce intelligence through local partners, consent-based worker registration, structured profiles and employer requirements.",
     "intro": [
       {
         "kind": "paragraph",
@@ -1128,7 +1140,7 @@ export const pages = {
     "eyebrow": "For Employers",
     "headline": "Understand the Frontline Workforce Around Your Hiring Locations",
     "title": "Frontline Workforce Intelligence for Employers | RojMitra",
-    "description": "Use village-level workforce intelligence to understand local and returning talent for manufacturing, garments, logistics, retail and frontline hiring.",
+    "description": "Discover frontline workforce intelligence for manufacturing, logistics, warehousing, construction and retail. Understand local workers by location, skills and experience with RojMitra by EarlyJobs.",
     "intro": [
       {
         "kind": "paragraph",
@@ -1426,7 +1438,7 @@ export const pages = {
     "eyebrow": "Become a RojMitra Sourcing Partner",
     "headline": "Become a RojMitra Village Workforce Sourcing Partner",
     "title": "Become a Village Workforce Sourcing Partner | RojMitra",
-    "description": "Join RojMitra as a local sourcing partner to document worker experience, build consent-based workforce records and connect communities with opportunities.",
+    "description": "Become a RojMitra sourcing partner. Connect with workers in your village, document skills and work experience, and help build India's village-level workforce intelligence network.",
     "intro": [
       {
         "kind": "paragraph",
@@ -1732,8 +1744,8 @@ export const pages = {
     "path": "/government-initiatives",
     "eyebrow": "Government Initiatives",
     "headline": "Public Initiatives Shaping Workforce Registration and Visibility in India",
-    "title": "Government Workforce & Labour Initiatives India | RojMitra",
-    "description": "Track verified public workforce initiatives in India and understand how village-level workforce intelligence can complement employment and skill programmes.",
+    "title": "Government Labour & Gig Worker Initiatives in India | RojMitra",
+    "description": "Explore India's government initiatives for unorganised workers, e-Shram registration, gig worker welfare and labour policies. Follow official updates with RojMitra by EarlyJobs.",
     "intro": [
       {
         "kind": "paragraph",
@@ -1974,7 +1986,7 @@ export const pages = {
     "eyebrow": "Blog — RojMitra",
     "headline": "Research Themes Shaping India's Workforce",
     "title": "India Workforce Research & Labour Insights | RojMitra",
-    "description": "Explore RojMitra research on workforce intelligence, migration, gig work, hiring and public initiatives shaping India's changing labour market and skills.",
+    "description": "Explore research, insights and stories on India's workforce, labour migration, gig economy, worker skills, employment trends and village-level workforce intelligence by RojMitra.",
     "intro": [
       {
         "kind": "paragraph",

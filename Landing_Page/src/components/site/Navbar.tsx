@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/site/Logo";
 import { Pill } from "@/components/site/primitives";
@@ -9,17 +9,18 @@ import { Button } from "@/components/ui/button";
 import { navLinks, site } from "@/content/site";
 import { cn } from "@/lib/utils";
 
-/** Primary nav: About is a single link; Our Story and The Problem live in the footer and in-page links. */
+/** Primary nav: About → Our Story → Workforce…; Problem, Government, Blog live in footer / page links. */
 const primaryLinks = navLinks.filter(
   (link) =>
-    link.href !== "/our-story" &&
     link.href !== "/the-problem" &&
-    link.href !== "/government-initiatives",
+    link.href !== "/government-initiatives" &&
+    link.href !== "/blog",
 );
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname() || "/";
   useEffect(() => {
     setOpen(false);
@@ -32,10 +33,12 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", close);
   }, []);
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
+    if (!open) return;
+    const closeOnOutside = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setOpen(false);
     };
+    document.addEventListener("pointerdown", closeOnOutside);
+    return () => document.removeEventListener("pointerdown", closeOnOutside);
   }, [open]);
   const linkClass = (href: string) =>
     cn(
@@ -43,7 +46,7 @@ export function Navbar() {
       pathname === href ? "bg-sky-pale text-brand" : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm supports-[backdrop-filter]:bg-card/90">
+    <header ref={headerRef} className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm supports-[backdrop-filter]:bg-card/90">
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
         <Logo size="sm" className="[&_img]:h-9 sm:[&_img]:h-10" />
         <nav aria-label="Primary" className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex">
@@ -55,7 +58,7 @@ export function Navbar() {
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <Pill href="/become-a-sourcing-partner" arrow className="hidden lg:inline-flex">
-            Join as a Sourcing Partner
+            Join as Sourcing Partner
           </Pill>
           <Button
             variant="ghost"
@@ -88,7 +91,7 @@ export function Navbar() {
               </a>
             ))}
             <Pill href="/become-a-sourcing-partner" arrow className="mt-2 w-full justify-between" onClick={() => setOpen(false)}>
-              Join as a Sourcing Partner
+              Join as Sourcing Partner
             </Pill>
             <p className="mt-3 px-3 pb-1 text-xs text-muted-foreground">{site.brandRelationship}</p>
           </nav>
