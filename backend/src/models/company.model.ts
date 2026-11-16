@@ -5,6 +5,8 @@ const companySchema = new Schema(
     name: { type: String, required: true },
     nameNormalized: { type: String, required: true, unique: true },
     status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+    /** Admin soft-suspend. Independent of review status. */
+    isBlocked: { type: Boolean, default: false },
     suggestedBy: [{ type: Schema.Types.ObjectId, ref: 'SourcingPartner' }],
     reviewedBy: { type: Schema.Types.ObjectId, ref: 'Admin' },
     reviewedAt: Date,

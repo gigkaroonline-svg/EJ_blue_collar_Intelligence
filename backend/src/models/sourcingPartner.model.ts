@@ -24,6 +24,8 @@ const partnerSchema = new Schema(
     /** Optional profile photo — GCS object key from /api/uploads/signed-url. */
     avatarUrl: String,
     status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+    /** Admin soft-suspend. Independent of review status. */
+    isBlocked: { type: Boolean, default: false },
     reviewedBy: { type: Schema.Types.ObjectId, ref: 'Admin' },
     reviewedAt: Date,
     rejectionReason: String,

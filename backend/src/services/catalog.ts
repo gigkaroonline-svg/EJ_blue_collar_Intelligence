@@ -19,7 +19,7 @@ async function resolveCompany(doc: any) {
     if (!next) break;
     cur = next;
   }
-  if (!cur || cur.status === 'rejected') return null;
+  if (!cur || cur.status === 'rejected' || cur.isBlocked) return null;
   return cur;
 }
 
@@ -173,6 +173,7 @@ export async function searchCompanies(q: string, limit = 10) {
   if (!term) return [];
   return Company.find({
     status: 'accepted',
+    isBlocked: { $ne: true },
     nameNormalized: { $regex: `^${escapeRegex(term)}` },
   }).limit(limit);
 }

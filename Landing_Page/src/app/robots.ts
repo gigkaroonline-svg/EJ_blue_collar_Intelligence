@@ -1,13 +1,17 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/content/site";
+import { SITE_ORIGIN } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
-    sitemap: `${site.url}/sitemap.xml`,
-    host: site.url,
+    rules: [
+      { userAgent: "*", allow: "/" },
+      { userAgent: "Googlebot", allow: "/" },
+      { userAgent: "OAI-SearchBot", allow: "/" },
+      { userAgent: "GPTBot", allow: "/" },
+      { userAgent: "PerplexityBot", allow: "/" },
+      { userAgent: "Claude-SearchBot", allow: "/" },
+      { userAgent: "ClaudeBot", allow: "/" },
+    ],
+    sitemap: `${SITE_ORIGIN}/sitemap.xml`,
   };
 }
