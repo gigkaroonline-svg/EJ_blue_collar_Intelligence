@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ContactPage } from "@/components/site/ContactPage";
-import { absoluteUrl } from "@/lib/site-url";
+import { absoluteUrl, ogImage } from "@/lib/site-url";
 
 const title = "Contact RojMitra | Village Workforce Intelligence";
 const description =
@@ -16,6 +16,15 @@ export const metadata: Metadata = {
     description,
     type: "website",
     url: absoluteUrl(path),
+    siteName: "RojMitra by EarlyJobs",
+    locale: "en_IN",
+    images: [ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [ogImage.url],
   },
 };
 

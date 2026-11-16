@@ -1,47 +1,55 @@
-"use client";
+import type { Metadata } from "next";
+import Script from "next/script";
+import { BlogIndexClient } from "@/app/blog/blog-index-client";
+import { blogPageJsonLd } from "@/lib/json-ld";
+import { ogImage, SITE_ORIGIN } from "@/lib/site-url";
 
-import { useEffect, useState } from "react";
-import { BlogIndexView } from "@/components/site/BlogViews";
-import { pages } from "@/content/pages";
-import { fetchPublishedPosts, type BlogPost } from "@/lib/api-blogs";
+const url = `${SITE_ORIGIN}/blog`;
 
-const page = pages.blog;
+const title = "India Workforce Research & Labour Insights | RojMitra";
+const description =
+  "Explore research, insights and stories on India's workforce, labour migration, gig economy, worker skills, employment trends and village-level workforce intelligence by RojMitra.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: url },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  },
+  openGraph: {
+    type: "website",
+    title,
+    description:
+      "Research and stories on India's workforce, migration, employment, gig economy and village-level workforce intelligence.",
+    url,
+    siteName: "RojMitra by EarlyJobs",
+    locale: "en_IN",
+    images: [ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description: "Explore India's changing workforce through research, stories and labour intelligence.",
+    images: [ogImage.url],
+  },
+};
 
 export default function BlogRoute() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let alive = true;
-    fetchPublishedPosts()
-      .then((data) => {
-        if (alive) setPosts(data);
-      })
-      .finally(() => {
-        if (alive) setLoading(false);
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  if (loading) {
-    return (
-      <BlogIndexView
-        eyebrow={page.eyebrow}
-        title="Stories & research"
-        intro="Loading stories…"
-        posts={[]}
-      />
-    );
-  }
-
   return (
-    <BlogIndexView
-      eyebrow={page.eyebrow}
-      title="Stories & research"
-      intro="Published notes on workforce intelligence, migration, hiring, and public employment initiatives across India."
-      posts={posts}
-    />
+    <>
+      <Script
+        id="blog-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPageJsonLd) }}
+      />
+      <BlogIndexClient />
+    </>
   );
 }

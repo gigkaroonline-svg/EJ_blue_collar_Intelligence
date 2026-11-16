@@ -8,6 +8,16 @@ import type { BlogPost } from "@/lib/api-blogs";
 import { formatBlogDate } from "@/lib/api-blogs";
 import { cn } from "@/lib/utils";
 
+/** Prefer CMS coverAlt; fall back to a descriptive SEO alt from the post title. */
+function blogCoverAlt(post: Pick<BlogPost, "title" | "coverAlt">) {
+  const custom = post.coverAlt?.trim();
+  if (custom) return custom;
+  const title = post.title?.trim();
+  return title
+    ? `${title} — RojMitra workforce research`
+    : "RojMitra workforce research and labour insights article cover";
+}
+
 export function BlogIndexView({
   eyebrow,
   title,
@@ -69,7 +79,7 @@ function BlogCard({ post }: { post: BlogPost }) {
         <Link href={`/blog/${post.slug}`} className="block overflow-hidden">
           <img
             src={post.coverUrl}
-            alt={post.coverAlt?.trim() || post.title}
+            alt={blogCoverAlt(post)}
             width={800}
             height={520}
             loading="lazy"
@@ -177,7 +187,7 @@ export function BlogArticleView({
             <Reveal delay={0.06} className="mt-8 overflow-hidden rounded-2xl shadow-soft">
               <img
                 src={post.coverUrl}
-                alt={post.coverAlt?.trim() || post.title}
+                alt={blogCoverAlt(post)}
                 width={1200}
                 height={675}
                 fetchPriority="high"
