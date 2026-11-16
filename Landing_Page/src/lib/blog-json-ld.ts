@@ -85,7 +85,9 @@ export function articlePageMetadata(post: BlogPost): Metadata {
     (post.title?.trim()
       ? `${post.title.trim()} — RojMitra workforce research`
       : "RojMitra workforce research and labour insights article cover");
-  const image = cover ? { url: cover, alt: coverAlt } : ogImage;
+  const image = cover
+    ? { url: cover, width: 1200, height: 630, alt: coverAlt }
+    : ogImage;
   return {
     title: `${post.title} | RojMitra`,
     description,

@@ -31,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { strings, t } from '@/strings.js'
 
 const ALL = '__all__'
 
@@ -98,7 +99,7 @@ export function PartnersPage() {
 
   async function toggleBlock(row) {
     const blocked = !row.isBlocked
-    if (!window.confirm(`${blocked ? 'Block' : 'Unblock'} ${row.fullName}?`)) return
+    if (!window.confirm(t(blocked ? 'commonConfirmBlock' : 'commonConfirmUnblock', { name: row.fullName }))) return
     try {
       await api(`/partners/${row._id || row.id}/block`, {
         method: 'PATCH',
@@ -112,13 +113,13 @@ export function PartnersPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader description="Review pending signups, update profiles, and block accounts." />
+      <PageHeader description={strings.partnersDescription} />
 
       <StatCards
         items={[
           {
             id: 'total',
-            label: 'Total',
+            label: strings.commonTotal,
             value: data.total ?? 0,
             active: !filters.status && !filters.isBlocked,
             onClick: () => {
@@ -129,7 +130,7 @@ export function PartnersPage() {
           },
           {
             id: 'pending',
-            label: 'Pending',
+            label: strings.commonPending,
             value: filters.status === 'pending' ? data.total ?? 0 : pageStats.pending,
             active: filters.status === 'pending',
             onClick: () => {
@@ -140,7 +141,7 @@ export function PartnersPage() {
           },
           {
             id: 'accepted',
-            label: 'Accepted',
+            label: strings.commonAccepted,
             value: filters.status === 'accepted' ? data.total ?? 0 : pageStats.accepted,
             active: filters.status === 'accepted',
             onClick: () => {
@@ -151,7 +152,7 @@ export function PartnersPage() {
           },
           {
             id: 'blocked',
-            label: 'Blocked',
+            label: strings.commonBlocked,
             value: filters.isBlocked === 'true' ? data.total ?? 0 : pageStats.blocked,
             active: filters.isBlocked === 'true',
             onClick: () => {
@@ -170,8 +171,8 @@ export function PartnersPage() {
       <DataCard
         loading={loading}
         empty={!data.items.length}
-        emptyTitle="No partners found"
-        emptyDescription="Try adjusting filters or wait for new partner signups."
+        emptyTitle={strings.partnersEmptyTitle}
+        emptyDescription={strings.partnersEmptyDescription}
         toolbar={
           <form
             className="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center"
@@ -185,7 +186,7 @@ export function PartnersPage() {
               <Input
                 className="pl-8"
                 type="search"
-                placeholder="Search name, phone, or email"
+                placeholder={strings.partnersSearchPlaceholder}
                 value={filters.q}
                 onChange={(e) => setFilters({ ...filters, q: e.target.value })}
               />
@@ -195,14 +196,14 @@ export function PartnersPage() {
               onValueChange={(role) => setFilters({ ...filters, role: role === ALL ? '' : role })}
             >
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Role" />
+                <SelectValue placeholder={strings.commonRole} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>All roles</SelectItem>
-                <SelectItem value="csc">csc</SelectItem>
-                <SelectItem value="cmc">cmc</SelectItem>
-                <SelectItem value="anganwadi">anganwadi</SelectItem>
-                <SelectItem value="gov_ngo">gov_ngo</SelectItem>
+                <SelectItem value={ALL}>{strings.partnersAllRoles}</SelectItem>
+                <SelectItem value="csc">{strings.roleCsc}</SelectItem>
+                <SelectItem value="cmc">{strings.roleCmc}</SelectItem>
+                <SelectItem value="anganwadi">{strings.roleAnganwadi}</SelectItem>
+                <SelectItem value="gov_ngo">{strings.roleGovNgo}</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -210,13 +211,13 @@ export function PartnersPage() {
               onValueChange={(status) => setFilters({ ...filters, status: status === ALL ? '' : status })}
             >
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={strings.commonStatus} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>All statuses</SelectItem>
-                <SelectItem value="pending">pending</SelectItem>
-                <SelectItem value="accepted">accepted</SelectItem>
-                <SelectItem value="rejected">rejected</SelectItem>
+                <SelectItem value={ALL}>{strings.commonAllStatuses}</SelectItem>
+                <SelectItem value="pending">{strings.statusPending}</SelectItem>
+                <SelectItem value="accepted">{strings.statusAccepted}</SelectItem>
+                <SelectItem value="rejected">{strings.statusRejected}</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -226,27 +227,27 @@ export function PartnersPage() {
               }
             >
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Blocked" />
+                <SelectValue placeholder={strings.commonBlocked} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>Blocked: any</SelectItem>
-                <SelectItem value="false">Active</SelectItem>
-                <SelectItem value="true">Blocked</SelectItem>
+                <SelectItem value={ALL}>{strings.commonBlockedAny}</SelectItem>
+                <SelectItem value="false">{strings.commonActive}</SelectItem>
+                <SelectItem value="true">{strings.commonBlocked}</SelectItem>
               </SelectContent>
             </Select>
             <Input
               className="w-full lg:w-32"
-              placeholder="State"
+              placeholder={strings.commonState}
               value={filters.state}
               onChange={(e) => setFilters({ ...filters, state: e.target.value })}
             />
             <Input
               className="w-full lg:w-32"
-              placeholder="District"
+              placeholder={strings.commonDistrict}
               value={filters.district}
               onChange={(e) => setFilters({ ...filters, district: e.target.value })}
             />
-            <Button type="submit">Apply</Button>
+            <Button type="submit">{strings.commonApply}</Button>
           </form>
         }
         footer={<Pager page={page} limit={data.limit} total={data.total} onPage={(p) => load(p, filters)} />}
@@ -254,11 +255,11 @@ export function PartnersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{strings.commonName}</TableHead>
+              <TableHead>{strings.commonRole}</TableHead>
+              <TableHead>{strings.commonPhone}</TableHead>
+              <TableHead>{strings.commonLocation}</TableHead>
+              <TableHead>{strings.commonStatus}</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -269,7 +270,7 @@ export function PartnersPage() {
                   <div className="flex items-center gap-3">
                     <Avatar size="sm">
                       <AvatarFallback>
-                        {String(row.fullName || '?')
+                        {String(row.fullName || strings.commonUnknownInitial)
                           .split(/\s+/)
                           .slice(0, 2)
                           .map((p) => p[0])
@@ -279,7 +280,7 @@ export function PartnersPage() {
                     </Avatar>
                     <div>
                       <div className="font-medium">{row.fullName}</div>
-                      <div className="text-muted-foreground text-xs">{row.email || '—'}</div>
+                      <div className="text-muted-foreground text-xs">{row.email || strings.commonEmDash}</div>
                     </div>
                   </div>
                 </TableCell>
@@ -287,7 +288,7 @@ export function PartnersPage() {
                   <code className="bg-muted rounded px-1.5 py-0.5 text-xs">{row.role}</code>
                 </TableCell>
                 <TableCell>{row.phoneNumber}</TableCell>
-                <TableCell>{[row.district, row.state].filter(Boolean).join(', ') || '—'}</TableCell>
+                <TableCell>{[row.district, row.state].filter(Boolean).join(', ') || strings.commonEmDash}</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1.5">
                     <StatusBadge value={row.status} />
@@ -297,14 +298,14 @@ export function PartnersPage() {
                 <TableCell>
                   <div className="flex justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={() => open(row)}>
-                      Edit
+                      {strings.commonEdit}
                     </Button>
                     <Button
                       variant={row.isBlocked ? 'outline' : 'destructive'}
                       size="sm"
                       onClick={() => toggleBlock(row)}
                     >
-                      {row.isBlocked ? 'Unblock' : 'Block'}
+                      {row.isBlocked ? strings.commonUnblock : strings.commonBlock}
                     </Button>
                   </div>
                 </TableCell>
@@ -317,15 +318,15 @@ export function PartnersPage() {
       <Dialog open={Boolean(editing && form)} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit partner</DialogTitle>
+            <DialogTitle>{strings.partnersEditTitle}</DialogTitle>
             <DialogDescription>
-              Phone stays {editing?.phoneNumber}. Partner create from admin is not available yet.
+              {t('partnersEditDescription', { phone: editing?.phoneNumber })}
             </DialogDescription>
           </DialogHeader>
           {form ? (
             <form onSubmit={save} className="grid gap-4">
               <div className="grid gap-2">
-                <Label>Full name</Label>
+                <Label>{strings.partnersFullName}</Label>
                 <Input
                   value={form.fullName}
                   onChange={(e) => setForm({ ...form, fullName: e.target.value })}
@@ -333,7 +334,7 @@ export function PartnersPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Email</Label>
+                <Label>{strings.commonEmail}</Label>
                 <Input
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -341,7 +342,7 @@ export function PartnersPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
-                  <Label>Status</Label>
+                  <Label>{strings.commonStatus}</Label>
                   <Select
                     value={form.status}
                     onValueChange={(status) => setForm({ ...form, status })}
@@ -350,20 +351,20 @@ export function PartnersPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pending">pending</SelectItem>
-                      <SelectItem value="accepted">accepted</SelectItem>
-                      <SelectItem value="rejected">rejected</SelectItem>
+                      <SelectItem value="pending">{strings.statusPending}</SelectItem>
+                      <SelectItem value="accepted">{strings.statusAccepted}</SelectItem>
+                      <SelectItem value="rejected">{strings.statusRejected}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label>Role</Label>
+                  <Label>{strings.commonRole}</Label>
                   <Input value={editing?.role || ''} disabled />
                 </div>
               </div>
               {form.status === 'rejected' ? (
                 <div className="grid gap-2">
-                  <Label>Rejection reason</Label>
+                  <Label>{strings.partnersRejectionReason}</Label>
                   <Input
                     value={form.rejectionReason}
                     onChange={(e) => setForm({ ...form, rejectionReason: e.target.value })}
@@ -372,14 +373,14 @@ export function PartnersPage() {
               ) : null}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
-                  <Label>State</Label>
+                  <Label>{strings.commonState}</Label>
                   <Input
                     value={form.state}
                     onChange={(e) => setForm({ ...form, state: e.target.value })}
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label>District</Label>
+                  <Label>{strings.commonDistrict}</Label>
                   <Input
                     value={form.district}
                     onChange={(e) => setForm({ ...form, district: e.target.value })}
@@ -388,10 +389,10 @@ export function PartnersPage() {
               </div>
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setEditing(null)}>
-                  Cancel
+                  {strings.commonCancel}
                 </Button>
                 <Button type="submit" disabled={busy}>
-                  {busy ? 'Saving…' : 'Save changes'}
+                  {busy ? strings.commonSaving : strings.commonSaveChanges}
                 </Button>
               </DialogFooter>
             </form>

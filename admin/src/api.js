@@ -1,3 +1,5 @@
+import { strings } from '@/strings.js'
+
 const TOKEN_KEY = 'rojmitra_admin_token'
 const DEFAULT_API_URL = 'https://backendapi.rojmitra.in'
 
@@ -39,7 +41,7 @@ export async function api(path, { method = 'GET', body, auth = true } = {}) {
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const err = new Error(data.error || res.statusText || 'Request failed')
+    const err = new Error(data.error || res.statusText || strings.commonRequestFailed)
     err.code = data.code
     err.status = res.status
     throw err

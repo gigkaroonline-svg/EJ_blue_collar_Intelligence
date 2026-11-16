@@ -6,7 +6,7 @@ import { Admin, Company, SourcingPartner, Worker, Job, Skill } from '../models';
 import { asyncHandler, AppError } from '../middleware/asyncHandler';
 import { requireAdmin, toAuthAdmin } from '../middleware/adminAuth';
 import { env } from '../config/env';
-import { normalize, skillDisplayName } from '../services/catalog';
+import { buildSearchTerms, normalize, skillDisplayName } from '../services/catalog';
 import { catalogView } from '../models/i18n';
 import { parseLang } from '../config/languages';
 import { adminBlogRouter } from './adminBlog.routes';
@@ -432,15 +432,119 @@ adminRouter.patch(
   }),
 );
 
+function formatAdminJob(job: InstanceType<typeof Job>, lang?: string) {
+  const o = plain(job as any);
+  o.name = skillDisplayName(job, lang);
+  return o;
+}
+
 adminRouter.get(
   '/jobs',
   asyncHandler(async (req, res) => {
     const lang = typeof req.query.lang === 'string' ? req.query.lang : undefined;
     const q = typeof req.query.q === 'string' ? req.query.q.trim() : '';
-    const filter: Record<string, unknown> = { status: 'accepted' };
-    if (q) filter.searchTerms = { $regex: `^${escapeRegex(normalize(q))}` };
-    const rows = await Job.find(filter).sort({ 'names.en': 1 }).limit(50);
-    res.json({ items: rows.map((j) => ({ id: j.id, name: skillDisplayName(j, lang) })) });
+    const manage =
+      req.query.page != null ||
+      req.query.limit != null ||
+      (typeof req.query.status === 'string' && req.query.status.length > 0);
+
+    // Autocomplete helper (Workers filters): accepted jobs only, compact payload.
+    if (!manage) {
+      const filter: Record<string, unknown> = { status: 'accepted' };
+      if (q) filter.searchTerms = { $regex: `^${escapeRegex(normalize(q))}` };
+      const rows = await Job.find(filter).sort({ 'names.en': 1 }).limit(50);
+      res.json({ items: rows.map((j) => ({ id: j.id, name: skillDisplayName(j, lang) })) });
+      return;
+    }
+
+    const filter: Record<string, unknown> = {};
+    if (typeof req.query.status === 'string' && STATUSES.includes(req.query.status as (typeof STATUSES)[number])) {
+      filter.status = req.query.status;
+    }
+    if (q) {
+      filter.searchTerms = { $regex: escapeRegex(normalize(q)), $options: 'i' };
+    }
+    const { page, limit, skip } = pageLimit(req.query as Record<string, unknown>);
+    const [rows, total] = await Promise.all([
+      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Job.countDocuments(filter),
+    ]);
+    res.json({ items: rows.map((j) => formatAdminJob(j, lang)), page, limit, total });
+  }),
+);
+
+adminRouter.post(
+  '/jobs',
+  asyncHandler(async (req, res) => {
+    const { name, status, lang } = req.body ?? {};
+    if (typeof name !== 'string' || !name.trim()) {
+      throw new AppError(400, 'name is required', 'validation_error', { name: 'missing_field' });
+    }
+    const trimmed = name.trim();
+    const term = normalize(trimmed);
+    const existing = await Job.findOne({ searchTerms: term });
+    if (existing) {
+      throw new AppError(409, 'Job already exists', 'duplicate_job', {
+        id: existing.id,
+        name: skillDisplayName(existing),
+        status: existing.status,
+      });
+    }
+    const nextStatus: (typeof STATUSES)[number] =
+      typeof status === 'string' && STATUSES.includes(status as (typeof STATUSES)[number])
+        ? (status as (typeof STATUSES)[number])
+        : 'accepted';
+    const jobLang = typeof lang === 'string' && lang.trim() ? lang.trim() : 'en';
+    const job = await Job.create({
+      names: { [jobLang]: trimmed },
+      aliases: [],
+      searchTerms: [term],
+      skills: [],
+      status: nextStatus,
+    });
+    res.status(201).json(formatAdminJob(job));
+  }),
+);
+
+adminRouter.patch(
+  '/jobs/:id',
+  asyncHandler(async (req, res) => {
+    if (!isObjectId(req.params.id)) throw new AppError(404, 'Job not found', 'not_found');
+    const job = await Job.findById(req.params.id);
+    if (!job) throw new AppError(404, 'Job not found', 'not_found');
+    const body = req.body ?? {};
+    const lang = typeof body.lang === 'string' && body.lang.trim() ? body.lang.trim() : 'en';
+
+    if (typeof body.name === 'string' && body.name.trim()) {
+      const trimmed = body.name.trim();
+      const term = normalize(trimmed);
+      const clash = await Job.findOne({ searchTerms: term, _id: { $ne: job._id } });
+      if (clash) {
+        throw new AppError(409, 'Job name already exists', 'duplicate_job', {
+          id: clash.id,
+          name: skillDisplayName(clash),
+        });
+      }
+      const names =
+        job.names instanceof Map
+          ? Object.fromEntries(job.names.entries())
+          : { ...((job.names as Record<string, string>) || {}) };
+      names[lang] = trimmed;
+      if (!names.en) names.en = trimmed;
+      job.names = names as any;
+      job.searchTerms = buildSearchTerms(names, job.aliases || []);
+    }
+
+    if (body.status !== undefined) {
+      if (!STATUSES.includes(body.status)) {
+        throw new AppError(400, 'Invalid status', 'validation_error', { status: 'invalid_status' });
+      }
+      job.status = body.status;
+    }
+
+    await job.save();
+    const respLang = typeof req.query.lang === 'string' ? req.query.lang : undefined;
+    res.json(formatAdminJob(job, respLang));
   }),
 );
 

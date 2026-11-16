@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { strings, t } from '@/strings.js'
 
 const ALL = '__all__'
 
@@ -83,7 +84,7 @@ export function CompaniesPage() {
 
   async function toggleBlock(row) {
     const blocked = !row.isBlocked
-    if (!window.confirm(`${blocked ? 'Block' : 'Unblock'} ${row.name}?`)) return
+    if (!window.confirm(t(blocked ? 'commonConfirmBlock' : 'commonConfirmUnblock', { name: row.name }))) return
     try {
       await api(`/companies/${row._id || row.id}/block`, {
         method: 'PATCH',
@@ -98,7 +99,7 @@ export function CompaniesPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        description="Create and moderate employer records used across the catalog."
+        description={strings.companiesDescription}
         action={
           <Button
             onClick={() => {
@@ -107,7 +108,7 @@ export function CompaniesPage() {
             }}
           >
             <Plus />
-            Add company
+            {strings.companiesAdd}
           </Button>
         }
       />
@@ -116,7 +117,7 @@ export function CompaniesPage() {
         items={[
           {
             id: 'total',
-            label: 'Total',
+            label: strings.commonTotal,
             value: data.total ?? 0,
             active: !filters.status && !filters.isBlocked,
             onClick: () => {
@@ -127,7 +128,7 @@ export function CompaniesPage() {
           },
           {
             id: 'pending',
-            label: 'Pending',
+            label: strings.commonPending,
             value: filters.status === 'pending' ? data.total ?? 0 : pageStats.pending,
             active: filters.status === 'pending',
             onClick: () => {
@@ -138,7 +139,7 @@ export function CompaniesPage() {
           },
           {
             id: 'accepted',
-            label: 'Accepted',
+            label: strings.commonAccepted,
             value: filters.status === 'accepted' ? data.total ?? 0 : pageStats.accepted,
             active: filters.status === 'accepted',
             onClick: () => {
@@ -149,7 +150,7 @@ export function CompaniesPage() {
           },
           {
             id: 'blocked',
-            label: 'Blocked',
+            label: strings.commonBlocked,
             value: filters.isBlocked === 'true' ? data.total ?? 0 : pageStats.blocked,
             active: filters.isBlocked === 'true',
             onClick: () => {
@@ -168,8 +169,8 @@ export function CompaniesPage() {
       <DataCard
         loading={loading}
         empty={!data.items.length}
-        emptyTitle="No companies found"
-        emptyDescription="Add a company or clear filters to see results."
+        emptyTitle={strings.companiesEmptyTitle}
+        emptyDescription={strings.companiesEmptyDescription}
         toolbar={
           <form
             className="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center"
@@ -183,7 +184,7 @@ export function CompaniesPage() {
               <Input
                 className="pl-8"
                 type="search"
-                placeholder="Search company name"
+                placeholder={strings.companiesSearchPlaceholder}
                 value={filters.q}
                 onChange={(e) => setFilters({ ...filters, q: e.target.value })}
               />
@@ -193,13 +194,13 @@ export function CompaniesPage() {
               onValueChange={(status) => setFilters({ ...filters, status: status === ALL ? '' : status })}
             >
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={strings.commonStatus} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>All statuses</SelectItem>
-                <SelectItem value="pending">pending</SelectItem>
-                <SelectItem value="accepted">accepted</SelectItem>
-                <SelectItem value="rejected">rejected</SelectItem>
+                <SelectItem value={ALL}>{strings.commonAllStatuses}</SelectItem>
+                <SelectItem value="pending">{strings.statusPending}</SelectItem>
+                <SelectItem value="accepted">{strings.statusAccepted}</SelectItem>
+                <SelectItem value="rejected">{strings.statusRejected}</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -209,15 +210,15 @@ export function CompaniesPage() {
               }
             >
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Blocked" />
+                <SelectValue placeholder={strings.commonBlocked} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>Blocked: any</SelectItem>
-                <SelectItem value="false">Active</SelectItem>
-                <SelectItem value="true">Blocked</SelectItem>
+                <SelectItem value={ALL}>{strings.commonBlockedAny}</SelectItem>
+                <SelectItem value="false">{strings.commonActive}</SelectItem>
+                <SelectItem value="true">{strings.commonBlocked}</SelectItem>
               </SelectContent>
             </Select>
-            <Button type="submit">Apply</Button>
+            <Button type="submit">{strings.commonApply}</Button>
           </form>
         }
         footer={<Pager page={page} limit={data.limit} total={data.total} onPage={(p) => load(p, filters)} />}
@@ -225,8 +226,8 @@ export function CompaniesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{strings.commonName}</TableHead>
+              <TableHead>{strings.commonStatus}</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -250,14 +251,14 @@ export function CompaniesPage() {
                         setForm({ name: row.name, status: row.status })
                       }}
                     >
-                      Edit
+                      {strings.commonEdit}
                     </Button>
                     <Button
                       variant={row.isBlocked ? 'outline' : 'destructive'}
                       size="sm"
                       onClick={() => toggleBlock(row)}
                     >
-                      {row.isBlocked ? 'Unblock' : 'Block'}
+                      {row.isBlocked ? strings.commonUnblock : strings.commonBlock}
                     </Button>
                   </div>
                 </TableCell>
@@ -270,11 +271,11 @@ export function CompaniesPage() {
       <Dialog open={Boolean(editing)} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit company</DialogTitle>
+            <DialogTitle>{strings.companiesEditTitle}</DialogTitle>
           </DialogHeader>
           <form onSubmit={saveEdit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label>Name</Label>
+              <Label>{strings.commonName}</Label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -282,24 +283,24 @@ export function CompaniesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Status</Label>
+              <Label>{strings.commonStatus}</Label>
               <Select value={form.status} onValueChange={(status) => setForm({ ...form, status })}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">pending</SelectItem>
-                  <SelectItem value="accepted">accepted</SelectItem>
-                  <SelectItem value="rejected">rejected</SelectItem>
+                  <SelectItem value="pending">{strings.statusPending}</SelectItem>
+                  <SelectItem value="accepted">{strings.statusAccepted}</SelectItem>
+                  <SelectItem value="rejected">{strings.statusRejected}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setEditing(null)}>
-                Cancel
+                {strings.commonCancel}
               </Button>
               <Button type="submit" disabled={busy}>
-                {busy ? 'Saving…' : 'Save changes'}
+                {busy ? strings.commonSaving : strings.commonSaveChanges}
               </Button>
             </DialogFooter>
           </form>
@@ -309,11 +310,11 @@ export function CompaniesPage() {
       <Dialog open={adding} onOpenChange={(open) => !open && setAdding(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add company</DialogTitle>
+            <DialogTitle>{strings.companiesAddTitle}</DialogTitle>
           </DialogHeader>
           <form onSubmit={create} className="grid gap-4">
             <div className="grid gap-2">
-              <Label>Name</Label>
+              <Label>{strings.commonName}</Label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -321,23 +322,23 @@ export function CompaniesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Status</Label>
+              <Label>{strings.commonStatus}</Label>
               <Select value={form.status} onValueChange={(status) => setForm({ ...form, status })}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="accepted">accepted</SelectItem>
-                  <SelectItem value="pending">pending</SelectItem>
+                  <SelectItem value="accepted">{strings.statusAccepted}</SelectItem>
+                  <SelectItem value="pending">{strings.statusPending}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setAdding(false)}>
-                Cancel
+                {strings.commonCancel}
               </Button>
               <Button type="submit" disabled={busy}>
-                {busy ? 'Creating…' : 'Create'}
+                {busy ? strings.commonCreating : strings.commonCreate}
               </Button>
             </DialogFooter>
           </form>

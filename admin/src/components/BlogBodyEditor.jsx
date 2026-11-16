@@ -13,6 +13,7 @@ import {
 import { blogHtmlTextLength, sanitizeBlogHtml, toEditorHtml } from '@/lib/blog-html.js'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { strings, t } from '@/strings.js'
 
 const BODY_MAX = 20000
 
@@ -39,24 +40,24 @@ export function BlogBodyEditor({ id = 'blog-body', value, onChange, resetKey, cl
   }
 
   function addLink() {
-    const url = window.prompt('Link URL', 'https://')
+    const url = window.prompt(strings.blogEditorLinkPrompt, strings.blogEditorLinkDefault)
     if (!url) return
     if (!/^https?:\/\//i.test(url) && !url.startsWith('/')) {
-      window.alert('Use an http, https, or site path link.')
+      window.alert(strings.blogEditorLinkInvalid)
       return
     }
     format('createLink', url)
   }
 
   function insertTable() {
-    const rowsRaw = window.prompt('Number of rows (including header)', '3')
+    const rowsRaw = window.prompt(strings.blogEditorRowsPrompt, '3')
     if (rowsRaw == null) return
-    const colsRaw = window.prompt('Number of columns', '3')
+    const colsRaw = window.prompt(strings.blogEditorColsPrompt, '3')
     if (colsRaw == null) return
     const rows = Math.min(20, Math.max(2, Number.parseInt(rowsRaw, 10) || 3))
     const cols = Math.min(10, Math.max(2, Number.parseInt(colsRaw, 10) || 3))
 
-    const headerCells = Array.from({ length: cols }, (_, i) => `<th>Header ${i + 1}</th>`).join('')
+    const headerCells = Array.from({ length: cols }, (_, i) => `<th>${t('blogEditorHeaderCell', { n: i + 1 })}</th>`).join('')
     const bodyRows = Array.from({ length: rows - 1 }, () => {
       const cells = Array.from({ length: cols }, () => '<td> </td>').join('')
       return `<tr>${cells}</tr>`
@@ -75,35 +76,35 @@ export function BlogBodyEditor({ id = 'blog-body', value, onChange, resetKey, cl
       <div
         className="flex flex-wrap items-center gap-1 rounded-t-lg border border-b-0 bg-muted/40 p-1.5"
         role="toolbar"
-        aria-label="Story formatting"
+        aria-label={strings.blogEditorToolbarAria}
       >
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('bold')} aria-label="Bold">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('bold')} aria-label={strings.blogEditorBold}>
           <Bold className="size-4" />
         </Button>
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('italic')} aria-label="Italic">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('italic')} aria-label={strings.blogEditorItalic}>
           <Italic className="size-4" />
         </Button>
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('underline')} aria-label="Underline">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('underline')} aria-label={strings.blogEditorUnderline}>
           <Underline className="size-4" />
         </Button>
         <span className="bg-border mx-1 h-6 w-px" />
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('formatBlock', 'h2')} aria-label="Heading">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('formatBlock', 'h2')} aria-label={strings.blogEditorHeading}>
           <Heading2 className="size-4" />
         </Button>
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('formatBlock', 'h3')} aria-label="Subheading">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('formatBlock', 'h3')} aria-label={strings.blogEditorSubheading}>
           <Heading3 className="size-4" />
         </Button>
         <span className="bg-border mx-1 h-6 w-px" />
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('insertUnorderedList')} aria-label="Bullet list">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('insertUnorderedList')} aria-label={strings.blogEditorBulletList}>
           <List className="size-4" />
         </Button>
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('insertOrderedList')} aria-label="Numbered list">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={() => format('insertOrderedList')} aria-label={strings.blogEditorNumberedList}>
           <ListOrdered className="size-4" />
         </Button>
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={addLink} aria-label="Link">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={addLink} aria-label={strings.blogEditorLink}>
           <Link2 className="size-4" />
         </Button>
-        <Button type="button" variant="outline" size="icon" className="size-8" onClick={insertTable} aria-label="Insert table">
+        <Button type="button" variant="outline" size="icon" className="size-8" onClick={insertTable} aria-label={strings.blogEditorInsertTable}>
           <Table className="size-4" />
         </Button>
       </div>
@@ -114,14 +115,17 @@ export function BlogBodyEditor({ id = 'blog-body', value, onChange, resetKey, cl
         contentEditable
         role="textbox"
         aria-multiline="true"
-        aria-label="Story"
-        data-placeholder="Write the story. Use the toolbar for headings, lists, links and tables."
+        aria-label={strings.blogEditorStoryAria}
+        data-placeholder={strings.blogEditorPlaceholder}
         onInput={emit}
         onBlur={emit}
         suppressContentEditableWarning
       />
       <p className="text-muted-foreground text-xs">
-        {textLength} characters · max {BODY_MAX.toLocaleString('en-IN')}
+        {t('blogEditorCharCount', {
+          count: textLength,
+          max: BODY_MAX.toLocaleString('en-IN'),
+        })}
       </p>
     </div>
   )

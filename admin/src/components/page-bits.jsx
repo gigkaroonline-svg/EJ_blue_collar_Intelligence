@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { t } from '@/strings.js'
 
 export function PageHeader({ description, action }) {
   return (
@@ -43,14 +44,14 @@ export function Pager({ page, limit, total, onPage }) {
   return (
     <div className="flex flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-muted-foreground text-sm">
-        {total || 0} total · page {page} / {pages}
+        {t('commonPagerSummary', { total: total || 0, page, pages })}
       </p>
       <div className="flex gap-2">
         <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)}>
-          Previous
+          {t('commonPrevious')}
         </Button>
         <Button variant="outline" size="sm" disabled={page >= pages} onClick={() => onPage(page + 1)}>
-          Next
+          {t('commonNext')}
         </Button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { statusText } from '@/strings.js'
 
 const styles = {
   accepted: 'border-transparent bg-emerald-100 text-emerald-800',
@@ -17,7 +18,7 @@ export function StatusBadge({ value, kind }) {
   const key = String(kind || value || '').toLowerCase()
   return (
     <Badge variant="outline" className={cn('lowercase', styles[key])}>
-      {value}
+      {statusText(value)}
     </Badge>
   )
 }

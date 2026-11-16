@@ -80,11 +80,11 @@ function BlogCard({ post }: { post: BlogPost }) {
           <img
             src={post.coverUrl}
             alt={blogCoverAlt(post)}
-            width={800}
-            height={520}
+            width={1200}
+            height={630}
             loading="lazy"
             decoding="async"
-            className="aspect-[16/10] w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+            className="aspect-[1200/630] w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
           />
         </Link>
       ) : null}
@@ -189,10 +189,10 @@ export function BlogArticleView({
                 src={post.coverUrl}
                 alt={blogCoverAlt(post)}
                 width={1200}
-                height={675}
+                height={630}
                 fetchPriority="high"
                 decoding="async"
-                className="aspect-[16/9] w-full object-cover"
+                className="aspect-[1200/630] w-full object-cover"
               />
             </Reveal>
           ) : null}

@@ -1,9 +1,6 @@
 import { useState } from 'react'
-import { Building2, HardHat, LogOut, Newspaper, Users } from 'lucide-react'
-import { PartnersPage } from '@/pages/PartnersPage.jsx'
-import { CompaniesPage } from '@/pages/CompaniesPage.jsx'
-import { WorkersPage } from '@/pages/WorkersPage.jsx'
-import { BlogsPage } from '@/pages/BlogsPage.jsx'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Briefcase, Building2, HardHat, LogOut, Newspaper, Users } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   Sidebar,
@@ -22,18 +19,20 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 import { Separator } from '@/components/ui/separator'
+import { strings } from '@/strings.js'
 
 const PAGES = [
-  { id: 'partners', label: 'Sourcing partners', icon: Users },
-  { id: 'companies', label: 'Companies', icon: Building2 },
-  { id: 'workers', label: 'Labours', icon: HardHat },
-  { id: 'blogs', label: 'Blogs', icon: Newspaper },
+  { path: '/partners', labelKey: 'navPartners', icon: Users },
+  { path: '/companies', labelKey: 'navCompanies', icon: Building2 },
+  { path: '/jobs', labelKey: 'navJobs', icon: Briefcase },
+  { path: '/workers', labelKey: 'navWorkers', icon: HardHat },
+  { path: '/blogs', labelKey: 'navBlogs', icon: Newspaper },
 ]
 
 export function Shell({ admin, onLogout }) {
-  const [page, setPage] = useState('partners')
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const active = PAGES.find((p) => p.id === page)
+  const location = useLocation()
+  const active = PAGES.find((p) => location.pathname === p.path) || PAGES[0]
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -43,11 +42,11 @@ export function Shell({ admin, onLogout }) {
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" className="pointer-events-none">
                 <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg text-sm font-bold">
-                  R
+                  {strings.brandMark}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">RojMitra</span>
-                  <span className="text-muted-foreground truncate text-xs">Admin console</span>
+                  <span className="truncate font-semibold">{strings.brandName}</span>
+                  <span className="text-muted-foreground truncate text-xs">{strings.brandConsole}</span>
                 </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -56,21 +55,26 @@ export function Shell({ admin, onLogout }) {
 
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Manage</SidebarGroupLabel>
+            <SidebarGroupLabel>{strings.navManage}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {PAGES.map((item) => (
-                  <SidebarMenuItem key={item.id}>
-                    <SidebarMenuButton
-                      isActive={page === item.id}
-                      tooltip={item.label}
-                      onClick={() => setPage(item.id)}
-                    >
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {PAGES.map((item) => {
+                  const label = strings[item.labelKey]
+                  return (
+                    <SidebarMenuItem key={item.path}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={location.pathname === item.path}
+                        tooltip={label}
+                      >
+                        <NavLink to={item.path}>
+                          <item.icon />
+                          <span>{label}</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -82,11 +86,11 @@ export function Shell({ admin, onLogout }) {
               <div className="flex items-center gap-2 px-2 py-1.5">
                 <Avatar size="sm">
                   <AvatarFallback>
-                    {(admin?.name || admin?.email || 'A').slice(0, 1).toUpperCase()}
+                    {(admin?.name || admin?.email || strings.brandMark).slice(0, 1).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <span className="truncate font-medium">{admin?.name || 'Admin'}</span>
+                  <span className="truncate font-medium">{admin?.name || strings.fallbackAdminName}</span>
                   <span className="text-muted-foreground truncate text-xs">{admin?.email}</span>
                 </div>
               </div>
@@ -94,7 +98,7 @@ export function Shell({ admin, onLogout }) {
             <SidebarMenuItem>
               <SidebarMenuButton onClick={onLogout}>
                 <LogOut />
-                <span>Sign out</span>
+                <span>{strings.navSignOut}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -107,15 +111,12 @@ export function Shell({ admin, onLogout }) {
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <div>
-            <p className="text-muted-foreground text-xs">Admin</p>
-            <h1 className="text-sm font-semibold leading-none">{active?.label}</h1>
+            <p className="text-muted-foreground text-xs">{strings.brandAdminShort}</p>
+            <h1 className="text-sm font-semibold leading-none">{strings[active.labelKey]}</h1>
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
-          {page === 'partners' ? <PartnersPage /> : null}
-          {page === 'companies' ? <CompaniesPage /> : null}
-          {page === 'workers' ? <WorkersPage /> : null}
-          {page === 'blogs' ? <BlogsPage /> : null}
+          <Outlet />
         </div>
       </SidebarInset>
     </SidebarProvider>

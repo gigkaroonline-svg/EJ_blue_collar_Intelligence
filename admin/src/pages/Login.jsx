@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { strings } from '@/strings.js'
 
 export function Login({ onLogin }) {
   const [email, setEmail] = useState('')
@@ -24,7 +25,7 @@ export function Login({ onLogin }) {
       setToken(data.token)
       onLogin(data.admin)
     } catch (err) {
-      setError(err.message || 'Login failed')
+      setError(err.message || strings.loginFailed)
     } finally {
       setBusy(false)
     }
@@ -35,18 +36,18 @@ export function Login({ onLogin }) {
       <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="flex items-center gap-3">
           <div className="bg-primary text-primary-foreground flex size-9 items-center justify-center rounded-lg text-sm font-bold">
-            R
+            {strings.brandMark}
           </div>
           <div>
-            <div className="font-semibold">RojMitra</div>
-            <div className="text-muted-foreground text-sm">Admin console</div>
+            <div className="font-semibold">{strings.brandName}</div>
+            <div className="text-muted-foreground text-sm">{strings.brandConsole}</div>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Sign in</CardTitle>
-            <CardDescription>Manage partners, companies, and labours.</CardDescription>
+            <CardTitle>{strings.loginTitle}</CardTitle>
+            <CardDescription>{strings.loginDescription}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={submit} className="grid gap-4">
@@ -56,18 +57,18 @@ export function Login({ onLogin }) {
                 </div>
               ) : null}
               <div className="grid gap-2">
-                <Label htmlFor="admin-email">Email</Label>
+                <Label htmlFor="admin-email">{strings.loginEmail}</Label>
                 <Input
                   id="admin-email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="username"
-                  placeholder="admin@example.com"
+                  placeholder={strings.loginEmailPlaceholder}
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="admin-password">Password</Label>
+                <Label htmlFor="admin-password">{strings.loginPassword}</Label>
                 <Input
                   id="admin-password"
                   type="password"
@@ -78,7 +79,7 @@ export function Login({ onLogin }) {
                 />
               </div>
               <Button type="submit" disabled={busy} className="w-full">
-                {busy ? 'Signing in…' : 'Sign in'}
+                {busy ? strings.loginSubmitting : strings.loginSubmit}
               </Button>
             </form>
           </CardContent>

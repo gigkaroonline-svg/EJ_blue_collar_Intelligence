@@ -31,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { strings } from '@/strings.js'
 
 const ALL = '__all__'
 const NONE = '__none__'
@@ -105,13 +106,13 @@ export function WorkersPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader description="Browse workers registered by partners and update availability details." />
+      <PageHeader description={strings.workersDescription} />
 
       <StatCards
         items={[
           {
             id: 'total',
-            label: 'Total',
+            label: strings.commonTotal,
             value: data.total ?? 0,
             active: !filters.isReadyToWork && !filters.hasDisability,
             onClick: () => {
@@ -122,7 +123,7 @@ export function WorkersPage() {
           },
           {
             id: 'ready',
-            label: 'Ready',
+            label: strings.workersReady,
             value: filters.isReadyToWork === 'true' ? data.total ?? 0 : pageStats.ready,
             active: filters.isReadyToWork === 'true',
             onClick: () => {
@@ -133,7 +134,7 @@ export function WorkersPage() {
           },
           {
             id: 'not-ready',
-            label: 'Not ready',
+            label: strings.workersNotReady,
             value: filters.isReadyToWork === 'false' ? data.total ?? 0 : pageStats.notReady,
             active: filters.isReadyToWork === 'false',
             onClick: () => {
@@ -144,7 +145,7 @@ export function WorkersPage() {
           },
           {
             id: 'disability',
-            label: 'Disability',
+            label: strings.workersDisability,
             value: filters.hasDisability === 'true' ? data.total ?? 0 : pageStats.disability,
             active: filters.hasDisability === 'true',
             onClick: () => {
@@ -163,8 +164,8 @@ export function WorkersPage() {
       <DataCard
         loading={loading}
         empty={!data.items.length}
-        emptyTitle="No labours found"
-        emptyDescription="Try another search or check partner registrations."
+        emptyTitle={strings.workersEmptyTitle}
+        emptyDescription={strings.workersEmptyDescription}
         toolbar={
           <form
             className="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center"
@@ -178,20 +179,20 @@ export function WorkersPage() {
               <Input
                 className="pl-8"
                 type="search"
-                placeholder="Search by name"
+                placeholder={strings.workersSearchPlaceholder}
                 value={filters.q}
                 onChange={(e) => setFilters({ ...filters, q: e.target.value })}
               />
             </div>
             <Input
               className="w-full lg:w-32"
-              placeholder="State"
+              placeholder={strings.commonState}
               value={filters.state}
               onChange={(e) => setFilters({ ...filters, state: e.target.value })}
             />
             <Input
               className="w-full lg:w-32"
-              placeholder="District"
+              placeholder={strings.commonDistrict}
               value={filters.district}
               onChange={(e) => setFilters({ ...filters, district: e.target.value })}
             />
@@ -202,12 +203,12 @@ export function WorkersPage() {
               }
             >
               <SelectTrigger className="w-full lg:w-44">
-                <SelectValue placeholder="Availability" />
+                <SelectValue placeholder={strings.workersAvailability} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>Availability: any</SelectItem>
-                <SelectItem value="true">Ready</SelectItem>
-                <SelectItem value="false">Not ready</SelectItem>
+                <SelectItem value={ALL}>{strings.workersAvailabilityAny}</SelectItem>
+                <SelectItem value="true">{strings.workersReady}</SelectItem>
+                <SelectItem value="false">{strings.workersNotReady}</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -217,15 +218,15 @@ export function WorkersPage() {
               }
             >
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Disability" />
+                <SelectValue placeholder={strings.workersDisability} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>Disability: any</SelectItem>
-                <SelectItem value="true">Yes</SelectItem>
-                <SelectItem value="false">No</SelectItem>
+                <SelectItem value={ALL}>{strings.workersDisabilityAny}</SelectItem>
+                <SelectItem value="true">{strings.commonYes}</SelectItem>
+                <SelectItem value="false">{strings.commonNo}</SelectItem>
               </SelectContent>
             </Select>
-            <Button type="submit">Apply</Button>
+            <Button type="submit">{strings.commonApply}</Button>
           </form>
         }
         footer={<Pager page={page} limit={data.limit} total={data.total} onPage={(p) => load(p, filters)} />}
@@ -233,12 +234,12 @@ export function WorkersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Trade</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Partner</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{strings.commonName}</TableHead>
+              <TableHead>{strings.commonPhone}</TableHead>
+              <TableHead>{strings.workersTrade}</TableHead>
+              <TableHead>{strings.commonLocation}</TableHead>
+              <TableHead>{strings.workersPartner}</TableHead>
+              <TableHead>{strings.commonStatus}</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -249,7 +250,7 @@ export function WorkersPage() {
                   <div className="flex items-center gap-3">
                     <Avatar size="sm">
                       <AvatarFallback>
-                        {String(row.fullName || '?')
+                        {String(row.fullName || strings.commonUnknownInitial)
                           .split(/\s+/)
                           .slice(0, 2)
                           .map((p) => p[0])
@@ -263,15 +264,15 @@ export function WorkersPage() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{row.phoneNumber || '—'}</TableCell>
-                <TableCell>{row.jobId?.name || '—'}</TableCell>
+                <TableCell>{row.phoneNumber || strings.commonEmDash}</TableCell>
+                <TableCell>{row.jobId?.name || strings.commonEmDash}</TableCell>
                 <TableCell>
                   {[row.permanentAddress?.district, row.permanentAddress?.state]
                     .filter(Boolean)
-                    .join(', ') || '—'}
+                    .join(', ') || strings.commonEmDash}
                 </TableCell>
                 <TableCell>
-                  <div className="font-medium">{row.registeredBy?.fullName || '—'}</div>
+                  <div className="font-medium">{row.registeredBy?.fullName || strings.commonEmDash}</div>
                   <div className="text-muted-foreground text-xs">{row.registeredBy?.role || ''}</div>
                 </TableCell>
                 <TableCell>
@@ -283,7 +284,7 @@ export function WorkersPage() {
                 <TableCell>
                   <div className="flex justify-end">
                     <Button variant="outline" size="sm" onClick={() => open(row)}>
-                      Edit
+                      {strings.commonEdit}
                     </Button>
                   </div>
                 </TableCell>
@@ -296,12 +297,12 @@ export function WorkersPage() {
       <Dialog open={Boolean(editing && form)} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit labour</DialogTitle>
+            <DialogTitle>{strings.workersEditTitle}</DialogTitle>
           </DialogHeader>
           {form ? (
             <form onSubmit={save} className="grid gap-4">
               <div className="grid gap-2">
-                <Label>Full name</Label>
+                <Label>{strings.workersFullName}</Label>
                 <Input
                   value={form.fullName}
                   onChange={(e) => setForm({ ...form, fullName: e.target.value })}
@@ -310,14 +311,14 @@ export function WorkersPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
-                  <Label>Phone</Label>
+                  <Label>{strings.commonPhone}</Label>
                   <Input
                     value={form.phoneNumber}
                     onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label>Gender</Label>
+                  <Label>{strings.workersGender}</Label>
                   <Select
                     value={form.gender || NONE}
                     onValueChange={(gender) =>
@@ -328,16 +329,16 @@ export function WorkersPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={NONE}>—</SelectItem>
-                      <SelectItem value="male">male</SelectItem>
-                      <SelectItem value="female">female</SelectItem>
-                      <SelectItem value="other">other</SelectItem>
+                      <SelectItem value={NONE}>{strings.commonEmDash}</SelectItem>
+                      <SelectItem value="male">{strings.genderMale}</SelectItem>
+                      <SelectItem value="female">{strings.genderFemale}</SelectItem>
+                      <SelectItem value="other">{strings.genderOther}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div className="grid gap-2">
-                <Label>Daily wage</Label>
+                <Label>{strings.workersDailyWage}</Label>
                 <Input
                   type="number"
                   min="0"
@@ -353,7 +354,7 @@ export function WorkersPage() {
                       setForm({ ...form, isReadyToWork: Boolean(checked) })
                     }
                   />
-                  Ready to work
+                  {strings.workersReadyToWork}
                 </label>
                 <label className="flex items-center gap-2 text-sm">
                   <Checkbox
@@ -362,12 +363,12 @@ export function WorkersPage() {
                       setForm({ ...form, hasDisability: Boolean(checked) })
                     }
                   />
-                  Has disability
+                  {strings.workersHasDisability}
                 </label>
               </div>
               {form.hasDisability ? (
                 <div className="grid gap-2">
-                  <Label>Disability details</Label>
+                  <Label>{strings.workersDisabilityDetails}</Label>
                   <Input
                     value={form.disabilityDetails}
                     onChange={(e) => setForm({ ...form, disabilityDetails: e.target.value })}
@@ -376,14 +377,14 @@ export function WorkersPage() {
               ) : null}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
-                  <Label>State</Label>
+                  <Label>{strings.commonState}</Label>
                   <Input
                     value={form.state}
                     onChange={(e) => setForm({ ...form, state: e.target.value })}
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label>District</Label>
+                  <Label>{strings.commonDistrict}</Label>
                   <Input
                     value={form.district}
                     onChange={(e) => setForm({ ...form, district: e.target.value })}
@@ -392,10 +393,10 @@ export function WorkersPage() {
               </div>
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setEditing(null)}>
-                  Cancel
+                  {strings.commonCancel}
                 </Button>
                 <Button type="submit" disabled={busy}>
-                  {busy ? 'Saving…' : 'Save changes'}
+                  {busy ? strings.commonSaving : strings.commonSaveChanges}
                 </Button>
               </DialogFooter>
             </form>
